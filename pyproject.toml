@@ -1,0 +1,34 @@
+[project]
+name = "pyvalues"
+version = "0.1.0"
+description = "Python library for processing, evaluating, and visualizing (Schwartz) human value scores"
+requires-python = ">=3.10,<3.14"
+readme = "README.md"
+dependencies = [
+    "pandas (>=2.3.3,<3.0.0)",
+    "pydantic (>=2.12.3,<3.0.0)",
+]
+license = { file = "LICENSE" }
+keywords = [ "ai", "artificial intelligence", "classification", "human values", "schwartz values", "vallueeval" ]
+authors = [
+    {name = "Johannes Kiesel"},
+]
+maintainers = [
+    {name = "Johannes Kiesel",email = "Johannes.Kiesel@gesis.org"}
+]
+
+[project.urls]
+"Source" = "https://github.com/ValueEval/pyvalues"
+"Issues" = "https://github.com/ValueEval/pyvalues/issues"
+
+[tool.poetry]
+packages = [{include = "pyvalues", from = "src"}]
+
+[tool.poetry.group.development]
+optional = true
+[tool.poetry.group.development.dependencies]
+flake8 = "*"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
