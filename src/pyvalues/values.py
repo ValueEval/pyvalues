@@ -28,6 +28,8 @@ def combine_attainment_scores(
         attained += score.attained
         constrained += score.constrained
     total = mode(totals)
+    assert total >= 0
+    assert total <= 1
     if attained + constrained == 0:
         return AttainmentScore()
     else:
