@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import Annotated, Callable, Iterable
-from pydantic import BaseModel, ConfigDict, Field
+from typing import Annotated, Callable, Iterable, Self
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 Score = Annotated[float, Field(ge=0, le=1)]
 
@@ -9,17 +9,22 @@ class AttainmentScore(BaseModel):
     attained: Score = 0.0
     constrained: Score = 0.0
 
+    @model_validator(mode="after")
+    def _check_total(self) -> Self:
+        total = self.attained + self.constrained
+        if total > 1:
+            raise ValueError(
+                f"Total > 1: {self.attained} + {self.constrained} = {total}")
+        return self
+
     def total(self) -> Score:
-        score = self.attained + self.constrained
-        assert score >= 0
-        assert score <= 1
-        return score
+        return self.attained + self.constrained
 
 
 def combine_attainment_scores(
-        scores: Iterable[AttainmentScore],
-        mode: Callable[[Iterable[float]], float] = max
-    ) -> AttainmentScore:
+            scores: Iterable[AttainmentScore],
+            mode: Callable[[Iterable[float]], float] = max
+        ) -> AttainmentScore:
     totals = []
     attained = 0.0
     constrained = 0.0
@@ -42,21 +47,28 @@ def combine_attainment_scores(
 
 
 class Values(ABC, BaseModel):
+    """ Scores (with or without attainment) for any system of values.
+    """
     pass
 
 
 class ValuesWithoutAttainment(Values):
+    """ Scores without attainment for any system of values.
+    """
     pass
 
 
 class ValuesWithAttainment(Values):
-
+    """ Scores with attainment for any system of values.
+    """
     @abstractmethod
     def without_attainment(self) -> ValuesWithoutAttainment:
         pass
 
 
 class OriginalValues(ValuesWithoutAttainment):
+    """ Scores for the ten values from Schwartz original system.
+    """
     self_direction: Score = Field(serialization_alias="Self-direction", default=0.0)
     stimulation: Score = Field(serialization_alias="Stimulation", default=0.0)
     hedonism: Score = Field(serialization_alias="Hedonism", default=0.0)
@@ -72,6 +84,9 @@ class OriginalValues(ValuesWithoutAttainment):
 
 
 class RefinedCoarseValues(ValuesWithoutAttainment):
+    """ Scores for the twelve values from Schwartz refined system (19 values)
+    when combining values with same name prefix.
+    """
     self_direction: Score = Field(serialization_alias="Self-direction", default=0.0)
     stimulation: Score = Field(serialization_alias="Stimulation", default=0.0)
     hedonism: Score = Field(serialization_alias="Hedonism", default=0.0)
@@ -103,6 +118,8 @@ class RefinedCoarseValues(ValuesWithoutAttainment):
 
 
 class RefinedValues(ValuesWithoutAttainment):
+    """ Scores for the 19 values from Schwartz refined system.
+    """
     self_direction_thought: Score = Field(serialization_alias="Self-direction: thought", default=0.0)
     self_direction_action: Score = Field(serialization_alias="Self-direction: action", default=0.0)
     stimulation: Score = Field(serialization_alias="Stimulation", default=0.0)
@@ -140,12 +157,14 @@ class RefinedValues(ValuesWithoutAttainment):
             benevolence=mode([self.benevolence_caring, self.benevolence_dependability]),
             universalism=mode([self.universalism_concern, self.universalism_nature, self.universalism_tolerance])
         )
-    
+
     def original_values(self, mode: Callable[[Iterable[float]], float] = max) -> OriginalValues:
         return self.coarse_values(mode=mode).original_values()
 
 
 class OriginalValuesWithAttainment(ValuesWithAttainment):
+    """ Scores with attainment for the ten values from Schwartz original system.
+    """
     self_direction: AttainmentScore = Field(serialization_alias="Self-direction", default=AttainmentScore())
     stimulation: AttainmentScore = Field(serialization_alias="Stimulation", default=AttainmentScore())
     hedonism: AttainmentScore = Field(serialization_alias="Hedonism", default=AttainmentScore())
@@ -175,6 +194,9 @@ class OriginalValuesWithAttainment(ValuesWithAttainment):
 
 
 class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
+    """ Scores with attainment for the twelve values from Schwartz refined
+    system (19 values) when combining values with same name prefix.
+    """
     self_direction: AttainmentScore = Field(serialization_alias="Self-direction", default=AttainmentScore())
     stimulation: AttainmentScore = Field(serialization_alias="Stimulation", default=AttainmentScore())
     hedonism: AttainmentScore = Field(serialization_alias="Hedonism", default=AttainmentScore())
@@ -222,6 +244,8 @@ class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
 
 
 class RefinedValuesWithAttainment(ValuesWithAttainment):
+    """ Scores with attainment for the 19 values from Schwartz refined system.
+    """
     self_direction_thought: AttainmentScore = Field(
         serialization_alias="Self-direction: thought", default=AttainmentScore())
     self_direction_action: AttainmentScore = Field(
@@ -284,7 +308,7 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
             universalism=combine_attainment_scores(
                 [self.universalism_concern, self.universalism_nature, self.universalism_tolerance], mode=mode)
         )
-    
+
     def original_values(self, mode: Callable[[Iterable[float]], float] = max) -> OriginalValuesWithAttainment:
         return self.coarse_values(mode=mode).original_values()
 
