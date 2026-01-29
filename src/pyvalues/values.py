@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Annotated, Callable, Iterable, Self
+from typing import Annotated, Callable, Iterable, List, Self
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 Score = Annotated[float, Field(ge=0, le=1)]
@@ -82,6 +82,22 @@ class OriginalValues(ValuesWithoutAttainment):
 
     model_config = ConfigDict(serialize_by_alias=True)
 
+    @classmethod
+    def from_list(cls, list: List[float]) -> Self:
+        assert len(list) == 10
+        return cls(
+            self_direction=list[0],
+            stimulation=list[1],
+            hedonism=list[2],
+            achievement=list[3],
+            power=list[4],
+            security=list[5],
+            tradition=list[6],
+            conformity=list[7],
+            benevolence=list[8],
+            universalism=list[9]
+        )
+
 
 class RefinedCoarseValues(ValuesWithoutAttainment):
     """ Scores for the twelve values from Schwartz refined system (19 values)
@@ -101,6 +117,24 @@ class RefinedCoarseValues(ValuesWithoutAttainment):
     universalism: Score = Field(serialization_alias="Universalism", default=0.0)
 
     model_config = ConfigDict(serialize_by_alias=True)
+
+    @classmethod
+    def from_list(cls, list: List[float]) -> Self:
+        assert len(list) == 12
+        return cls(
+            self_direction=list[0],
+            stimulation=list[1],
+            hedonism=list[2],
+            achievement=list[3],
+            power=list[4],
+            face=list[5],
+            security=list[6],
+            tradition=list[7],
+            conformity=list[8],
+            humility=list[9],
+            benevolence=list[10],
+            universalism=list[11]
+        )
 
     def original_values(self) -> OriginalValues:
         return OriginalValues(
@@ -141,6 +175,31 @@ class RefinedValues(ValuesWithoutAttainment):
     universalism_tolerance: Score = Field(serialization_alias="Universalism: tolerance", default=0.0)
 
     model_config = ConfigDict(serialize_by_alias=True)
+
+    @classmethod
+    def from_list(cls, list: List[float]) -> Self:
+        assert len(list) == 19
+        return cls(
+            self_direction_thought=list[0],
+            self_direction_action=list[1],
+            stimulation=list[2],
+            hedonism=list[3],
+            achievement=list[4],
+            power_dominance=list[5],
+            power_resources=list[6],
+            face=list[7],
+            security_personal=list[8],
+            security_societal=list[9],
+            tradition=list[10],
+            conformity_rules=list[11],
+            conformity_interpersonal=list[12],
+            humility=list[13],
+            benevolence_caring=list[14],
+            benevolence_dependability=list[15],
+            universalism_concern=list[16],
+            universalism_nature=list[17],
+            universalism_tolerance=list[18]
+        )
 
     def coarse_values(self, mode: Callable[[Iterable[float]], float] = max) -> RefinedCoarseValues:
         return RefinedCoarseValues(
