@@ -35,7 +35,7 @@ def plot_radar(
     ax.set_varlabels(dim_names)  # type: ignore
     has_label = False
     for i in range(len(valuess)):
-        label=labels[i % len(labels)]
+        label = labels[i % len(labels)]
         ax.plot(theta, list(valuess[i]),
                 color=linecolors[i % len(linecolors)],
                 label=label)

@@ -634,6 +634,6 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
 def plot_value_scores(valuess: list[Values], **kwargs):
     return plot_radar(
         dim_names=valuess[0].names(),
-        valuess=[v.to_list() for v in valuess], 
+        valuess=[v.to_list() for v in valuess],
         **kwargs
     )
