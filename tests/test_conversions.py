@@ -12,7 +12,7 @@ from pyvalues import (
 )
 
 
-class TestConversions(unittest.TestCase):
+class TestValueClasses(unittest.TestCase):
 
     def test_original_values(self):
         values = OriginalValues.from_list([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9])
@@ -28,11 +28,11 @@ class TestConversions(unittest.TestCase):
         self.assertEqual(0.9, values.universalism)
 
     def test_error_on_too_few(self):
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(AssertionError):
             OriginalValues.from_list([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8])
 
     def test_error_on_too_many(self):
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(AssertionError):
             OriginalValues.from_list([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
 
     def test_error_on_above_one(self):
