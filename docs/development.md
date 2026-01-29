@@ -13,7 +13,7 @@ poetry run python -m unittest
 ## Running linter (automatically on push)
 
 ```shell
-poetry run flake8 src --count --max-complexity=10 --max-line-length=127 --statistics
+poetry run flake8 src --count --max-complexity=10 --max-line-length=127 --statistics --ignore=C901
 ```
 
 ## Release new version

@@ -53,8 +53,10 @@ class OriginalValuesWithAttainmentClassifier(OriginalValuesClassifier):
 
     @abstractmethod
     def classify_original_values_with_attainment(
-                self, text: str, language: str = "EN"
-            ) -> OriginalValuesWithAttainment:
+        self,
+        text: str,
+        language: str = "EN"
+    ) -> OriginalValuesWithAttainment:
         pass
 
 
@@ -65,21 +67,21 @@ class RefinedCoarseValuesWithAttainmentClassifier(
     """
 
     def classify_refined_coarse_values(
-                self, text: str, language: str = "EN"
-            ) -> RefinedCoarseValues:
+        self, text: str, language: str = "EN"
+    ) -> RefinedCoarseValues:
         return self.classify_refined_coarse_values_with_attainment(
             text=text, language=language).without_attainment()
 
     def classify_original_values_with_attainment(
-                self, text: str, language: str = "EN"
-            ) -> OriginalValuesWithAttainment:
+        self, text: str, language: str = "EN"
+    ) -> OriginalValuesWithAttainment:
         return self.classify_refined_coarse_values_with_attainment(
             text=text, language=language).original_values()
 
     @abstractmethod
     def classify_refined_coarse_values_with_attainment(
-                self, text: str, language: str = "EN"
-            ) -> RefinedCoarseValuesWithAttainment:
+        self, text: str, language: str = "EN"
+    ) -> RefinedCoarseValuesWithAttainment:
         pass
 
 
@@ -89,19 +91,19 @@ class RefinedValuesWithAttainmentClassifier(
     """
 
     def classify_refined_values(
-                self, text: str, language: str = "EN"
-            ) -> RefinedValues:
+        self, text: str, language: str = "EN"
+    ) -> RefinedValues:
         return self.classify_refined_values_with_attainment(
             text=text, language=language).without_attainment()
 
     def classify_refined_coarse_values_with_attainment(
-                self, text: str, language: str = "EN"
-            ) -> RefinedCoarseValuesWithAttainment:
+        self, text: str, language: str = "EN"
+    ) -> RefinedCoarseValuesWithAttainment:
         return self.classify_refined_values_with_attainment(
             text=text, language=language).coarse_values()
 
     @abstractmethod
     def classify_refined_values_with_attainment(
-                self, text: str, language: str = "EN"
-            ) -> RefinedValuesWithAttainment:
+        self, text: str, language: str = "EN"
+    ) -> RefinedValuesWithAttainment:
         pass

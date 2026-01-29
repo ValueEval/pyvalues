@@ -1,6 +1,70 @@
 from abc import ABC, abstractmethod
-from typing import Annotated, Callable, Iterable, List, Self
+from typing import Annotated, Callable, Iterable, Self
 from pydantic import BaseModel, ConfigDict, Field, model_validator
+from .radarplot import plot_radar
+
+original_values = [
+    "Self-direction",
+    "Stimulation",
+    "Hedonism",
+    "Achievement",
+    "Power",
+    "Security",
+    "Tradition",
+    "Conformity",
+    "Benevolence",
+    "Universalism"
+]
+
+original_values_with_attainment = \
+    [v + " attained" for v in original_values] + \
+    [v + " constrained" for v in original_values]
+
+refined_coarse_values = [
+    "Self-direction",
+    "Stimulation",
+    "Hedonism",
+    "Achievement",
+    "Power",
+    "Face",
+    "Security",
+    "Tradition",
+    "Conformity",
+    "Humility",
+    "Benevolence",
+    "Universalism"
+]
+
+refined_coarse_values_with_attainment = \
+    [v + " attained" for v in refined_coarse_values] + \
+    [v + " constrained" for v in refined_coarse_values]
+
+refined_values = [
+    "Self-direction: action",
+    "Self-direction: thought",
+    "Stimulation",
+    "Hedonism",
+    "Achievement",
+    "Power: dominance",
+    "Power: resources",
+    "Face",
+    "Security: personal",
+    "Security: societal",
+    "Tradition",
+    "Conformity: rules",
+    "Conformity: interpersonal",
+    "Humility",
+    "Benevolence: caring",
+    "Benevolence: dependability",
+    "Universalism: concern",
+    "Universalism: nature",
+    "Universalism: tolerance"
+]
+
+refined_values_with_attainment = \
+    [v + " attained" for v in refined_values] + \
+    [v + " constrained" for v in refined_values]
+
 
 Score = Annotated[float, Field(ge=0, le=1)]
 
@@ -22,9 +86,9 @@ class AttainmentScore(BaseModel):
 
 
 def combine_attainment_scores(
-            scores: Iterable[AttainmentScore],
-            mode: Callable[[Iterable[float]], float] = max
-        ) -> AttainmentScore:
+    scores: Iterable[AttainmentScore],
+    mode: Callable[[Iterable[float]], float] = max
+) -> AttainmentScore:
     totals = []
     attained = 0.0
     constrained = 0.0
@@ -49,7 +113,14 @@ def combine_attainment_scores(
 class Values(ABC, BaseModel):
     """ Scores (with or without attainment) for any system of values.
     """
-    pass
+
+    @abstractmethod
+    def names(self) -> list[str]:
+        pass
+
+    @abstractmethod
+    def to_list(self) -> list[float]:
+        pass
 
 
 class ValuesWithoutAttainment(Values):
@@ -83,7 +154,7 @@ class OriginalValues(ValuesWithoutAttainment):
     model_config = ConfigDict(serialize_by_alias=True)
 
     @classmethod
-    def from_list(cls, list: List[float]) -> Self:
+    def from_list(cls, list: list[float]) -> Self:
         assert len(list) == 10
         return cls(
             self_direction=list[0],
@@ -97,6 +168,23 @@ class OriginalValues(ValuesWithoutAttainment):
             benevolence=list[8],
             universalism=list[9]
         )
+
+    def names(self) -> list[str]:
+        return original_values
+
+    def to_list(self) -> list[float]:
+        return [
+            self.self_direction,
+            self.stimulation,
+            self.hedonism,
+            self.achievement,
+            self.power,
+            self.security,
+            self.tradition,
+            self.conformity,
+            self.benevolence,
+            self.universalism
+        ]
 
 
 class RefinedCoarseValues(ValuesWithoutAttainment):
@@ -119,7 +207,7 @@ class RefinedCoarseValues(ValuesWithoutAttainment):
     model_config = ConfigDict(serialize_by_alias=True)
 
     @classmethod
-    def from_list(cls, list: List[float]) -> Self:
+    def from_list(cls, list: list[float]) -> Self:
         assert len(list) == 12
         return cls(
             self_direction=list[0],
@@ -135,6 +223,25 @@ class RefinedCoarseValues(ValuesWithoutAttainment):
             benevolence=list[10],
             universalism=list[11]
         )
+
+    def names(self) -> list[str]:
+        return refined_coarse_values
+
+    def to_list(self) -> list[float]:
+        return [
+            self.self_direction,
+            self.stimulation,
+            self.hedonism,
+            self.achievement,
+            self.power,
+            self.face,
+            self.security,
+            self.tradition,
+            self.conformity,
+            self.humility,
+            self.benevolence,
+            self.universalism
+        ]
 
     def original_values(self) -> OriginalValues:
         return OriginalValues(
@@ -177,7 +284,7 @@ class RefinedValues(ValuesWithoutAttainment):
     model_config = ConfigDict(serialize_by_alias=True)
 
     @classmethod
-    def from_list(cls, list: List[float]) -> Self:
+    def from_list(cls, list: list[float]) -> Self:
         assert len(list) == 19
         return cls(
             self_direction_thought=list[0],
@@ -200,6 +307,32 @@ class RefinedValues(ValuesWithoutAttainment):
             universalism_nature=list[17],
             universalism_tolerance=list[18]
         )
+
+    def names(self) -> list[str]:
+        return refined_values
+
+    def to_list(self) -> list[float]:
+        return [
+            self.self_direction_action,
+            self.self_direction_thought,
+            self.stimulation,
+            self.hedonism,
+            self.achievement,
+            self.power_dominance,
+            self.power_resources,
+            self.face,
+            self.security_personal,
+            self.security_societal,
+            self.tradition,
+            self.conformity_rules,
+            self.conformity_interpersonal,
+            self.humility,
+            self.benevolence_caring,
+            self.benevolence_dependability,
+            self.universalism_concern,
+            self.universalism_nature,
+            self.universalism_tolerance,
+        ]
 
     def coarse_values(self, mode: Callable[[Iterable[float]], float] = max) -> RefinedCoarseValues:
         return RefinedCoarseValues(
@@ -237,6 +370,33 @@ class OriginalValuesWithAttainment(ValuesWithAttainment):
 
     model_config = ConfigDict(serialize_by_alias=True)
 
+    def names(self) -> list[str]:
+        return original_values_with_attainment
+
+    def to_list(self) -> list[float]:
+        return [
+            self.self_direction.attained,
+            self.stimulation.attained,
+            self.hedonism.attained,
+            self.achievement.attained,
+            self.power.attained,
+            self.security.attained,
+            self.tradition.attained,
+            self.conformity.attained,
+            self.benevolence.attained,
+            self.universalism.attained,
+            self.self_direction.constrained,
+            self.stimulation.constrained,
+            self.hedonism.constrained,
+            self.achievement.constrained,
+            self.power.constrained,
+            self.security.constrained,
+            self.tradition.constrained,
+            self.conformity.constrained,
+            self.benevolence.constrained,
+            self.universalism.constrained
+        ]
+
     def without_attainment(self) -> OriginalValues:
         return OriginalValues(
             self_direction=self.self_direction.total(),
@@ -270,6 +430,37 @@ class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
     universalism: AttainmentScore = Field(serialization_alias="Universalism", default=AttainmentScore())
 
     model_config = ConfigDict(serialize_by_alias=True)
+
+    def names(self) -> list[str]:
+        return refined_coarse_values_with_attainment
+
+    def to_list(self) -> list[float]:
+        return [
+            self.self_direction.attained,
+            self.stimulation.attained,
+            self.hedonism.attained,
+            self.achievement.attained,
+            self.power.attained,
+            self.face.attained,
+            self.security.attained,
+            self.tradition.attained,
+            self.conformity.attained,
+            self.humility.attained,
+            self.benevolence.attained,
+            self.universalism.attained,
+            self.self_direction.constrained,
+            self.stimulation.constrained,
+            self.hedonism.constrained,
+            self.achievement.constrained,
+            self.power.constrained,
+            self.face.constrained,
+            self.security.constrained,
+            self.tradition.constrained,
+            self.conformity.constrained,
+            self.humility.constrained,
+            self.benevolence.constrained,
+            self.universalism.constrained
+        ]
 
     def original_values(self) -> OriginalValuesWithAttainment:
         return OriginalValuesWithAttainment(
@@ -346,6 +537,51 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
 
     model_config = ConfigDict(serialize_by_alias=True)
 
+    def names(self) -> list[str]:
+        return refined_values_with_attainment
+
+    def to_list(self) -> list[float]:
+        return [
+            self.self_direction_action.attained,
+            self.self_direction_thought.attained,
+            self.stimulation.attained,
+            self.hedonism.attained,
+            self.achievement.attained,
+            self.power_dominance.attained,
+            self.power_resources.attained,
+            self.face.attained,
+            self.security_personal.attained,
+            self.security_societal.attained,
+            self.tradition.attained,
+            self.conformity_rules.attained,
+            self.conformity_interpersonal.attained,
+            self.humility.attained,
+            self.benevolence_caring.attained,
+            self.benevolence_dependability.attained,
+            self.universalism_concern.attained,
+            self.universalism_nature.attained,
+            self.universalism_tolerance.attained,
+            self.self_direction_action.constrained,
+            self.self_direction_thought.constrained,
+            self.stimulation.constrained,
+            self.hedonism.constrained,
+            self.achievement.constrained,
+            self.power_dominance.constrained,
+            self.power_resources.constrained,
+            self.face.constrained,
+            self.security_personal.constrained,
+            self.security_societal.constrained,
+            self.tradition.constrained,
+            self.conformity_rules.constrained,
+            self.conformity_interpersonal.constrained,
+            self.humility.constrained,
+            self.benevolence_caring.constrained,
+            self.benevolence_dependability.constrained,
+            self.universalism_concern.constrained,
+            self.universalism_nature.constrained,
+            self.universalism_tolerance.constrained
+        ]
+
     def coarse_values(self, mode: Callable[[Iterable[float]], float] = max) -> RefinedCoarseValuesWithAttainment:
         return RefinedCoarseValuesWithAttainment(
             self_direction=combine_attainment_scores(
@@ -393,3 +629,11 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
             universalism_nature=self.universalism_nature.total(),
             universalism_tolerance=self.universalism_tolerance.total(),
         )
+
+
+def plot_value_scores(valuess: list[Values], **kwargs):
+    return plot_radar(
+        dim_names=valuess[0].names(),
+        valuess=[v.to_list() for v in valuess], 
+        **kwargs
+    )
