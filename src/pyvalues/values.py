@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from operator import add
-from typing import Annotated, Callable, Iterable, Self, Sequence
+from typing import Annotated, Callable, Iterable, Self, Sequence, Tuple
 from pydantic import AliasChoices, BaseModel, ConfigDict, Field, model_validator
 from .radarplot import plot_radar
 
@@ -86,29 +86,44 @@ class AttainmentScore(BaseModel):
         return self.attained + self.constrained
 
 
-def combine_attainment_scores(
-    scores: Iterable[AttainmentScore],
-    mode: Callable[[Iterable[float]], float] = max
-) -> AttainmentScore:
-    totals = []
-    attained = 0.0
-    constrained = 0.0
-    for score in scores:
-        totals.append(score.total())
-        attained += score.attained
-        constrained += score.constrained
-    total = mode(totals)
-    assert total >= 0
-    assert total <= 1
-    if attained + constrained == 0:
-        return AttainmentScore()
-    else:
-        weighted_attained = total * (attained / (attained + constrained))
-        weighted_constrained = total - weighted_attained
-        return AttainmentScore(
-            attained=weighted_attained,
-            constrained=weighted_constrained
-        )
+class ThresholdedDecision(BaseModel):
+    threshold: Score
+    is_true: bool
+
+
+class Evaluation(BaseModel):
+    value_evaluations: dict[str, list[ThresholdedDecision]] = {}
+
+    def _f(self, threshold: Score=0.5, beta: float=1) -> Tuple[dict[str, Score], dict[str, Score], dict[str, Score]]:
+        beta_square = beta * beta
+        fs = {}
+        precisions = {}
+        recalls = {}
+        for value, thresholded_decisions in self.value_evaluations.items():
+            true_positives = 0
+            false_positives = 0
+            true_negatives = 0
+            false_negatives = 0
+            for thresholded_decision in thresholded_decisions:
+                if thresholded_decision.threshold >= threshold:
+                    if thresholded_decision.is_true:
+                        true_positives += 1
+                    else:
+                        false_positives += 1
+                else:
+                    if thresholded_decision.is_true:
+                        false_negatives += 1
+                    else:
+                        true_negatives += 1
+
+            precision = true_positives / (true_positives + false_positives)
+            recall = true_positives / (true_positives + false_positives)
+            f = (1 + beta_square) * precision * recall / ((beta_square * precision) + recall)
+            precisions[value] = precision
+            recalls[value] = recall
+            fs[value] = f
+
+        return fs, precisions, recalls
 
 
 class Values(ABC, BaseModel):
@@ -304,7 +319,17 @@ class OriginalValues(ValuesWithoutAttainment):
 
     @staticmethod
     def average(value_scores_list: list["OriginalValues"]) -> "OriginalValues":
-        return OriginalValues.from_list(_average_value_scores(value_scores_list))
+        return OriginalValues.from_list(average_value_scores(value_scores_list))
+    
+    @staticmethod
+    def evaluate_all(
+        tested: list["OriginalValues"],
+        truth: list["OriginalValues"]
+    ) -> Evaluation:
+        instance_evaluations = [t1.evaluate(t2) for t1, t2 in zip(tested, truth)]
+        return Evaluation(value_evaluations={
+            value: [instance_evaluation[value] for instance_evaluation in instance_evaluations] for value in original_values
+        })
 
     def names(self) -> list[str]:
         return original_values
@@ -322,6 +347,9 @@ class OriginalValues(ValuesWithoutAttainment):
             self.benevolence,
             self.universalism
         ]
+    
+    def evaluate(self, truth: "OriginalValues") -> dict[str, ThresholdedDecision]:
+        return evaluate(self, truth)
 
 
 class RefinedCoarseValues(ValuesWithoutAttainment):
@@ -415,7 +443,17 @@ class RefinedCoarseValues(ValuesWithoutAttainment):
 
     @staticmethod
     def average(value_scores_list: list["RefinedCoarseValues"]) -> "RefinedCoarseValues":
-        return RefinedCoarseValues.from_list(_average_value_scores(value_scores_list))
+        return RefinedCoarseValues.from_list(average_value_scores(value_scores_list))
+    
+    @staticmethod
+    def evaluate_all(
+        tested: list["RefinedCoarseValues"],
+        truth: list["RefinedCoarseValues"]
+    ) -> Evaluation:
+        instance_evaluations = [t1.evaluate(t2) for t1, t2 in zip(tested, truth)]
+        return Evaluation(value_evaluations={
+            value: [instance_evaluation[value] for instance_evaluation in instance_evaluations] for value in original_values
+        })
 
     def names(self) -> list[str]:
         return refined_coarse_values
@@ -435,6 +473,9 @@ class RefinedCoarseValues(ValuesWithoutAttainment):
             self.benevolence,
             self.universalism
         ]
+    
+    def evaluate(self, truth: "RefinedCoarseValues") -> dict[str, ThresholdedDecision]:
+        return evaluate(self, truth)
 
     def original_values(self) -> OriginalValues:
         return OriginalValues(
@@ -583,7 +624,17 @@ class RefinedValues(ValuesWithoutAttainment):
 
     @staticmethod
     def average(value_scores_list: list["RefinedValues"]) -> "RefinedValues":
-        return RefinedValues.from_list(_average_value_scores(value_scores_list))
+        return RefinedValues.from_list(average_value_scores(value_scores_list))
+    
+    @staticmethod
+    def evaluate_all(
+        tested: list["RefinedValues"],
+        truth: list["RefinedValues"]
+    ) -> Evaluation:
+        instance_evaluations = [t1.evaluate(t2) for t1, t2 in zip(tested, truth)]
+        return Evaluation(value_evaluations={
+            value: [instance_evaluation[value] for instance_evaluation in instance_evaluations] for value in original_values
+        })
 
     def names(self) -> list[str]:
         return refined_values
@@ -610,6 +661,9 @@ class RefinedValues(ValuesWithoutAttainment):
             self.universalism_nature,
             self.universalism_tolerance,
         ]
+    
+    def evaluate(self, truth: "RefinedValues") -> dict[str, ThresholdedDecision]:
+        return evaluate(self, truth)
 
     def coarse_values(self, mode: Callable[[Iterable[float]], float] = max) -> RefinedCoarseValues:
         return RefinedCoarseValues(
@@ -706,12 +760,12 @@ class OriginalValuesWithAttainment(ValuesWithAttainment):
     @staticmethod
     def from_labels(labels: list[str]) -> "OriginalValuesWithAttainment":
         return OriginalValuesWithAttainment.model_validate(
-            _labels_with_attainment_to_dict(labels)
+            labels_with_attainment_to_dict(labels)
         )
 
     @staticmethod
     def average(value_scores_list: list["OriginalValuesWithAttainment"]) -> "OriginalValuesWithAttainment":
-        return OriginalValuesWithAttainment.from_list(_average_value_scores(value_scores_list))
+        return OriginalValuesWithAttainment.from_list(average_value_scores(value_scores_list))
 
     def names(self) -> list[str]:
         return original_values_with_attainment
@@ -784,7 +838,7 @@ class OriginalValuesWithAttainment(ValuesWithAttainment):
 
     def majority_attainment(self) -> "OriginalValuesWithAttainment":
         return OriginalValuesWithAttainment.model_validate(
-            _majority_attainment(self)
+            majority_attainment(self)
         )
 
 
@@ -876,12 +930,12 @@ class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
     @staticmethod
     def from_labels(labels: list[str]) -> "RefinedCoarseValuesWithAttainment":
         return RefinedCoarseValuesWithAttainment.model_validate(
-            _labels_with_attainment_to_dict(labels)
+            labels_with_attainment_to_dict(labels)
         )
 
     @staticmethod
     def average(value_scores_list: list["RefinedCoarseValuesWithAttainment"]) -> "RefinedCoarseValuesWithAttainment":
-        return RefinedCoarseValuesWithAttainment.from_list(_average_value_scores(value_scores_list))
+        return RefinedCoarseValuesWithAttainment.from_list(average_value_scores(value_scores_list))
 
     def names(self) -> list[str]:
         return refined_coarse_values_with_attainment
@@ -978,7 +1032,7 @@ class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
 
     def majority_attainment(self) -> "RefinedCoarseValuesWithAttainment":
         return RefinedCoarseValuesWithAttainment.model_validate(
-            _majority_attainment(self)
+            majority_attainment(self)
         )
 
 
@@ -1111,12 +1165,12 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
     @staticmethod
     def from_labels(labels: list[str]) -> "RefinedValuesWithAttainment":
         return RefinedValuesWithAttainment.model_validate(
-            _labels_with_attainment_to_dict(labels)
+            labels_with_attainment_to_dict(labels)
         )
 
     @staticmethod
     def average(value_scores_list: list["RefinedValuesWithAttainment"]) -> "RefinedValuesWithAttainment":
-        return RefinedValuesWithAttainment.from_list(_average_value_scores(value_scores_list))
+        return RefinedValuesWithAttainment.from_list(average_value_scores(value_scores_list))
 
     def names(self) -> list[str]:
         return refined_values_with_attainment
@@ -1259,11 +1313,36 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
 
     def majority_attainment(self) -> "RefinedValuesWithAttainment":
         return RefinedValuesWithAttainment.model_validate(
-            _majority_attainment(self)
+            majority_attainment(self)
         )
 
 
-def _average_value_scores(value_scores_list: Sequence[Values]) -> list[float]:
+def combine_attainment_scores(
+    scores: Iterable[AttainmentScore],
+    mode: Callable[[Iterable[float]], float] = max
+) -> AttainmentScore:
+    totals = []
+    attained = 0.0
+    constrained = 0.0
+    for score in scores:
+        totals.append(score.total())
+        attained += score.attained
+        constrained += score.constrained
+    total = mode(totals)
+    assert total >= 0
+    assert total <= 1
+    if attained + constrained == 0:
+        return AttainmentScore()
+    else:
+        weighted_attained = total * (attained / (attained + constrained))
+        weighted_constrained = total - weighted_attained
+        return AttainmentScore(
+            attained=weighted_attained,
+            constrained=weighted_constrained
+        )
+
+
+def average_value_scores(value_scores_list: Sequence[Values]) -> list[float]:
     num_scores = len(value_scores_list)
     if num_scores == 0:
         return []
@@ -1273,7 +1352,7 @@ def _average_value_scores(value_scores_list: Sequence[Values]) -> list[float]:
     return means
 
 
-def _labels_with_attainment_to_dict(labels: list[str]) -> dict[str, float]:
+def labels_with_attainment_to_dict(labels: list[str]) -> dict[str, float]:
     model = {}
     for label in labels:
         if label.endswith(" attained"):
@@ -1290,7 +1369,7 @@ def _labels_with_attainment_to_dict(labels: list[str]) -> dict[str, float]:
     return model
 
 
-def _majority_attainment(value_scores : ValuesWithAttainment) -> dict[str, AttainmentScore]:
+def majority_attainment(value_scores : ValuesWithAttainment) -> dict[str, AttainmentScore]:
     model = {}
     for value, attainment_score in value_scores.model_dump().items():
         attained = attainment_score["attained"]
@@ -1300,3 +1379,14 @@ def _majority_attainment(value_scores : ValuesWithAttainment) -> dict[str, Attai
         else:
             model[value] = AttainmentScore(constrained=attained + constrained)
     return model
+
+
+def evaluate(tested: ValuesWithoutAttainment, truth: ValuesWithoutAttainment) -> dict[str, ThresholdedDecision]:
+    assert type(tested) == type(truth)
+    decisions = {}
+    for value in tested.names():
+        decisions[value] = ThresholdedDecision(
+            threshold=tested[value],
+            is_true=truth[value] >= 0.5
+        )
+    return decisions
