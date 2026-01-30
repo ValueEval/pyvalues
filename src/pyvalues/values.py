@@ -782,6 +782,11 @@ class OriginalValuesWithAttainment(ValuesWithAttainment):
             universalism=self.universalism.constrained,
         )
 
+    def majority_attainment(self) -> "OriginalValuesWithAttainment":
+        return OriginalValuesWithAttainment.model_validate(
+            _majority_attainment(self)
+        )
+
 
 class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
     """ Scores with attainment for the twelve values from Schwartz refined
@@ -969,6 +974,11 @@ class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
             humility=self.humility.constrained,
             benevolence=self.benevolence.constrained,
             universalism=self.universalism.constrained,
+        )
+
+    def majority_attainment(self) -> "RefinedCoarseValuesWithAttainment":
+        return RefinedCoarseValuesWithAttainment.model_validate(
+            _majority_attainment(self)
         )
 
 
@@ -1247,6 +1257,11 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
             universalism_tolerance=self.universalism_tolerance.constrained,
         )
 
+    def majority_attainment(self) -> "RefinedValuesWithAttainment":
+        return RefinedValuesWithAttainment.model_validate(
+            _majority_attainment(self)
+        )
+
 
 def _average_value_scores(value_scores_list: Sequence[Values]) -> list[float]:
     num_scores = len(value_scores_list)
@@ -1272,4 +1287,16 @@ def _labels_with_attainment_to_dict(labels: list[str]) -> dict[str, float]:
         else:
             assert label not in model
             model[label] = AttainmentScore(attained=1)
+    return model
+
+
+def _majority_attainment(value_scores : ValuesWithAttainment) -> dict[str, AttainmentScore]:
+    model = {}
+    for value, attainment_score in value_scores.model_dump().items():
+        attained = attainment_score["attained"]
+        constrained = attainment_score["constrained"]
+        if attained >= constrained:
+            model[value] = AttainmentScore(attained=attained + constrained)
+        else:
+            model[value] = AttainmentScore(constrained=attained + constrained)
     return model
