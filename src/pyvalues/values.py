@@ -632,6 +632,17 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
 
 
 def plot_value_scores(valuess: list[Values], **kwargs):
+    """ Plot scores in a radar plot.
+
+    Returns the matplotlib module, so one can directly use `savefig(file)` or `show()`
+    on the returned value.
+
+    ::
+
+        import pyvalues
+        values = pyvalues.OriginalValues.from_list([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0])
+        pyvalues.plot_value_scores([values], labels=["my values"]).show()
+    """
     return plot_radar(
         dim_names=valuess[0].names(),
         valuess=[v.to_list() for v in valuess],
