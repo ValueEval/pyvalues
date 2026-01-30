@@ -94,6 +94,11 @@ class ThresholdedDecision(BaseModel):
 class Evaluation(BaseModel):
     value_evaluations: dict[str, list[ThresholdedDecision]] = {}
 
+    def __init__(self, value_evaluations: dict[str, list[ThresholdedDecision]]):
+        self.value_evaluations = value_evaluations
+        for thresholded_decisions in self.value_evaluations.values():
+            thresholded_decisions.sort(key=lambda x : x.threshold)
+
     def _f(self, threshold: Score=0.5, beta: float=1) -> Tuple[dict[str, Score], dict[str, Score], dict[str, Score]]:
         beta_square = beta * beta
         fs = {}
@@ -124,6 +129,60 @@ class Evaluation(BaseModel):
             fs[value] = f
 
         return fs, precisions, recalls
+    
+    def precision_recall_steps(self) -> dict[str, Tuple[list[float], list[float]]]:
+        lines = {}
+        for value, thresholded_decisions in self.value_evaluations.items():
+            num_positive = sum([
+                thresholded_decision.is_true for thresholded_decision
+                in thresholded_decisions
+            ])
+            assert num_positive > 0
+            true_positives = 0
+            false_positives = 0
+            xs = []
+            ys = []
+            last_threshold = 0
+            for thresholded_decision in thresholded_decisions:
+                if thresholded_decision.threshold > last_threshold:
+                    xs.append(true_positives / num_positive)
+                    if true_positives + false_positives == 0:
+                        ys.append(0)
+                    else:
+                        ys.append(true_positives / (true_positives + false_positives))
+                    last_threshold = thresholded_decision.threshold
+                    if thresholded_decision.is_true:
+                        true_positives += 1
+                    else:
+                        false_positives += 1
+            xs.append(1)
+            ys.append(true_positives / (true_positives + false_positives))
+            lines[value] = (xs, ys)
+        return lines
+
+
+class OriginalValuesEvaluation(Evaluation):
+    def f(self, threshold: Score=0.5, beta: float=1) -> Tuple["OriginalValues", "OriginalValues", "OriginalValues"]:
+        fs, precisions, recalls = self._f(threshold, beta)
+        return OriginalValues.model_validate(fs), \
+            OriginalValues.model_validate(precisions), \
+            OriginalValues.model_validate(recalls), 
+
+
+class RefinedCoarseValuesEvaluation(Evaluation):
+    def f(self, threshold: Score=0.5, beta: float=1) -> Tuple["RefinedCoarseValues", "RefinedCoarseValues", "RefinedCoarseValues"]:
+        fs, precisions, recalls = self._f(threshold, beta)
+        return RefinedCoarseValues.model_validate(fs), \
+            RefinedCoarseValues.model_validate(precisions), \
+            RefinedCoarseValues.model_validate(recalls), 
+
+
+class RefinedValuesEvaluation(Evaluation):
+    def f(self, threshold: Score=0.5, beta: float=1) -> Tuple["RefinedValues", "RefinedValues", "RefinedValues"]:
+        fs, precisions, recalls = self._f(threshold, beta)
+        return RefinedValues.model_validate(fs), \
+            RefinedValues.model_validate(precisions), \
+            RefinedValues.model_validate(recalls), 
 
 
 class Values(ABC, BaseModel):
@@ -325,9 +384,9 @@ class OriginalValues(ValuesWithoutAttainment):
     def evaluate_all(
         tested: list["OriginalValues"],
         truth: list["OriginalValues"]
-    ) -> Evaluation:
+    ) -> OriginalValuesEvaluation:
         instance_evaluations = [t1.evaluate(t2) for t1, t2 in zip(tested, truth)]
-        return Evaluation(value_evaluations={
+        return OriginalValuesEvaluation(value_evaluations={
             value: [instance_evaluation[value] for instance_evaluation in instance_evaluations] for value in original_values
         })
 
@@ -449,9 +508,9 @@ class RefinedCoarseValues(ValuesWithoutAttainment):
     def evaluate_all(
         tested: list["RefinedCoarseValues"],
         truth: list["RefinedCoarseValues"]
-    ) -> Evaluation:
+    ) -> RefinedCoarseValuesEvaluation:
         instance_evaluations = [t1.evaluate(t2) for t1, t2 in zip(tested, truth)]
-        return Evaluation(value_evaluations={
+        return RefinedCoarseValuesEvaluation(value_evaluations={
             value: [instance_evaluation[value] for instance_evaluation in instance_evaluations] for value in original_values
         })
 
@@ -630,9 +689,9 @@ class RefinedValues(ValuesWithoutAttainment):
     def evaluate_all(
         tested: list["RefinedValues"],
         truth: list["RefinedValues"]
-    ) -> Evaluation:
+    ) -> RefinedValuesEvaluation:
         instance_evaluations = [t1.evaluate(t2) for t1, t2 in zip(tested, truth)]
-        return Evaluation(value_evaluations={
+        return RefinedValuesEvaluation(value_evaluations={
             value: [instance_evaluation[value] for instance_evaluation in instance_evaluations] for value in original_values
         })
 
