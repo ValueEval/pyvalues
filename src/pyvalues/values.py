@@ -148,9 +148,6 @@ class Values(ABC, BaseModel):
 class ValuesWithoutAttainment(Values):
     """ Scores without attainment for any system of values.
     """
-    def __getitem__(self, key: str) -> Score:
-        return getattr(self, key)
-
     @staticmethod
     def plot_all(value_scores_list: Sequence["ValuesWithoutAttainment"], **kwargs):
         """ Plot scores in a radar plot.
@@ -172,6 +169,15 @@ class ValuesWithoutAttainment(Values):
             valuess=[value_scores.to_list() for value_scores in value_scores_list],
             **kwargs
         )
+
+    def __getitem__(self, key: str) -> Score:
+        return getattr(self, key)
+
+    def to_labels(self, threshold=0.5) -> list[str]:
+        return [
+            label for (label, score) in zip(self.names(), self.to_list())
+            if score >= threshold
+        ]
     
     def plot(self, linecolors=["black"], **kwargs):
         return ValuesWithoutAttainment.plot_all(
@@ -198,6 +204,18 @@ class ValuesWithAttainment(Values):
 
     def __getitem__(self, key: str) -> AttainmentScore:
         return getattr(self, key)
+
+    def to_labels(self, threshold=0.5) -> list[str]:
+        labels = []
+        for label, attainment_score in self.model_dump().items():
+            attained = attainment_score["attained"]
+            constrained = attainment_score["constrained"]
+            if attained + constrained >= threshold:
+                if attained >= constrained:
+                    labels.append(label + " attained")
+                else:
+                    labels.append(label + " constrained")
+        return labels
     
     def plot(self, **kwargs):
         return ValuesWithoutAttainment.plot_all(
@@ -262,7 +280,7 @@ class OriginalValues(ValuesWithoutAttainment):
         validation_alias=AliasChoices("universalism", "Universalism"),
     )
 
-    model_config = ConfigDict(serialize_by_alias=True)
+    model_config = ConfigDict(extra="forbid", serialize_by_alias=True)
 
     @staticmethod
     def from_list(list: list[float]) -> "OriginalValues":
@@ -279,6 +297,10 @@ class OriginalValues(ValuesWithoutAttainment):
             benevolence=list[8],
             universalism=list[9]
         )
+
+    @staticmethod
+    def from_labels(labels: list[str]) -> "OriginalValues":
+        return OriginalValues.model_validate({label: 1 for label in labels})
 
     @staticmethod
     def average(value_scores_list: list["OriginalValues"]) -> "OriginalValues":
@@ -367,7 +389,7 @@ class RefinedCoarseValues(ValuesWithoutAttainment):
         validation_alias=AliasChoices("universalism", "Universalism"),
     )
 
-    model_config = ConfigDict(serialize_by_alias=True)
+    model_config = ConfigDict(extra="forbid", serialize_by_alias=True)
 
     @staticmethod
     def from_list(list: list[float]) -> "RefinedCoarseValues":
@@ -386,6 +408,10 @@ class RefinedCoarseValues(ValuesWithoutAttainment):
             benevolence=list[10],
             universalism=list[11]
         )
+
+    @staticmethod
+    def from_labels(labels: list[str]) -> "RefinedCoarseValues":
+        return RefinedCoarseValues.model_validate({label: 1 for label in labels})
 
     @staticmethod
     def average(value_scores_list: list["RefinedCoarseValues"]) -> "RefinedCoarseValues":
@@ -524,7 +550,7 @@ class RefinedValues(ValuesWithoutAttainment):
         validation_alias=AliasChoices("universalism_tolerance", "Universalism: tolerance"),
     )
 
-    model_config = ConfigDict(serialize_by_alias=True)
+    model_config = ConfigDict(extra="forbid", serialize_by_alias=True)
 
     @staticmethod
     def from_list(list: list[float]) -> "RefinedValues":
@@ -550,6 +576,10 @@ class RefinedValues(ValuesWithoutAttainment):
             universalism_nature=list[17],
             universalism_tolerance=list[18]
         )
+
+    @staticmethod
+    def from_labels(labels: list[str]) -> "RefinedValues":
+        return RefinedValues.model_validate({label: 1 for label in labels})
 
     @staticmethod
     def average(value_scores_list: list["RefinedValues"]) -> "RefinedValues":
@@ -655,7 +685,7 @@ class OriginalValuesWithAttainment(ValuesWithAttainment):
         validation_alias=AliasChoices("universalism", "Universalism"),
     )
 
-    model_config = ConfigDict(serialize_by_alias=True)
+    model_config = ConfigDict(extra="forbid", serialize_by_alias=True)
 
     @staticmethod
     def from_list(list: list[float]) -> "OriginalValuesWithAttainment":
@@ -671,6 +701,12 @@ class OriginalValuesWithAttainment(ValuesWithAttainment):
             conformity=AttainmentScore(attained=list[14], constrained=list[15]),
             benevolence=AttainmentScore(attained=list[16], constrained=list[17]),
             universalism=AttainmentScore(attained=list[18], constrained=list[19])
+        )
+
+    @staticmethod
+    def from_labels(labels: list[str]) -> "OriginalValuesWithAttainment":
+        return OriginalValuesWithAttainment.model_validate(
+            _labels_with_attainment_to_dict(labels)
         )
 
     @staticmethod
@@ -812,7 +848,7 @@ class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
         validation_alias=AliasChoices("universalism", "Universalism"),
     )
 
-    model_config = ConfigDict(serialize_by_alias=True)
+    model_config = ConfigDict(extra="forbid", serialize_by_alias=True)
 
     @staticmethod
     def from_list(list: list[float]) -> "RefinedCoarseValuesWithAttainment":
@@ -830,6 +866,12 @@ class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
             humility=AttainmentScore(attained=list[18], constrained=list[19]),
             benevolence=AttainmentScore(attained=list[20], constrained=list[21]),
             universalism=AttainmentScore(attained=list[22], constrained=list[23])
+        )
+
+    @staticmethod
+    def from_labels(labels: list[str]) -> "RefinedCoarseValuesWithAttainment":
+        return RefinedCoarseValuesWithAttainment.model_validate(
+            _labels_with_attainment_to_dict(labels)
         )
 
     @staticmethod
@@ -1029,7 +1071,7 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
         validation_alias=AliasChoices("universalism_tolerance", "Universalism: tolerance"),
     )
 
-    model_config = ConfigDict(serialize_by_alias=True)
+    model_config = ConfigDict(extra="forbid", serialize_by_alias=True)
 
     @staticmethod
     def from_list(list: list[float]) -> "RefinedValuesWithAttainment":
@@ -1054,6 +1096,12 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
             universalism_concern=AttainmentScore(attained=list[32], constrained=list[33]),
             universalism_nature=AttainmentScore(attained=list[34], constrained=list[35]),
             universalism_tolerance=AttainmentScore(attained=list[36], constrained=list[37])
+        )
+
+    @staticmethod
+    def from_labels(labels: list[str]) -> "RefinedValuesWithAttainment":
+        return RefinedValuesWithAttainment.model_validate(
+            _labels_with_attainment_to_dict(labels)
         )
 
     @staticmethod
@@ -1208,3 +1256,20 @@ def _average_value_scores(value_scores_list: Sequence[Values]) -> list[float]:
     sums = map(sum, zip(*value_scores_matrix))
     means = [score_sum / num_scores for score_sum in sums]
     return means
+
+
+def _labels_with_attainment_to_dict(labels: list[str]) -> dict[str, float]:
+    model = {}
+    for label in labels:
+        if label.endswith(" attained"):
+            labelWithoutAttainment = label[:-9]
+            assert labelWithoutAttainment not in model
+            model[labelWithoutAttainment] = AttainmentScore(attained=1)
+        elif label.endswith(" constrained"):
+            labelWithoutAttainment = label[:-12]
+            assert labelWithoutAttainment not in model
+            model[labelWithoutAttainment] = AttainmentScore(constrained=1)
+        else:
+            assert label not in model
+            model[label] = AttainmentScore(attained=1)
+    return model
