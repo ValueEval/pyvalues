@@ -29,7 +29,7 @@ def plot_radar(
     fillalphas: list[float] = [0.25]
 ):
     theta = radar_factory(len(dim_names))
-    _, ax = plt.subplots(subplot_kw=dict(projection="radar"))
+    fig, ax = plt.subplots(subplot_kw=dict(projection="radar"))
     ax.set_ylim(0, 1)
     ax.set_rgrids([0.25, 0.50, 0.75], fontsize="small")  # type: ignore
     ax.set_varlabels(dim_names)  # type: ignore
@@ -39,14 +39,15 @@ def plot_radar(
         ax.plot(theta, list(valuess[i]),
                 color=linecolors[i % len(linecolors)],
                 label=label)
-        ax.fill(theta, list(valuess[i]),
-                facecolor=fillcolors[i % len(fillcolors)],
-                alpha=fillalphas[i % len(fillalphas)],
-                label='_nolegend_')
+        if fillcolors[i % len(fillcolors)] is not None:
+            ax.fill(theta, list(valuess[i]),
+                    facecolor=fillcolors[i % len(fillcolors)],
+                    alpha=fillalphas[i % len(fillalphas)],
+                    label='_nolegend_')
         if label is not None:
             has_label = True
     if has_label:
-        ax.legend(loc=(1.1, 1.05), labelspacing=0.1, fontsize='small')
+        fig.legend(loc="upper right", labelspacing=0.1, fontsize='small')
     return plt
 
 

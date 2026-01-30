@@ -5,7 +5,6 @@ from .values import (
     RefinedValuesWithAttainment,
     RefinedCoarseValuesWithAttainment,
     OriginalValuesWithAttainment,
-    plot_value_scores
 )
 from .classifiers import (
     RefinedValuesClassifier,
@@ -23,7 +22,6 @@ __all__ = [
     "RefinedValuesWithAttainment",
     "RefinedCoarseValuesWithAttainment",
     "OriginalValuesWithAttainment",
-    "plot_value_scores",
     "RefinedValuesClassifier",
     "RefinedCoarseValuesClassifier",
     "OriginalValuesClassifier",
