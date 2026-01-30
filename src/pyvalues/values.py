@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
-from operator import add
 from typing import Annotated, Callable, Iterable, Self, Sequence, Tuple
 from pydantic import AliasChoices, BaseModel, ConfigDict, Field, model_validator
 from .radarplot import plot_radar
+import matplotlib.pyplot as plt
 
 original_values = [
     "Self-direction",
@@ -15,6 +15,20 @@ original_values = [
     "Conformity",
     "Benevolence",
     "Universalism"
+]
+
+# Based on https://sashamaps.net/docs/resources/20-colors/
+original_values_colors = [
+    "#ffe119",  # self-direction
+    "#fffac8",  # stimulation
+    "#bfef45",  # hedonism
+    "#3cb44b",  # achievement
+    "#aaffc3",  # power
+    "#000075",  # security
+    "#911eb4",  # tradition
+    "#f032e6",  # conformity
+    "#e6194b",  # benevolence
+    "#f58231",  # universalism
 ]
 
 original_values_with_attainment = \
@@ -34,6 +48,22 @@ refined_coarse_values = [
     "Humility",
     "Benevolence",
     "Universalism"
+]
+
+# Based on https://sashamaps.net/docs/resources/20-colors/
+refined_coarse_values_colors = [
+    "#ffe119",  # self-direction
+    "#fffac8",  # stimulation
+    "#bfef45",  # hedonism
+    "#3cb44b",  # achievement
+    "#aaffc3",  # power
+    "#42d4f4",  # face
+    "#000075",  # security
+    "#911eb4",  # tradition
+    "#f032e6",  # conformity
+    "#800000",  # humility
+    "#e6194b",  # benevolence
+    "#f58231",  # universalism
 ]
 
 refined_coarse_values_with_attainment = \
@@ -60,6 +90,22 @@ refined_values = [
     "Universalism: concern",
     "Universalism: nature",
     "Universalism: tolerance"
+]
+
+# Based on https://sashamaps.net/docs/resources/20-colors/
+refined_values_colors = [
+    "#808000", "#ffe119",  # self-direction
+    "#fffac8",  # stimulation
+    "#bfef45",  # hedonism
+    "#3cb44b",  # achievement
+    "#aaffc3", "#469990",  # power
+    "#42d4f4",  # face
+    "#000075", "#4363d8",  # security
+    "#911eb4",  # tradition
+    "#dcbeff", "#f032e6",  # conformity
+    "#800000",  # humility
+    "#e6194b", "#fabed4",  # benevolence
+    "#9a6324", "#f58231", "#ffd8b1"  # universalism
 ]
 
 refined_values_with_attainment = \
@@ -95,9 +141,12 @@ class Evaluation(BaseModel):
     value_evaluations: dict[str, list[ThresholdedDecision]] = {}
 
     def __init__(self, value_evaluations: dict[str, list[ThresholdedDecision]]):
-        self.value_evaluations = value_evaluations
+        super().__init__(value_evaluations=value_evaluations)
         for thresholded_decisions in self.value_evaluations.values():
             thresholded_decisions.sort(key=lambda x : x.threshold)
+
+    def __getitem__(self, key: str) -> list[ThresholdedDecision]:
+        return self.value_evaluations[key]
 
     def _f(self, threshold: Score=0.5, beta: float=1) -> Tuple[dict[str, Score], dict[str, Score], dict[str, Score]]:
         beta_square = beta * beta
@@ -121,9 +170,13 @@ class Evaluation(BaseModel):
                     else:
                         true_negatives += 1
 
-            precision = true_positives / (true_positives + false_positives)
-            recall = true_positives / (true_positives + false_positives)
-            f = (1 + beta_square) * precision * recall / ((beta_square * precision) + recall)
+            precision = 0
+            recall = 0
+            f = 0
+            if true_positives > 0:
+                precision = true_positives / (true_positives + false_positives)
+                recall = true_positives / (true_positives + false_negatives)
+                f = (1 + beta_square) * precision * recall / ((beta_square * precision) + recall)
             precisions[value] = precision
             recalls[value] = recall
             fs[value] = f
@@ -131,7 +184,7 @@ class Evaluation(BaseModel):
         return fs, precisions, recalls
     
     def precision_recall_steps(self) -> dict[str, Tuple[list[float], list[float]]]:
-        lines = {}
+        steps = {}
         for value, thresholded_decisions in self.value_evaluations.items():
             num_positive = sum([
                 thresholded_decision.is_true for thresholded_decision
@@ -142,23 +195,54 @@ class Evaluation(BaseModel):
             false_positives = 0
             xs = []
             ys = []
-            last_threshold = 0
-            for thresholded_decision in thresholded_decisions:
-                if thresholded_decision.threshold > last_threshold:
-                    xs.append(true_positives / num_positive)
-                    if true_positives + false_positives == 0:
-                        ys.append(0)
-                    else:
-                        ys.append(true_positives / (true_positives + false_positives))
+            last_threshold = 2
+            for thresholded_decision in reversed(thresholded_decisions):
+                if thresholded_decision.threshold < last_threshold:
+                    if last_threshold <= 1:
+                        xs.append(true_positives / num_positive)
+                        if true_positives == 0:
+                            ys.append(0)
+                        else:
+                            ys.append(true_positives / (true_positives + false_positives))
                     last_threshold = thresholded_decision.threshold
                     if thresholded_decision.is_true:
                         true_positives += 1
                     else:
                         false_positives += 1
             xs.append(1)
-            ys.append(true_positives / (true_positives + false_positives))
-            lines[value] = (xs, ys)
-        return lines
+            if true_positives > 0:
+                ys.append(true_positives / (true_positives + false_positives))
+            else:
+                ys.append(0)
+            steps[value] = (xs, ys)
+        return steps
+    
+    def plot_precision_recall_curves(self):
+        num_values = len(self.value_evaluations.keys())
+        colors = None
+        if num_values == 10:
+            colors = original_values_colors
+        elif num_values == 12:
+            colors = refined_coarse_values_colors
+        elif num_values == 19:
+            colors = refined_values_colors
+        else:
+            raise ValueError(f"Invalid number of values: {num_values}")
+        
+        fig = plt.figure()
+        i = 0
+        for value, steps in self.precision_recall_steps().items():
+            plt.step(steps[0], steps[1], where="post", label=value, color=colors[i])
+            i += 1
+
+        axes = fig.get_axes()[0]
+        axes.set_xlim(0, 1)
+        axes.set_ylim(0, 1)
+        axes.set_xlabel("Recall")
+        axes.set_ylabel("Precision")
+        plt.legend(loc="lower left")
+        return plt
+
 
 
 class OriginalValuesEvaluation(Evaluation):
@@ -215,8 +299,9 @@ class Values(ABC, BaseModel):
     def to_list(self) -> list[float]:
         pass
 
-    def __getitem__(self, key: str):
-        return getattr(self, key)
+    @abstractmethod
+    def __getitem__(self, key: str) -> Score | AttainmentScore:
+        pass
 
 
 class ValuesWithoutAttainment(Values):
@@ -245,7 +330,14 @@ class ValuesWithoutAttainment(Values):
         )
 
     def __getitem__(self, key: str) -> Score:
-        return getattr(self, key)
+        return getattr(
+            self,
+            key
+                .lower()
+                .replace("-", "_")
+                .replace(":", "")
+                .replace(" ", "_")
+        )
 
     def to_labels(self, threshold=0.5) -> list[str]:
         return [
@@ -277,7 +369,14 @@ class ValuesWithAttainment(Values):
         pass
 
     def __getitem__(self, key: str) -> AttainmentScore:
-        return getattr(self, key)
+        return getattr(
+            self,
+            key
+                .lower()
+                .replace("-", "_")
+                .replace(":", "")
+                .replace(" ", "_")
+        )
 
     def to_labels(self, threshold=0.5) -> list[str]:
         labels = []
