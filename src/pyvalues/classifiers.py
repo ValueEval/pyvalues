@@ -33,8 +33,8 @@ class RefinedCoarseValuesClassifier(OriginalValuesClassifier):
     """
 
     def classify_for_original_values(self, text: str, language: str = "EN") -> Tuple[OriginalValues, str, str]:
-        values, t, l = self.classify_for_refined_coarse_values(text=text, language=language)
-        return values.original_values(), t, l
+        values, t, lang = self.classify_for_refined_coarse_values(text=text, language=language)
+        return values.original_values(), t, lang
 
     def classify_for_refined_coarse_values(self, text: str, language: str = "EN") -> Tuple[RefinedCoarseValues, str, str]:
         return self.classify_all_for_refined_coarse_values([text], language).__next__()
@@ -45,8 +45,8 @@ class RefinedCoarseValuesClassifier(OriginalValuesClassifier):
         texts: Generator[str, None, None] | Sequence[str],
         language: str = "EN"
     ) -> Generator[Tuple[OriginalValues, str, str], None, None]:
-        for values, t, l in self.classify_all_for_refined_coarse_values(texts, language):
-            yield values.original_values(), t, l
+        for values, t, lang in self.classify_all_for_refined_coarse_values(texts, language):
+            yield values.original_values(), t, lang
 
     @abstractmethod
     def classify_all_for_refined_coarse_values(
@@ -62,8 +62,8 @@ class RefinedValuesClassifier(RefinedCoarseValuesClassifier):
     """
 
     def classify_for_refined_coarse_values(self, text: str, language: str = "EN") -> Tuple[RefinedCoarseValues, str, str]:
-        values, t, l = self.classify_for_refined_values(text=text, language=language)
-        return values.coarse_values(), t, l
+        values, t, lang = self.classify_for_refined_values(text=text, language=language)
+        return values.coarse_values(), t, lang
 
     def classify_for_refined_values(self, text: str, language: str = "EN") -> Tuple[RefinedValues, str, str]:
         return self.classify_all_for_refined_values([text], language).__next__()
@@ -73,8 +73,8 @@ class RefinedValuesClassifier(RefinedCoarseValuesClassifier):
         texts: Generator[str, None, None] | Sequence[str],
         language: str = "EN"
     ) -> Generator[Tuple[RefinedCoarseValues, str, str], None, None]:
-        for values, t, l in self.classify_all_for_refined_values(texts, language):
-            yield values.coarse_values(), t, l
+        for values, t, lang in self.classify_all_for_refined_values(texts, language):
+            yield values.coarse_values(), t, lang
 
     @abstractmethod
     def classify_all_for_refined_values(
@@ -90,11 +90,11 @@ class OriginalValuesWithAttainmentClassifier(OriginalValuesClassifier):
     """
 
     def classify_for_original_values(self, text: str, language: str = "EN") -> Tuple[OriginalValues, str, str]:
-        values, t, l = self.classify_for_original_values_with_attainment(
+        values, t, lang = self.classify_for_original_values_with_attainment(
             text=text,
             language=language
         )
-        return values.without_attainment(), t, l
+        return values.without_attainment(), t, lang
 
     def classify_for_original_values_with_attainment(
         self,
@@ -108,8 +108,8 @@ class OriginalValuesWithAttainmentClassifier(OriginalValuesClassifier):
         texts: Generator[str, None, None] | Sequence[str],
         language: str = "EN"
     ) -> Generator[Tuple[OriginalValues, str, str], None, None]:
-        for values, t, l in self.classify_all_for_original_values_with_attainment(texts, language):
-            yield values.without_attainment(), t, l
+        for values, t, lang in self.classify_all_for_original_values_with_attainment(texts, language):
+            yield values.without_attainment(), t, lang
 
     @abstractmethod
     def classify_all_for_original_values_with_attainment(
@@ -129,16 +129,16 @@ class RefinedCoarseValuesWithAttainmentClassifier(
     def classify_for_refined_coarse_values(
         self, text: str, language: str = "EN"
     ) -> Tuple[RefinedCoarseValues, str, str]:
-        values, t, l = self.classify_for_refined_coarse_values_with_attainment(
+        values, t, lang = self.classify_for_refined_coarse_values_with_attainment(
             text=text, language=language)
-        return values.without_attainment(), t, l
+        return values.without_attainment(), t, lang
 
     def classify_for_original_values_with_attainment(
         self, text: str, language: str = "EN"
     ) -> Tuple[OriginalValuesWithAttainment, str, str]:
-        values, t, l = self.classify_for_refined_coarse_values_with_attainment(
+        values, t, lang = self.classify_for_refined_coarse_values_with_attainment(
             text=text, language=language)
-        return values.original_values(), t, l
+        return values.original_values(), t, lang
 
     def classify_for_refined_coarse_values_with_attainment(
         self, text: str, language: str = "EN"
@@ -150,16 +150,16 @@ class RefinedCoarseValuesWithAttainmentClassifier(
         texts: Generator[str, None, None] | Sequence[str],
         language: str = "EN"
     ) -> Generator[Tuple[RefinedCoarseValues, str, str], None, None]:
-        for values, t, l in self.classify_all_for_refined_coarse_values_with_attainment(texts, language):
-            yield values.without_attainment(), t, l
+        for values, t, lang in self.classify_all_for_refined_coarse_values_with_attainment(texts, language):
+            yield values.without_attainment(), t, lang
 
     def classify_all_for_original_values_with_attainment(
         self,
         texts: Generator[str, None, None] | Sequence[str],
         language: str = "EN"
     ) -> Generator[Tuple[OriginalValuesWithAttainment, str, str], None, None]:
-        for values, t, l in self.classify_all_for_refined_coarse_values_with_attainment(texts, language):
-            yield values.original_values(), t, l
+        for values, t, lang in self.classify_all_for_refined_coarse_values_with_attainment(texts, language):
+            yield values.original_values(), t, lang
 
     @abstractmethod
     def classify_all_for_refined_coarse_values_with_attainment(
@@ -178,16 +178,16 @@ class RefinedValuesWithAttainmentClassifier(
     def classify_for_refined_values(
         self, text: str, language: str = "EN"
     ) -> Tuple[RefinedValues, str, str]:
-        values, t, l = self.classify_for_refined_values_with_attainment(
+        values, t, lang = self.classify_for_refined_values_with_attainment(
             text=text, language=language)
-        return values.without_attainment(), t, l
+        return values.without_attainment(), t, lang
 
     def classify_for_refined_coarse_values_with_attainment(
         self, text: str, language: str = "EN"
     ) -> Tuple[RefinedCoarseValuesWithAttainment, str, str]:
-        values, t, l = self.classify_for_refined_values_with_attainment(
+        values, t, lang = self.classify_for_refined_values_with_attainment(
             text=text, language=language)
-        return values.coarse_values(), t, l
+        return values.coarse_values(), t, lang
 
     def classify_for_refined_values_with_attainment(
         self, text: str, language: str = "EN"
@@ -199,16 +199,16 @@ class RefinedValuesWithAttainmentClassifier(
         texts: Generator[str, None, None] | Sequence[str],
         language: str = "EN"
     ) -> Generator[Tuple[RefinedValues, str, str], None, None]:
-        for values, t, l in self.classify_all_for_refined_values_with_attainment(texts, language):
-            yield values.without_attainment(), t, l
+        for values, t, lang in self.classify_all_for_refined_values_with_attainment(texts, language):
+            yield values.without_attainment(), t, lang
 
     def classify_all_for_refined_coarse_values_with_attainment(
         self,
         texts: Generator[str, None, None] | Sequence[str],
         language: str = "EN"
     ) -> Generator[Tuple[RefinedCoarseValuesWithAttainment, str, str], None, None]:
-        for values, t, l in self.classify_all_for_refined_values_with_attainment(texts, language):
-            yield values.coarse_values(), t, l
+        for values, t, lang in self.classify_all_for_refined_values_with_attainment(texts, language):
+            yield values.coarse_values(), t, lang
 
     @abstractmethod
     def classify_all_for_refined_values_with_attainment(
