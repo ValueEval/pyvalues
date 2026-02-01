@@ -367,24 +367,23 @@ class ValuesWithTextWriter(Generic[VALUES]):
 class Values(ABC, BaseModel):
     """ Scores (with or without attainment) for any system of values.
     """
+    @classmethod
+    @abstractmethod
+    def from_list(cls, list: list[float]) -> Self:
+        pass
 
-    @staticmethod
-    def from_list(list: list[float]) -> "Values":
-        match len(list):
-            case 10:
-                return OriginalValues.from_list(list)
-            case 12:
-                return RefinedCoarseValues.from_list(list)
-            case 19:
-                return RefinedValues.from_list(list)
-            case 20:
-                return OriginalValuesWithAttainment.from_list(list)
-            case 24:
-                return RefinedCoarseValuesWithAttainment.from_list(list)
-            case 38:
-                return RefinedValuesWithAttainment.from_list(list)
-            case _:
-                raise AssertionError(f"Invalid number of scores: {len(list)}")
+    @classmethod
+    def average(
+        cls,
+        value_scores_list: Iterable[Self]
+    ) -> Self:
+        value_scores_matrix = [value_scores.to_list() for value_scores in value_scores_list]
+        num_scores = len(value_scores_matrix)
+        if num_scores == 0:
+            return cls()
+        sums = map(sum, zip(*value_scores_matrix))
+        means = [score_sum / num_scores for score_sum in sums]
+        return cls.from_list(means)
 
     @classmethod
     def tsv_writer(
@@ -436,6 +435,10 @@ class ValuesWithoutAttainment(Values):
     """ Scores without attainment for any system of values.
     """
     @classmethod
+    def from_labels(cls, labels: Iterable[str]) -> Self:
+        return cls.model_validate({label: 1 for label in labels})
+
+    @classmethod
     def evaluate_all(
         cls,
         tested: Iterable["Self"],
@@ -485,7 +488,13 @@ class ValuesWithoutAttainment(Values):
         ]
 
     def evaluate(self, truth: "Self") -> dict[str, ThresholdedDecision]:
-        return evaluate(self, truth)
+        decisions = {}
+        for value in self.names():
+            decisions[value] = ThresholdedDecision(
+                threshold=self[value],
+                is_true=truth[value] >= 0.5
+            )
+        return decisions
 
     def plot(self, linecolors=["black"], **kwargs):
         return ValuesWithoutAttainment.plot_all(
@@ -495,6 +504,23 @@ class ValuesWithoutAttainment(Values):
 class ValuesWithAttainment(Values):
     """ Scores with attainment for any system of values.
     """
+    @classmethod
+    def from_labels(cls, labels: Iterable[str]) -> Self:
+        model = {}
+        for label in labels:
+            if label.endswith(" attained"):
+                labelWithoutAttainment = label[:-9]
+                assert labelWithoutAttainment not in model
+                model[labelWithoutAttainment] = AttainmentScore(attained=1)
+            elif label.endswith(" constrained"):
+                labelWithoutAttainment = label[:-12]
+                assert labelWithoutAttainment not in model
+                model[labelWithoutAttainment] = AttainmentScore(constrained=1)
+            else:
+                assert label not in model
+                model[label] = AttainmentScore(attained=1)
+        return cls.model_validate(model)
+
     @abstractmethod
     def without_attainment(self) -> ValuesWithoutAttainment:
         pass
@@ -524,6 +550,17 @@ class ValuesWithAttainment(Values):
                 else:
                     labels.append(label + " constrained")
         return labels
+
+    def majority_attainment(self) -> Self:
+        model = {}
+        for value, attainment_score in self.model_dump().items():
+            attained = attainment_score["attained"]
+            constrained = attainment_score["constrained"]
+            if attained >= constrained:
+                model[value] = AttainmentScore(attained=attained + constrained)
+            else:
+                model[value] = AttainmentScore(constrained=attained + constrained)
+        return self.model_validate(model)
 
     def plot(self, **kwargs):
         return ValuesWithoutAttainment.plot_all(
@@ -590,8 +627,8 @@ class OriginalValues(ValuesWithoutAttainment):
 
     model_config = ConfigDict(extra="forbid", serialize_by_alias=True)
 
-    @staticmethod
-    def from_list(list: list[float]) -> "OriginalValues":
+    @classmethod
+    def from_list(cls, list: list[float]) -> "OriginalValues":
         assert len(list) == 10
         return OriginalValues(
             self_direction=list[0],
@@ -605,14 +642,6 @@ class OriginalValues(ValuesWithoutAttainment):
             benevolence=list[8],
             universalism=list[9]
         )
-
-    @staticmethod
-    def from_labels(labels: Iterable[str]) -> "OriginalValues":
-        return OriginalValues.model_validate({label: 1 for label in labels})
-
-    @staticmethod
-    def average(value_scores_list: Iterable["OriginalValues"]) -> "OriginalValues":
-        return OriginalValues.from_list(average_value_scores(value_scores_list))
 
     @classmethod
     def names(cls) -> list[str]:
@@ -700,8 +729,8 @@ class RefinedCoarseValues(ValuesWithoutAttainment):
 
     model_config = ConfigDict(extra="forbid", serialize_by_alias=True)
 
-    @staticmethod
-    def from_list(list: list[float]) -> "RefinedCoarseValues":
+    @classmethod
+    def from_list(cls, list: list[float]) -> "RefinedCoarseValues":
         assert len(list) == 12
         return RefinedCoarseValues(
             self_direction=list[0],
@@ -717,14 +746,6 @@ class RefinedCoarseValues(ValuesWithoutAttainment):
             benevolence=list[10],
             universalism=list[11]
         )
-
-    @staticmethod
-    def from_labels(labels: Iterable[str]) -> "RefinedCoarseValues":
-        return RefinedCoarseValues.model_validate({label: 1 for label in labels})
-
-    @staticmethod
-    def average(value_scores_list: Iterable["RefinedCoarseValues"]) -> "RefinedCoarseValues":
-        return RefinedCoarseValues.from_list(average_value_scores(value_scores_list))
 
     @classmethod
     def names(cls) -> list[str]:
@@ -862,8 +883,8 @@ class RefinedValues(ValuesWithoutAttainment):
 
     model_config = ConfigDict(extra="forbid", serialize_by_alias=True)
 
-    @staticmethod
-    def from_list(list: list[float]) -> "RefinedValues":
+    @classmethod
+    def from_list(cls, list: list[float]) -> "RefinedValues":
         assert len(list) == 19
         return RefinedValues(
             self_direction_thought=list[0],
@@ -886,14 +907,6 @@ class RefinedValues(ValuesWithoutAttainment):
             universalism_nature=list[17],
             universalism_tolerance=list[18]
         )
-
-    @staticmethod
-    def from_labels(labels: Iterable[str]) -> "RefinedValues":
-        return RefinedValues.model_validate({label: 1 for label in labels})
-
-    @staticmethod
-    def average(value_scores_list: Iterable["RefinedValues"]) -> "RefinedValues":
-        return RefinedValues.from_list(average_value_scores(value_scores_list))
 
     @classmethod
     def names(cls) -> list[str]:
@@ -998,8 +1011,8 @@ class OriginalValuesWithAttainment(ValuesWithAttainment):
 
     model_config = ConfigDict(extra="forbid", serialize_by_alias=True)
 
-    @staticmethod
-    def from_list(list: list[float]) -> "OriginalValuesWithAttainment":
+    @classmethod
+    def from_list(cls, list: list[float]) -> "OriginalValuesWithAttainment":
         assert len(list) == 20
         return OriginalValuesWithAttainment(
             self_direction=AttainmentScore(attained=list[0], constrained=list[1]),
@@ -1013,16 +1026,6 @@ class OriginalValuesWithAttainment(ValuesWithAttainment):
             benevolence=AttainmentScore(attained=list[16], constrained=list[17]),
             universalism=AttainmentScore(attained=list[18], constrained=list[19])
         )
-
-    @staticmethod
-    def from_labels(labels: Iterable[str]) -> "OriginalValuesWithAttainment":
-        return OriginalValuesWithAttainment.model_validate(
-            labels_with_attainment_to_dict(labels)
-        )
-
-    @staticmethod
-    def average(value_scores_list: Iterable["OriginalValuesWithAttainment"]) -> "OriginalValuesWithAttainment":
-        return OriginalValuesWithAttainment.from_list(average_value_scores(value_scores_list))
 
     @classmethod
     def names(cls) -> list[str]:
@@ -1094,11 +1097,6 @@ class OriginalValuesWithAttainment(ValuesWithAttainment):
             universalism=self.universalism.constrained,
         )
 
-    def majority_attainment(self) -> "OriginalValuesWithAttainment":
-        return OriginalValuesWithAttainment.model_validate(
-            majority_attainment(self)
-        )
-
 
 class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
     """ Scores with attainment for the twelve values from Schwartz refined
@@ -1167,8 +1165,8 @@ class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
 
     model_config = ConfigDict(extra="forbid", serialize_by_alias=True)
 
-    @staticmethod
-    def from_list(list: list[float]) -> "RefinedCoarseValuesWithAttainment":
+    @classmethod
+    def from_list(cls, list: list[float]) -> "RefinedCoarseValuesWithAttainment":
         assert len(list) == 24
         return RefinedCoarseValuesWithAttainment(
             self_direction=AttainmentScore(attained=list[0], constrained=list[1]),
@@ -1184,16 +1182,6 @@ class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
             benevolence=AttainmentScore(attained=list[20], constrained=list[21]),
             universalism=AttainmentScore(attained=list[22], constrained=list[23])
         )
-
-    @staticmethod
-    def from_labels(labels: Iterable[str]) -> "RefinedCoarseValuesWithAttainment":
-        return RefinedCoarseValuesWithAttainment.model_validate(
-            labels_with_attainment_to_dict(labels)
-        )
-
-    @staticmethod
-    def average(value_scores_list: Iterable["RefinedCoarseValuesWithAttainment"]) -> "RefinedCoarseValuesWithAttainment":
-        return RefinedCoarseValuesWithAttainment.from_list(average_value_scores(value_scores_list))
 
     @classmethod
     def names(cls) -> list[str]:
@@ -1287,11 +1275,6 @@ class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
             humility=self.humility.constrained,
             benevolence=self.benevolence.constrained,
             universalism=self.universalism.constrained,
-        )
-
-    def majority_attainment(self) -> "RefinedCoarseValuesWithAttainment":
-        return RefinedCoarseValuesWithAttainment.model_validate(
-            majority_attainment(self)
         )
 
 
@@ -1396,8 +1379,8 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
 
     model_config = ConfigDict(extra="forbid", serialize_by_alias=True)
 
-    @staticmethod
-    def from_list(list: list[float]) -> "RefinedValuesWithAttainment":
+    @classmethod
+    def from_list(cls, list: list[float]) -> "RefinedValuesWithAttainment":
         assert len(list) == 38
         return RefinedValuesWithAttainment(
             self_direction_action=AttainmentScore(attained=list[0], constrained=list[1]),
@@ -1420,16 +1403,6 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
             universalism_nature=AttainmentScore(attained=list[34], constrained=list[35]),
             universalism_tolerance=AttainmentScore(attained=list[36], constrained=list[37])
         )
-
-    @staticmethod
-    def from_labels(labels: Iterable[str]) -> "RefinedValuesWithAttainment":
-        return RefinedValuesWithAttainment.model_validate(
-            labels_with_attainment_to_dict(labels)
-        )
-
-    @staticmethod
-    def average(value_scores_list: list["RefinedValuesWithAttainment"]) -> "RefinedValuesWithAttainment":
-        return RefinedValuesWithAttainment.from_list(average_value_scores(value_scores_list))
 
     @classmethod
     def names(cls) -> list[str]:
@@ -1571,11 +1544,6 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
             universalism_tolerance=self.universalism_tolerance.constrained,
         )
 
-    def majority_attainment(self) -> "RefinedValuesWithAttainment":
-        return RefinedValuesWithAttainment.model_validate(
-            majority_attainment(self)
-        )
-
 
 def normalize_value(value: str) -> str:
     return value.lower().replace("-", "_").replace(":", "").replace(" ", "_")
@@ -1604,53 +1572,3 @@ def combine_attainment_scores(
             attained=weighted_attained,
             constrained=weighted_constrained
         )
-
-
-def average_value_scores(value_scores_list: Iterable[Values]) -> list[float]:
-    value_scores_matrix = [value_scores.to_list() for value_scores in value_scores_list]
-    num_scores = len(value_scores_matrix)
-    if num_scores == 0:
-        return []
-    sums = map(sum, zip(*value_scores_matrix))
-    means = [score_sum / num_scores for score_sum in sums]
-    return means
-
-
-def labels_with_attainment_to_dict(labels: Iterable[str]) -> dict[str, float]:
-    model = {}
-    for label in labels:
-        if label.endswith(" attained"):
-            labelWithoutAttainment = label[:-9]
-            assert labelWithoutAttainment not in model
-            model[labelWithoutAttainment] = AttainmentScore(attained=1)
-        elif label.endswith(" constrained"):
-            labelWithoutAttainment = label[:-12]
-            assert labelWithoutAttainment not in model
-            model[labelWithoutAttainment] = AttainmentScore(constrained=1)
-        else:
-            assert label not in model
-            model[label] = AttainmentScore(attained=1)
-    return model
-
-
-def majority_attainment(value_scores: ValuesWithAttainment) -> dict[str, AttainmentScore]:
-    model = {}
-    for value, attainment_score in value_scores.model_dump().items():
-        attained = attainment_score["attained"]
-        constrained = attainment_score["constrained"]
-        if attained >= constrained:
-            model[value] = AttainmentScore(attained=attained + constrained)
-        else:
-            model[value] = AttainmentScore(constrained=attained + constrained)
-    return model
-
-
-def evaluate(tested: ValuesWithoutAttainment, truth: ValuesWithoutAttainment) -> dict[str, ThresholdedDecision]:
-    assert type(tested) is type(truth)
-    decisions = {}
-    for value in tested.names():
-        decisions[value] = ThresholdedDecision(
-            threshold=tested[value],
-            is_true=truth[value] >= 0.5
-        )
-    return decisions
