@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Generator, Sequence, Tuple
+from typing import Generator, Iterable, Tuple
 
 from .values import (
     RefinedValues,
@@ -21,7 +21,7 @@ class OriginalValuesClassifier(ABC):
     @abstractmethod
     def classify_all_for_original_values(
         self,
-        texts: Generator[str, None, None] | Sequence[str],
+        texts: Iterable[str],
         language: str = "EN"
     ) -> Generator[Tuple[OriginalValues, str, str], None, None]:
         pass
@@ -42,7 +42,7 @@ class RefinedCoarseValuesClassifier(OriginalValuesClassifier):
     @abstractmethod
     def classify_all_for_original_values(
         self,
-        texts: Generator[str, None, None] | Sequence[str],
+        texts: Iterable[str],
         language: str = "EN"
     ) -> Generator[Tuple[OriginalValues, str, str], None, None]:
         for values, t, lang in self.classify_all_for_refined_coarse_values(texts, language):
@@ -51,7 +51,7 @@ class RefinedCoarseValuesClassifier(OriginalValuesClassifier):
     @abstractmethod
     def classify_all_for_refined_coarse_values(
         self,
-        texts: Generator[str, None, None] | Sequence[str],
+        texts: Iterable[str],
         language: str = "EN"
     ) -> Generator[Tuple[RefinedCoarseValues, str, str], None, None]:
         pass
@@ -70,7 +70,7 @@ class RefinedValuesClassifier(RefinedCoarseValuesClassifier):
 
     def classify_all_for_refined_coarse_values(
         self,
-        texts: Generator[str, None, None] | Sequence[str],
+        texts: Iterable[str],
         language: str = "EN"
     ) -> Generator[Tuple[RefinedCoarseValues, str, str], None, None]:
         for values, t, lang in self.classify_all_for_refined_values(texts, language):
@@ -79,7 +79,7 @@ class RefinedValuesClassifier(RefinedCoarseValuesClassifier):
     @abstractmethod
     def classify_all_for_refined_values(
         self,
-        texts: Generator[str, None, None] | Sequence[str],
+        texts: Iterable[str],
         language: str = "EN"
     ) -> Generator[Tuple[RefinedValues, str, str], None, None]:
         pass
@@ -105,7 +105,7 @@ class OriginalValuesWithAttainmentClassifier(OriginalValuesClassifier):
 
     def classify_all_for_original_values(
         self,
-        texts: Generator[str, None, None] | Sequence[str],
+        texts: Iterable[str],
         language: str = "EN"
     ) -> Generator[Tuple[OriginalValues, str, str], None, None]:
         for values, t, lang in self.classify_all_for_original_values_with_attainment(texts, language):
@@ -114,7 +114,7 @@ class OriginalValuesWithAttainmentClassifier(OriginalValuesClassifier):
     @abstractmethod
     def classify_all_for_original_values_with_attainment(
         self,
-        texts: Generator[str, None, None] | Sequence[str],
+        texts: Iterable[str],
         language: str = "EN"
     ) -> Generator[Tuple[OriginalValuesWithAttainment, str, str], None, None]:
         pass
@@ -147,7 +147,7 @@ class RefinedCoarseValuesWithAttainmentClassifier(
 
     def classify_all_for_refined_coarse_values(
         self,
-        texts: Generator[str, None, None] | Sequence[str],
+        texts: Iterable[str],
         language: str = "EN"
     ) -> Generator[Tuple[RefinedCoarseValues, str, str], None, None]:
         for values, t, lang in self.classify_all_for_refined_coarse_values_with_attainment(texts, language):
@@ -155,7 +155,7 @@ class RefinedCoarseValuesWithAttainmentClassifier(
 
     def classify_all_for_original_values_with_attainment(
         self,
-        texts: Generator[str, None, None] | Sequence[str],
+        texts: Iterable[str],
         language: str = "EN"
     ) -> Generator[Tuple[OriginalValuesWithAttainment, str, str], None, None]:
         for values, t, lang in self.classify_all_for_refined_coarse_values_with_attainment(texts, language):
@@ -164,7 +164,7 @@ class RefinedCoarseValuesWithAttainmentClassifier(
     @abstractmethod
     def classify_all_for_refined_coarse_values_with_attainment(
         self,
-        texts: Generator[str, None, None] | Sequence[str],
+        texts: Iterable[str],
         language: str = "EN"
     ) -> Generator[Tuple[RefinedCoarseValuesWithAttainment, str, str], None, None]:
         pass
@@ -196,7 +196,7 @@ class RefinedValuesWithAttainmentClassifier(
 
     def classify_all_for_refined_values(
         self,
-        texts: Generator[str, None, None] | Sequence[str],
+        texts: Iterable[str],
         language: str = "EN"
     ) -> Generator[Tuple[RefinedValues, str, str], None, None]:
         for values, t, lang in self.classify_all_for_refined_values_with_attainment(texts, language):
@@ -204,7 +204,7 @@ class RefinedValuesWithAttainmentClassifier(
 
     def classify_all_for_refined_coarse_values_with_attainment(
         self,
-        texts: Generator[str, None, None] | Sequence[str],
+        texts: Iterable[str],
         language: str = "EN"
     ) -> Generator[Tuple[RefinedCoarseValuesWithAttainment, str, str], None, None]:
         for values, t, lang in self.classify_all_for_refined_values_with_attainment(texts, language):
@@ -213,7 +213,7 @@ class RefinedValuesWithAttainmentClassifier(
     @abstractmethod
     def classify_all_for_refined_values_with_attainment(
         self,
-        texts: Generator[str, None, None] | Sequence[str],
+        texts: Iterable[str],
         language: str = "EN"
     ) -> Generator[Tuple[RefinedValuesWithAttainment, str, str], None, None]:
         pass

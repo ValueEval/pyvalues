@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import Annotated, Callable, Iterable, Self, Sequence, Tuple
+import csv
+from typing import Annotated, Callable, Generic, Iterable, Self, Sequence, TextIO, Tuple, Type, TypeVar
 from pydantic import AliasChoices, BaseModel, ConfigDict, Field, model_validator
 from .radarplot import plot_radar
 import matplotlib.pyplot as plt
@@ -31,9 +32,10 @@ original_values_colors = [
     "#f58231",  # universalism
 ]
 
-original_values_with_attainment = \
-    [v + " attained" for v in original_values] + \
-    [v + " constrained" for v in original_values]
+original_values_with_attainment = sum(
+    [[v + " attained", v + "constrained"] for v in original_values],
+    []
+)
 
 refined_coarse_values = [
     "Self-direction",
@@ -66,9 +68,10 @@ refined_coarse_values_colors = [
     "#f58231",  # universalism
 ]
 
-refined_coarse_values_with_attainment = \
-    [v + " attained" for v in refined_coarse_values] + \
-    [v + " constrained" for v in refined_coarse_values]
+refined_coarse_values_with_attainment = sum(
+    [[v + " attained", v + "constrained"] for v in refined_coarse_values],
+    []
+)
 
 refined_values = [
     "Self-direction: action",
@@ -108,9 +111,10 @@ refined_values_colors = [
     "#9a6324", "#f58231", "#ffd8b1"  # universalism
 ]
 
-refined_values_with_attainment = \
-    [v + " attained" for v in refined_values] + \
-    [v + " constrained" for v in refined_values]
+refined_values_with_attainment = sum(
+    [[v + " attained", v + "constrained"] for v in refined_values],
+    []
+)
 
 
 Score = Annotated[float, Field(ge=0, le=1)]
@@ -137,23 +141,37 @@ class ThresholdedDecision(BaseModel):
     is_true: bool
 
 
-class Evaluation(BaseModel):
-    value_evaluations: dict[str, list[ThresholdedDecision]] = {}
+VALUES = TypeVar("VALUES", bound="Values")
+VALUES_WITHOUT_ATTAINMENT = TypeVar("VALUES_WITHOUT_ATTAINMENT", bound="ValuesWithoutAttainment")
 
-    def __init__(self, value_evaluations: dict[str, list[ThresholdedDecision]]):
-        super().__init__(value_evaluations=value_evaluations)
-        for thresholded_decisions in self.value_evaluations.values():
+
+class Evaluation(Generic[VALUES_WITHOUT_ATTAINMENT]):
+    _cls: Type[VALUES_WITHOUT_ATTAINMENT]
+    _value_evaluations: dict[str, list[ThresholdedDecision]] = {}
+
+    def __init__(
+        self,
+        cls: Type[VALUES_WITHOUT_ATTAINMENT],
+        value_evaluations: dict[str, list[ThresholdedDecision]]
+    ):
+        self._cls = cls
+        self._value_evaluations = value_evaluations
+        for thresholded_decisions in self._value_evaluations.values():
             thresholded_decisions.sort(key=lambda x: x.threshold)
 
     def __getitem__(self, key: str) -> list[ThresholdedDecision]:
-        return self.value_evaluations[key]
+        return self._value_evaluations[key]
 
-    def _f(self, threshold: Score = 0.5, beta: float = 1) -> Tuple[dict[str, Score], dict[str, Score], dict[str, Score]]:
+    def f(
+            self,
+            threshold: Score = 0.5,
+            beta: float = 1
+    ) -> Tuple["VALUES_WITHOUT_ATTAINMENT", "VALUES_WITHOUT_ATTAINMENT", "VALUES_WITHOUT_ATTAINMENT"]:
         beta_square = beta * beta
         fs = {}
         precisions = {}
         recalls = {}
-        for value, thresholded_decisions in self.value_evaluations.items():
+        for value, thresholded_decisions in self._value_evaluations.items():
             true_positives = 0
             false_positives = 0
             true_negatives = 0
@@ -181,11 +199,13 @@ class Evaluation(BaseModel):
             recalls[value] = recall
             fs[value] = f
 
-        return fs, precisions, recalls
+        return self._cls.model_validate(fs), \
+            self._cls.model_validate(precisions), \
+            self._cls.model_validate(recalls)
 
     def precision_recall_steps(self) -> dict[str, Tuple[list[float], list[float]]]:
         steps = {}
-        for value, thresholded_decisions in self.value_evaluations.items():
+        for value, thresholded_decisions in self._value_evaluations.items():
             num_positive = sum([
                 thresholded_decision.is_true for thresholded_decision
                 in thresholded_decisions
@@ -218,7 +238,7 @@ class Evaluation(BaseModel):
         return steps
 
     def plot_precision_recall_curves(self):
-        num_values = len(self.value_evaluations.keys())
+        num_values = len(self._value_evaluations.keys())
         colors = None
         if num_values == 10:
             colors = original_values_colors
@@ -244,29 +264,104 @@ class Evaluation(BaseModel):
         return plt
 
 
-class OriginalValuesEvaluation(Evaluation):
-    def f(self, threshold: Score = 0.5, beta: float = 1) -> Tuple["OriginalValues", "OriginalValues", "OriginalValues"]:
-        fs, precisions, recalls = self._f(threshold, beta)
-        return OriginalValues.model_validate(fs), \
-            OriginalValues.model_validate(precisions), \
-            OriginalValues.model_validate(recalls),
+class ValuesWriter(Generic[VALUES]):
+    _writer: csv.DictWriter
+
+    def __init__(
+            self,
+            cls: Type[VALUES],
+            output_file: TextIO,
+            delimiter: str = "\t"
+    ):
+        fieldnames = cls.names()
+        self._writer = csv.DictWriter(
+            output_file,
+            fieldnames=fieldnames,
+            delimiter=delimiter
+        )
+        self._writer.writeheader()
+
+    def write(self, values: VALUES):
+        line: dict[str, float] = {
+            value: score for (value, score) in zip(values.names(), values.to_list())
+        }
+        self._writer.writerow(line)
+    
+    def write_all(self, values: Iterable[VALUES]):
+        for v in values:
+            self.write(v)
 
 
-class RefinedCoarseValuesEvaluation(Evaluation):
-    def f(self, threshold: Score = 0.5, beta: float = 1) \
-            -> Tuple["RefinedCoarseValues", "RefinedCoarseValues", "RefinedCoarseValues"]:
-        fs, precisions, recalls = self._f(threshold, beta)
-        return RefinedCoarseValues.model_validate(fs), \
-            RefinedCoarseValues.model_validate(precisions), \
-            RefinedCoarseValues.model_validate(recalls),
+class ValuesWithTextWriter(Generic[VALUES]):
+    _writer: csv.DictWriter
+    _write_text_id: bool
+    _default_text_id: str | None
+    _write_language: bool
+    _default_language: str | None
 
+    def __init__(
+            self,
+            cls: Type[VALUES],
+            output_file: TextIO,
+            delimiter: str = "\t",
+            write_text_id: bool = True,
+            default_text_id: str | None = None,
+            write_language: bool = True,
+            default_language: str | None = "EN"
+    ):
+        self._write_text_id = write_text_id
+        self._default_text_id = default_text_id
+        self._write_language = write_language
+        self._default_language = default_language
 
-class RefinedValuesEvaluation(Evaluation):
-    def f(self, threshold: Score = 0.5, beta: float = 1) -> Tuple["RefinedValues", "RefinedValues", "RefinedValues"]:
-        fs, precisions, recalls = self._f(threshold, beta)
-        return RefinedValues.model_validate(fs), \
-            RefinedValues.model_validate(precisions), \
-            RefinedValues.model_validate(recalls),
+        fieldnames = []
+        if write_text_id:
+            fieldnames += ["Text-ID"]
+        fieldnames += ["Text"]
+        if write_language:
+            fieldnames += ["Language"]
+        fieldnames += cls.names()
+
+        self._writer = csv.DictWriter(
+            output_file,
+            fieldnames=fieldnames,
+            delimiter=delimiter
+        )
+        self._writer.writeheader()
+
+    def write(
+            self,
+            values: VALUES,
+            text: str,
+            text_id: str | None = None,
+            language: str | None = None
+    ):
+        line: dict[str, float | str] = {
+            value: score for (value, score) in zip(values.names(), values.to_list())
+        }
+        line["Text"] = text
+        if self._write_text_id:
+            if text_id is not None:
+                line["Text-ID"] = text_id
+            elif self._default_text_id is not None:
+                line["Text-ID"] = self._default_text_id
+            else:
+                raise ValueError("Missing text ID for writing and no default set")
+        if self._write_language:
+            if language is not None:
+                line["Language"] = language
+            elif self._default_language is not None:
+                line["Language"] = self._default_language
+            else:
+                raise ValueError("Missing language for writing and no default set")
+        self._writer.writerow(line)
+    
+    def write_all(
+            self,
+            values_with_text: Iterable[Tuple[VALUES, str, str]],
+            text_id: str | None = None):
+        for values, text, language in values_with_text:
+            self.write(values=values, text_id=text_id, text=text, language=language)
 
 
 class Values(ABC, BaseModel):
@@ -291,8 +386,41 @@ class Values(ABC, BaseModel):
             case _:
                 raise AssertionError(f"Invalid number of scores: {len(list)}")
 
+    @classmethod
+    def tsv_writer(
+        cls,
+        output_file: TextIO,
+        delimiter: str = "\t"
+    ) -> ValuesWriter[Self]:
+        return ValuesWriter[Self](
+            cls=cls,
+            output_file=output_file,
+            delimiter=delimiter
+        )
+
+    @classmethod
+    def tsv_writer_with_text(
+        cls,
+        output_file: TextIO,
+        delimiter: str = "\t",
+        write_text_id: bool = True,
+        default_text_id: str | None = None,
+        write_language: bool = True,
+        default_language: str | None = "EN"
+    ) -> ValuesWithTextWriter[Self]:
+        return ValuesWithTextWriter[Self](
+            cls=cls,
+            output_file=output_file,
+            delimiter=delimiter,
+            write_text_id=write_text_id,
+            default_text_id=default_text_id,
+            write_language=write_language,
+            default_language=default_language
+        )
+
+    @classmethod
     @abstractmethod
-    def names(self) -> list[str]:
+    def names(cls) -> list[str]:
         pass
 
     @abstractmethod
@@ -460,24 +588,30 @@ class OriginalValues(ValuesWithoutAttainment):
         )
 
     @staticmethod
-    def from_labels(labels: list[str]) -> "OriginalValues":
+    def from_labels(labels: Iterable[str]) -> "OriginalValues":
         return OriginalValues.model_validate({label: 1 for label in labels})
 
     @staticmethod
-    def average(value_scores_list: list["OriginalValues"]) -> "OriginalValues":
+    def average(value_scores_list: Iterable["OriginalValues"]) -> "OriginalValues":
         return OriginalValues.from_list(average_value_scores(value_scores_list))
 
     @staticmethod
     def evaluate_all(
-        tested: list["OriginalValues"],
-        truth: list["OriginalValues"]
-    ) -> OriginalValuesEvaluation:
+        tested: Iterable["OriginalValues"],
+        truth: Iterable["OriginalValues"]
+    ) -> Evaluation["OriginalValues"]:
         instance_evaluations = [t1.evaluate(t2) for t1, t2 in zip(tested, truth)]
-        return OriginalValuesEvaluation(value_evaluations={
-            value: [instance_evaluation[value] for instance_evaluation in instance_evaluations] for value in original_values
-        })
+        return Evaluation(
+            cls=OriginalValues,
+            value_evaluations={
+                value: [
+                    instance_evaluation[value] for instance_evaluation in instance_evaluations
+                ] for value in original_values
+            }
+        )
 
-    def names(self) -> list[str]:
+    @classmethod
+    def names(cls) -> list[str]:
         return original_values
 
     def to_list(self) -> list[float]:
@@ -584,24 +718,30 @@ class RefinedCoarseValues(ValuesWithoutAttainment):
         )
 
     @staticmethod
-    def from_labels(labels: list[str]) -> "RefinedCoarseValues":
+    def from_labels(labels: Iterable[str]) -> "RefinedCoarseValues":
         return RefinedCoarseValues.model_validate({label: 1 for label in labels})
 
     @staticmethod
-    def average(value_scores_list: list["RefinedCoarseValues"]) -> "RefinedCoarseValues":
+    def average(value_scores_list: Iterable["RefinedCoarseValues"]) -> "RefinedCoarseValues":
         return RefinedCoarseValues.from_list(average_value_scores(value_scores_list))
 
     @staticmethod
     def evaluate_all(
-        tested: list["RefinedCoarseValues"],
-        truth: list["RefinedCoarseValues"]
-    ) -> RefinedCoarseValuesEvaluation:
+        tested: Iterable["RefinedCoarseValues"],
+        truth: Iterable["RefinedCoarseValues"]
+    ) -> Evaluation["RefinedCoarseValues"]:
         instance_evaluations = [t1.evaluate(t2) for t1, t2 in zip(tested, truth)]
-        return RefinedCoarseValuesEvaluation(value_evaluations={
-            value: [instance_evaluation[value] for instance_evaluation in instance_evaluations] for value in original_values
-        })
+        return Evaluation(
+            cls=RefinedCoarseValues,
+            value_evaluations={
+                value: [
+                    instance_evaluation[value] for instance_evaluation in instance_evaluations
+                ] for value in original_values
+            }
+        )
 
-    def names(self) -> list[str]:
+    @classmethod
+    def names(cls) -> list[str]:
         return refined_coarse_values
 
     def to_list(self) -> list[float]:
@@ -765,24 +905,30 @@ class RefinedValues(ValuesWithoutAttainment):
         )
 
     @staticmethod
-    def from_labels(labels: list[str]) -> "RefinedValues":
+    def from_labels(labels: Iterable[str]) -> "RefinedValues":
         return RefinedValues.model_validate({label: 1 for label in labels})
 
     @staticmethod
-    def average(value_scores_list: list["RefinedValues"]) -> "RefinedValues":
+    def average(value_scores_list: Iterable["RefinedValues"]) -> "RefinedValues":
         return RefinedValues.from_list(average_value_scores(value_scores_list))
 
     @staticmethod
     def evaluate_all(
-        tested: list["RefinedValues"],
-        truth: list["RefinedValues"]
-    ) -> RefinedValuesEvaluation:
+        tested: Iterable["RefinedValues"],
+        truth: Iterable["RefinedValues"]
+    ) -> Evaluation["RefinedValues"]:
         instance_evaluations = [t1.evaluate(t2) for t1, t2 in zip(tested, truth)]
-        return RefinedValuesEvaluation(value_evaluations={
-            value: [instance_evaluation[value] for instance_evaluation in instance_evaluations] for value in original_values
-        })
+        return Evaluation["RefinedValues"](
+            cls=RefinedValues,
+            value_evaluations={
+                value: [
+                    instance_evaluation[value] for instance_evaluation in instance_evaluations
+                ] for value in original_values
+            }
+        )
 
-    def names(self) -> list[str]:
+    @classmethod
+    def names(cls) -> list[str]:
         return refined_values
 
     def to_list(self) -> list[float]:
@@ -904,16 +1050,17 @@ class OriginalValuesWithAttainment(ValuesWithAttainment):
         )
 
     @staticmethod
-    def from_labels(labels: list[str]) -> "OriginalValuesWithAttainment":
+    def from_labels(labels: Iterable[str]) -> "OriginalValuesWithAttainment":
         return OriginalValuesWithAttainment.model_validate(
             labels_with_attainment_to_dict(labels)
         )
 
     @staticmethod
-    def average(value_scores_list: list["OriginalValuesWithAttainment"]) -> "OriginalValuesWithAttainment":
+    def average(value_scores_list: Iterable["OriginalValuesWithAttainment"]) -> "OriginalValuesWithAttainment":
         return OriginalValuesWithAttainment.from_list(average_value_scores(value_scores_list))
 
-    def names(self) -> list[str]:
+    @classmethod
+    def names(cls) -> list[str]:
         return original_values_with_attainment
 
     def to_list(self) -> list[float]:
@@ -1074,16 +1221,17 @@ class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
         )
 
     @staticmethod
-    def from_labels(labels: list[str]) -> "RefinedCoarseValuesWithAttainment":
+    def from_labels(labels: Iterable[str]) -> "RefinedCoarseValuesWithAttainment":
         return RefinedCoarseValuesWithAttainment.model_validate(
             labels_with_attainment_to_dict(labels)
         )
 
     @staticmethod
-    def average(value_scores_list: list["RefinedCoarseValuesWithAttainment"]) -> "RefinedCoarseValuesWithAttainment":
+    def average(value_scores_list: Iterable["RefinedCoarseValuesWithAttainment"]) -> "RefinedCoarseValuesWithAttainment":
         return RefinedCoarseValuesWithAttainment.from_list(average_value_scores(value_scores_list))
 
-    def names(self) -> list[str]:
+    @classmethod
+    def names(cls) -> list[str]:
         return refined_coarse_values_with_attainment
 
     def to_list(self) -> list[float]:
@@ -1309,7 +1457,7 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
         )
 
     @staticmethod
-    def from_labels(labels: list[str]) -> "RefinedValuesWithAttainment":
+    def from_labels(labels: Iterable[str]) -> "RefinedValuesWithAttainment":
         return RefinedValuesWithAttainment.model_validate(
             labels_with_attainment_to_dict(labels)
         )
@@ -1318,7 +1466,8 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
     def average(value_scores_list: list["RefinedValuesWithAttainment"]) -> "RefinedValuesWithAttainment":
         return RefinedValuesWithAttainment.from_list(average_value_scores(value_scores_list))
 
-    def names(self) -> list[str]:
+    @classmethod
+    def names(cls) -> list[str]:
         return refined_values_with_attainment
 
     def to_list(self) -> list[float]:
@@ -1492,17 +1641,17 @@ def combine_attainment_scores(
         )
 
 
-def average_value_scores(value_scores_list: Sequence[Values]) -> list[float]:
-    num_scores = len(value_scores_list)
+def average_value_scores(value_scores_list: Iterable[Values]) -> list[float]:
+    value_scores_matrix = [value_scores.to_list() for value_scores in value_scores_list]
+    num_scores = len(value_scores_matrix)
     if num_scores == 0:
         return []
-    value_scores_matrix = [value_scores.to_list() for value_scores in value_scores_list]
     sums = map(sum, zip(*value_scores_matrix))
     means = [score_sum / num_scores for score_sum in sums]
     return means
 
 
-def labels_with_attainment_to_dict(labels: list[str]) -> dict[str, float]:
+def labels_with_attainment_to_dict(labels: Iterable[str]) -> dict[str, float]:
     model = {}
     for label in labels:
         if label.endswith(" attained"):
