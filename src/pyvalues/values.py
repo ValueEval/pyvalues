@@ -435,6 +435,22 @@ class Values(ABC, BaseModel):
 class ValuesWithoutAttainment(Values):
     """ Scores without attainment for any system of values.
     """
+    @classmethod
+    def evaluate_all(
+        cls,
+        tested: Iterable["Self"],
+        truth: Iterable["Self"]
+    ) -> Evaluation["Self"]:
+        instance_evaluations = [t1.evaluate(t2) for t1, t2 in zip(tested, truth)]
+        return Evaluation(
+            cls=cls,
+            value_evaluations={
+                value: [
+                    instance_evaluation[value] for instance_evaluation in instance_evaluations
+                ] for value in original_values
+            }
+        )
+
     @staticmethod
     def plot_all(value_scores_list: Sequence["ValuesWithoutAttainment"], **kwargs):
         """ Plot scores in a radar plot.
@@ -467,6 +483,9 @@ class ValuesWithoutAttainment(Values):
             label for (label, score) in zip(self.names(), self.to_list())
             if score >= threshold
         ]
+
+    def evaluate(self, truth: "Self") -> dict[str, ThresholdedDecision]:
+        return evaluate(self, truth)
 
     def plot(self, linecolors=["black"], **kwargs):
         return ValuesWithoutAttainment.plot_all(
@@ -595,21 +614,6 @@ class OriginalValues(ValuesWithoutAttainment):
     def average(value_scores_list: Iterable["OriginalValues"]) -> "OriginalValues":
         return OriginalValues.from_list(average_value_scores(value_scores_list))
 
-    @staticmethod
-    def evaluate_all(
-        tested: Iterable["OriginalValues"],
-        truth: Iterable["OriginalValues"]
-    ) -> Evaluation["OriginalValues"]:
-        instance_evaluations = [t1.evaluate(t2) for t1, t2 in zip(tested, truth)]
-        return Evaluation(
-            cls=OriginalValues,
-            value_evaluations={
-                value: [
-                    instance_evaluation[value] for instance_evaluation in instance_evaluations
-                ] for value in original_values
-            }
-        )
-
     @classmethod
     def names(cls) -> list[str]:
         return original_values
@@ -627,9 +631,6 @@ class OriginalValues(ValuesWithoutAttainment):
             self.benevolence,
             self.universalism
         ]
-
-    def evaluate(self, truth: "OriginalValues") -> dict[str, ThresholdedDecision]:
-        return evaluate(self, truth)
 
 
 class RefinedCoarseValues(ValuesWithoutAttainment):
@@ -725,21 +726,6 @@ class RefinedCoarseValues(ValuesWithoutAttainment):
     def average(value_scores_list: Iterable["RefinedCoarseValues"]) -> "RefinedCoarseValues":
         return RefinedCoarseValues.from_list(average_value_scores(value_scores_list))
 
-    @staticmethod
-    def evaluate_all(
-        tested: Iterable["RefinedCoarseValues"],
-        truth: Iterable["RefinedCoarseValues"]
-    ) -> Evaluation["RefinedCoarseValues"]:
-        instance_evaluations = [t1.evaluate(t2) for t1, t2 in zip(tested, truth)]
-        return Evaluation(
-            cls=RefinedCoarseValues,
-            value_evaluations={
-                value: [
-                    instance_evaluation[value] for instance_evaluation in instance_evaluations
-                ] for value in original_values
-            }
-        )
-
     @classmethod
     def names(cls) -> list[str]:
         return refined_coarse_values
@@ -759,9 +745,6 @@ class RefinedCoarseValues(ValuesWithoutAttainment):
             self.benevolence,
             self.universalism
         ]
-
-    def evaluate(self, truth: "RefinedCoarseValues") -> dict[str, ThresholdedDecision]:
-        return evaluate(self, truth)
 
     def original_values(self) -> OriginalValues:
         return OriginalValues(
@@ -912,21 +895,6 @@ class RefinedValues(ValuesWithoutAttainment):
     def average(value_scores_list: Iterable["RefinedValues"]) -> "RefinedValues":
         return RefinedValues.from_list(average_value_scores(value_scores_list))
 
-    @staticmethod
-    def evaluate_all(
-        tested: Iterable["RefinedValues"],
-        truth: Iterable["RefinedValues"]
-    ) -> Evaluation["RefinedValues"]:
-        instance_evaluations = [t1.evaluate(t2) for t1, t2 in zip(tested, truth)]
-        return Evaluation["RefinedValues"](
-            cls=RefinedValues,
-            value_evaluations={
-                value: [
-                    instance_evaluation[value] for instance_evaluation in instance_evaluations
-                ] for value in original_values
-            }
-        )
-
     @classmethod
     def names(cls) -> list[str]:
         return refined_values
@@ -953,9 +921,6 @@ class RefinedValues(ValuesWithoutAttainment):
             self.universalism_nature,
             self.universalism_tolerance,
         ]
-
-    def evaluate(self, truth: "RefinedValues") -> dict[str, ThresholdedDecision]:
-        return evaluate(self, truth)
 
     def coarse_values(self, mode: Callable[[Iterable[float]], float] = max) -> RefinedCoarseValues:
         return RefinedCoarseValues(
