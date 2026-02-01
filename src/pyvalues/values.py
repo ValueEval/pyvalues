@@ -159,6 +159,21 @@ class Evaluation(Generic[VALUES_WITHOUT_ATTAINMENT]):
         for thresholded_decisions in self._value_evaluations.values():
             thresholded_decisions.sort(key=lambda x: x.threshold)
 
+    @classmethod
+    def combine(cls, evaluations: Iterable[Self]) -> Self:
+        clz = None
+        combined = {}
+        for evaluation in evaluations:
+            for value, thresholded_decisions in evaluation._value_evaluations.items():
+                if value not in combined:
+                    combined[value] = thresholded_decisions.copy()
+                else:
+                    combined[value] += thresholded_decisions
+            clz = evaluation._cls
+        if clz is not None:
+            return cls(clz, combined)
+        raise ValueError("No evaluation given")
+
     def __getitem__(self, key: str) -> list[ThresholdedDecision]:
         return self._value_evaluations[key]
 
