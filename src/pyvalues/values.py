@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 import csv
-from typing import Annotated, Callable, Generic, Iterable, Self, Sequence, TextIO, Tuple, Type, TypeVar
+from pathlib import Path
+from typing import Annotated, Callable, Generator, Generic, Iterable, Self, Sequence, TextIO, Tuple, Type, TypeVar
 from pydantic import AliasChoices, BaseModel, ConfigDict, Field, model_validator
 from .radarplot import plot_radar
 import matplotlib.pyplot as plt
@@ -389,6 +390,14 @@ class Values(ABC, BaseModel):
         pass
 
     @classmethod
+    def from_row(cls, row: dict[str, str]) -> Self:
+        value_scores: list[float] = [
+            float(row.get(value_name, 0.0))
+            for value_name in cls.names()
+        ]
+        return cls.from_list(value_scores)
+
+    @classmethod
     def average(
         cls,
         value_scores_list: Iterable[Self]
@@ -402,7 +411,28 @@ class Values(ABC, BaseModel):
         return cls.from_list(means)
 
     @classmethod
-    def tsv_writer(
+    def read_tsv(
+        cls,
+        input_file: str | Path | TextIO | csv.DictReader,
+        delimiter = "\t"
+    ) -> Generator[Self, None, None]:
+        if isinstance(input_file, str) or isinstance(input_file, Path):
+            with open(input_file, newline='') as input_file_handle:
+                reader = csv.DictReader(input_file_handle, delimiter=delimiter)
+                for row in reader:
+                    yield cls.from_row(row)
+        if isinstance(input_file, TextIO):
+            reader = csv.DictReader(input_file, delimiter=delimiter)
+            for row in reader:
+                yield cls.from_row(row)
+        if isinstance(input_file, csv.DictReader):
+            for row in input_file:
+                yield cls.from_row(row)
+        else:
+            raise ValueError(f"Unknown input file {type(input_file)}")
+
+    @classmethod
+    def writer_tsv(
         cls,
         output_file: TextIO,
         delimiter: str = "\t"
@@ -414,7 +444,7 @@ class Values(ABC, BaseModel):
         )
 
     @classmethod
-    def tsv_writer_with_text(
+    def writer_tsv_with_text(
         cls,
         output_file: TextIO,
         delimiter: str = "\t",
