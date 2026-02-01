@@ -359,7 +359,8 @@ class ValuesWithTextWriter(Generic[VALUES]):
     def write_all(
             self,
             values_with_text: Iterable[Tuple[VALUES, str, str]],
-            text_id: str | None = None):
+            text_id: str | None = None
+    ):
         for values, text, language in values_with_text:
             self.write(values=values, text_id=text_id, text=text, language=language)
 
