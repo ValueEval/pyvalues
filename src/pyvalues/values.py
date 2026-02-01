@@ -286,7 +286,7 @@ class ValuesWriter(Generic[VALUES]):
             value: score for (value, score) in zip(values.names(), values.to_list())
         }
         self._writer.writerow(line)
-    
+
     def write_all(self, values: Iterable[VALUES]):
         for v in values:
             self.write(v)
@@ -355,7 +355,7 @@ class ValuesWithTextWriter(Generic[VALUES]):
             else:
                 raise ValueError("Missing language for writing and no default set")
         self._writer.writerow(line)
-    
+
     def write_all(
             self,
             values_with_text: Iterable[Tuple[VALUES, str, str]],
