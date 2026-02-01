@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import csv
 from pathlib import Path
-from typing import Annotated, Callable, Generator, Generic, Iterable, Self, Sequence, TextIO, Tuple, Type, TypeVar
+from typing import Annotated, Callable, ClassVar, Generator, Generic, Iterable, Self, Sequence, TextIO, Tuple, Type, TypeVar
 from pydantic import AliasChoices, BaseModel, ConfigDict, Field, model_validator
 from .radarplot import plot_radar
 import matplotlib.pyplot as plt
@@ -280,6 +280,18 @@ class Evaluation(Generic[VALUES_WITHOUT_ATTAINMENT]):
         return plt
 
 
+class Document(BaseModel, Generic[VALUES]):
+    id: str | None = None
+    language: str = "EN"
+    values: list[VALUES] | None = None
+    texts: list[str] | None = None
+
+    TEXT_FIELD: ClassVar[str] = "Text"
+    ID_FIELD: ClassVar[str] = "ID"
+    LANGUAGE_FIELD: ClassVar[str] = "Language"
+    LANGUAGE_DEFAULT: ClassVar[str] = "EN"
+
+
 class ValuesWriter(Generic[VALUES]):
     _writer: csv.DictWriter
 
@@ -323,7 +335,7 @@ class ValuesWithTextWriter(Generic[VALUES]):
             write_text_id: bool = True,
             default_text_id: str | None = None,
             write_language: bool = True,
-            default_language: str | None = "EN"
+            default_language: str | None = Document.LANGUAGE_DEFAULT
     ):
         self._write_text_id = write_text_id
         self._default_text_id = default_text_id
@@ -332,10 +344,10 @@ class ValuesWithTextWriter(Generic[VALUES]):
 
         fieldnames = []
         if write_text_id:
-            fieldnames += ["Text-ID"]
-        fieldnames += ["Text"]
+            fieldnames += [Document.ID_FIELD]
+        fieldnames += [Document.TEXT_FIELD]
         if write_language:
-            fieldnames += ["Language"]
+            fieldnames += [Document.LANGUAGE_FIELD]
         fieldnames += cls.names()
 
         self._writer = csv.DictWriter(
@@ -355,19 +367,19 @@ class ValuesWithTextWriter(Generic[VALUES]):
         line: dict[str, float | str] = {
             value: score for (value, score) in zip(values.names(), values.to_list())
         }
-        line["Text"] = text
+        line[Document.TEXT_FIELD] = text
         if self._write_text_id:
             if text_id is not None:
-                line["Text-ID"] = text_id
+                line[Document.ID_FIELD] = text_id
             elif self._default_text_id is not None:
-                line["Text-ID"] = self._default_text_id
+                line[Document.ID_FIELD] = self._default_text_id
             else:
                 raise ValueError("Missing text ID for writing and no default set")
         if self._write_language:
             if language is not None:
-                line["Language"] = language
+                line[Document.LANGUAGE_FIELD] = language
             elif self._default_language is not None:
-                line["Language"] = self._default_language
+                line[Document.LANGUAGE_FIELD] = self._default_language
             else:
                 raise ValueError("Missing language for writing and no default set")
         self._writer.writerow(line)
@@ -413,23 +425,55 @@ class Values(ABC, BaseModel):
     @classmethod
     def read_tsv(
         cls,
-        input_file: str | Path | TextIO | csv.DictReader,
-        delimiter = "\t"
-    ) -> Generator[Self, None, None]:
-        if isinstance(input_file, str) or isinstance(input_file, Path):
-            with open(input_file, newline='') as input_file_handle:
-                reader = csv.DictReader(input_file_handle, delimiter=delimiter)
-                for row in reader:
-                    yield cls.from_row(row)
-        if isinstance(input_file, TextIO):
-            reader = csv.DictReader(input_file, delimiter=delimiter)
+        input_file: str | Path,
+        read_values: bool = True,
+        document_id: str | None = None,
+        language: str = Document.LANGUAGE_DEFAULT,
+        delimiter: str = "\t",
+        id_field: str | None = Document.ID_FIELD,
+        language_field: str | None = Document.LANGUAGE_FIELD,
+        text_field: str | None = Document.TEXT_FIELD,
+        **kwargs
+    ) -> Generator[Document[Self], None, None]:
+        current_document_id = document_id
+        current_language = language
+        values: list[Self] | None = None
+        texts: list[str] | None = None
+        with open(input_file, newline='') as input_file_handle:
+            reader = csv.DictReader(input_file_handle, delimiter=delimiter, **kwargs)
             for row in reader:
-                yield cls.from_row(row)
-        if isinstance(input_file, csv.DictReader):
-            for row in input_file:
-                yield cls.from_row(row)
-        else:
-            raise ValueError(f"Unknown input file {type(input_file)}")
+                row_document_id = None
+                if id_field is not None:
+                    row_document_id = row.get(id_field, document_id)
+                if row_document_id is None or row_document_id != current_document_id:
+                    if values is not None or texts is not None:
+                        yield Document[Self](
+                            id=current_document_id,
+                            language=current_language,
+                            values=values,
+                            texts=texts
+                        )
+                        texts = None
+                        values = None
+                current_document_id = row_document_id
+                if language_field is not None:
+                    current_language = row.get(language_field, language)
+                if read_values:
+                    if values is None:
+                        values = []
+                    values.append(cls.from_row(row))
+                if text_field is not None:
+                    text = row.get(text_field)
+                    if text is not None:
+                        if texts is None:
+                            texts = []
+                        texts.append(text)
+            yield Document[Self](
+                id=current_document_id,
+                language=current_language,
+                values=values,
+                texts=texts
+            )
 
     @classmethod
     def writer_tsv(
