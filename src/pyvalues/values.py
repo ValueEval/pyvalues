@@ -284,9 +284,9 @@ class Document(BaseModel, Generic[VALUES]):
     id: str | None = None
     language: str = "EN"
     values: list[VALUES] | None = None
-    texts: list[str] | None = None
+    segments: list[str] | None = None
 
-    TEXT_FIELD: ClassVar[str] = "Text"
+    SEGMENT_FIELD: ClassVar[str] = "Text"
     ID_FIELD: ClassVar[str] = "ID"
     LANGUAGE_FIELD: ClassVar[str] = "Language"
     LANGUAGE_DEFAULT: ClassVar[str] = "EN"
@@ -322,8 +322,8 @@ class ValuesWriter(Generic[VALUES]):
 
 class ValuesWithTextWriter(Generic[VALUES]):
     _writer: csv.DictWriter
-    _write_text_id: bool
-    _default_text_id: str | None
+    _write_document_id: bool
+    _default_document_id: str | None
     _write_language: bool
     _default_language: str | None
 
@@ -332,20 +332,20 @@ class ValuesWithTextWriter(Generic[VALUES]):
             cls: Type[VALUES],
             output_file: TextIO,
             delimiter: str = "\t",
-            write_text_id: bool = True,
-            default_text_id: str | None = None,
+            write_document_id: bool = True,
+            default_document_id: str | None = None,
             write_language: bool = True,
             default_language: str | None = Document.LANGUAGE_DEFAULT
     ):
-        self._write_text_id = write_text_id
-        self._default_text_id = default_text_id
+        self._write_document_id = write_document_id
+        self._default_document_id = default_document_id
         self._write_language = write_language
         self._default_language = default_language
 
         fieldnames = []
-        if write_text_id:
+        if write_document_id:
             fieldnames += [Document.ID_FIELD]
-        fieldnames += [Document.TEXT_FIELD]
+        fieldnames += [Document.SEGMENT_FIELD]
         if write_language:
             fieldnames += [Document.LANGUAGE_FIELD]
         fieldnames += cls.names()
@@ -360,21 +360,21 @@ class ValuesWithTextWriter(Generic[VALUES]):
     def write(
             self,
             values: VALUES,
-            text: str,
-            text_id: str | None = None,
+            segment: str,
+            document_id: str | None = None,
             language: str | None = None
     ):
         line: dict[str, float | str] = {
             value: score for (value, score) in zip(values.names(), values.to_list())
         }
-        line[Document.TEXT_FIELD] = text
-        if self._write_text_id:
-            if text_id is not None:
-                line[Document.ID_FIELD] = text_id
-            elif self._default_text_id is not None:
-                line[Document.ID_FIELD] = self._default_text_id
+        line[Document.SEGMENT_FIELD] = segment
+        if self._write_document_id:
+            if document_id is not None:
+                line[Document.ID_FIELD] = document_id
+            elif self._default_document_id is not None:
+                line[Document.ID_FIELD] = self._default_document_id
             else:
-                raise ValueError("Missing text ID for writing and no default set")
+                raise ValueError("Missing document ID for writing and no default set")
         if self._write_language:
             if language is not None:
                 line[Document.LANGUAGE_FIELD] = language
@@ -386,11 +386,11 @@ class ValuesWithTextWriter(Generic[VALUES]):
 
     def write_all(
             self,
-            values_with_text: Iterable[Tuple[VALUES, str, str]],
-            text_id: str | None = None
+            values_with_segments: Iterable[Tuple[VALUES, str, str]],
+            document_id: str | None = None
     ):
-        for values, text, language in values_with_text:
-            self.write(values=values, text_id=text_id, text=text, language=language)
+        for values, segment, language in values_with_segments:
+            self.write(values=values, document_id=document_id, segment=segment, language=language)
 
 
 class Values(ABC, BaseModel):
@@ -432,13 +432,13 @@ class Values(ABC, BaseModel):
         delimiter: str = "\t",
         id_field: str | None = Document.ID_FIELD,
         language_field: str | None = Document.LANGUAGE_FIELD,
-        text_field: str | None = Document.TEXT_FIELD,
+        segment_field: str | None = Document.SEGMENT_FIELD,
         **kwargs
     ) -> Generator[Document[Self], None, None]:
         current_document_id = document_id
         current_language = language
         values: list[Self] | None = None
-        texts: list[str] | None = None
+        segments: list[str] | None = None
         with open(input_file, newline='') as input_file_handle:
             reader = csv.DictReader(input_file_handle, delimiter=delimiter, **kwargs)
             for row in reader:
@@ -446,14 +446,14 @@ class Values(ABC, BaseModel):
                 if id_field is not None:
                     row_document_id = row.get(id_field, document_id)
                 if row_document_id is None or row_document_id != current_document_id:
-                    if values is not None or texts is not None:
+                    if values is not None or segments is not None:
                         yield Document[Self](
                             id=current_document_id,
                             language=current_language,
                             values=values,
-                            texts=texts
+                            segments=segments
                         )
-                        texts = None
+                        segments = None
                         values = None
                 current_document_id = row_document_id
                 if language_field is not None:
@@ -462,17 +462,17 @@ class Values(ABC, BaseModel):
                     if values is None:
                         values = []
                     values.append(cls.from_row(row))
-                if text_field is not None:
-                    text = row.get(text_field)
-                    if text is not None:
-                        if texts is None:
-                            texts = []
-                        texts.append(text)
+                if segment_field is not None:
+                    segment = row.get(segment_field)
+                    if segment is not None:
+                        if segments is None:
+                            segments = []
+                        segments.append(segment)
             yield Document[Self](
                 id=current_document_id,
                 language=current_language,
                 values=values,
-                texts=texts
+                segments=segments
             )
 
     @classmethod
@@ -492,8 +492,8 @@ class Values(ABC, BaseModel):
         cls,
         output_file: TextIO,
         delimiter: str = "\t",
-        write_text_id: bool = True,
-        default_text_id: str | None = None,
+        write_document_id: bool = True,
+        default_document_id: str | None = None,
         write_language: bool = True,
         default_language: str | None = "EN"
     ) -> ValuesWithTextWriter[Self]:
@@ -501,8 +501,8 @@ class Values(ABC, BaseModel):
             cls=cls,
             output_file=output_file,
             delimiter=delimiter,
-            write_text_id=write_text_id,
-            default_text_id=default_text_id,
+            write_document_id=write_document_id,
+            default_document_id=default_document_id,
             write_language=write_language,
             default_language=default_language
         )
