@@ -9,6 +9,7 @@ dependencies = [
     "pydantic (>=2.12.3,<3.0.0)",
     "matplotlib (>=3.10.8,<4.0.0)",
     "numpy (>=2.4.1,<3.0.0)",
+    "pydantic-extra-types (>=2.11.0,<3.0.0)",
 ]
 license = { file = "LICENSE" }
 keywords = [ "ai", "artificial intelligence", "classification", "human values", "schwartz values", "vallueeval" ]
