@@ -1,7 +1,12 @@
-from typing import Generator, Iterable, Tuple
+import random
+from typing import Generator, Iterable, Tuple, TypeVar
 from pydantic_extra_types.language_code import LanguageAlpha2
-from .classifiers import RefinedValuesWithAttainmentClassifier
-from .values import DEFAULT_LANGUAGE, AttainmentScore, RefinedValuesWithAttainment
+from .classifiers import OriginalValuesClassifier, OriginalValuesWithAttainmentClassifier, RefinedCoarseValuesClassifier, RefinedCoarseValuesWithAttainmentClassifier, RefinedValuesClassifier, RefinedValuesWithAttainmentClassifier
+from .values import DEFAULT_LANGUAGE, AttainmentScore, OriginalValues, OriginalValuesWithAttainment, RefinedCoarseValues, RefinedCoarseValuesWithAttainment, RefinedValues, RefinedValuesWithAttainment, Values, ValuesWithoutAttainment
+
+
+VALUES = TypeVar("VALUES", bound="Values")
+VALUES_WITHOUT_ATTAINMENT = TypeVar("VALUES_WITHOUT_ATTAINMENT", bound="ValuesWithoutAttainment")
 
 
 class AllAttainedClassifier(RefinedValuesWithAttainmentClassifier):
@@ -70,3 +75,217 @@ class AllConstrainedClassifier(RefinedValuesWithAttainmentClassifier):
                 universalism_nature=AttainmentScore(constrained=1),
                 universalism_tolerance=AttainmentScore(constrained=1),
             ), segment
+
+
+class RandomOriginalValuesClassifier(OriginalValuesClassifier):
+    """
+    Classifier that assigns values at random.
+    """
+
+    _probabilities: list[float]
+
+    def __init__(
+            self,
+            probabilities: OriginalValues | float = 0.5
+    ):
+        """
+        Creates a random classifier.
+        
+        :param probabilities: The probabilities for each value
+        :type probabilities: OriginalValues
+        """
+        if isinstance(probabilities, OriginalValues):
+            self._probabilities = probabilities.to_list()
+        else:
+            self._probabilities = [ probabilities ] * 10
+
+    def classify_document_for_original_values(
+            self,
+            segments: Iterable[str],
+            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+    ) -> Generator[Tuple[OriginalValues, str], None, None]:
+        for segment in segments:
+            draw = draw_list(self._probabilities)
+            yield OriginalValues.from_list(draw), segment
+
+
+class RandomRefinedCoarseValuesClassifier(RefinedCoarseValuesClassifier):
+    """
+    Classifier that assigns values at random.
+    """
+
+    _probabilities: list[float]
+
+    def __init__(
+            self,
+            probabilities: RefinedCoarseValues | float = 0.5
+    ):
+        """
+        Creates a random classifier.
+        
+        :param probabilities: The probabilities for each value
+        :type probabilities: RefinedCoarseValues
+        """
+        if isinstance(probabilities, RefinedCoarseValues):
+            self._probabilities = probabilities.to_list()
+        else:
+            self._probabilities = [ probabilities ] * 12
+
+    def classify_document_for_refined_coarse_values(
+            self,
+            segments: Iterable[str],
+            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+    ) -> Generator[Tuple[RefinedCoarseValues, str], None, None]:
+        for segment in segments:
+            draw = draw_list(self._probabilities)
+            yield RefinedCoarseValues.from_list(draw), segment
+
+
+class RandomRefinedValuesClassifier(RefinedValuesClassifier):
+    """
+    Classifier that assigns values at random.
+    """
+
+    _probabilities: list[float]
+
+    def __init__(
+            self,
+            probabilities: RefinedValues | float = 0.5
+    ):
+        """
+        Creates a random classifier.
+        
+        :param probabilities: The probabilities for each value
+        :type probabilities: RefinedValues
+        """
+        if isinstance(probabilities, RefinedValues):
+            self._probabilities = probabilities.to_list()
+        else:
+            self._probabilities = [ probabilities ] * 19
+
+    def classify_document_for_refined_values(
+            self,
+            segments: Iterable[str],
+            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+    ) -> Generator[Tuple[RefinedValues, str], None, None]:
+        for segment in segments:
+            draw = draw_list(self._probabilities)
+            yield RefinedValues.from_list(draw), segment
+
+
+class RandomOriginalValuesWithAttainmentClassifier(OriginalValuesWithAttainmentClassifier):
+    """
+    Classifier that assigns values at random.
+    """
+
+    _probabilities: list[float]
+
+    def __init__(
+            self,
+            probabilities: OriginalValuesWithAttainment | AttainmentScore
+            = AttainmentScore(attained=0.2929, constrained=0.2929)
+    ):
+        """
+        Creates a random classifier.
+
+        :param probabilities: The probabilities for each value (and attainment;
+        default is 0.2929 so that at least one attainment is drawn at 50%)
+        :type probabilities: RefinedCoarseValuesWithAttainment
+        """
+        if isinstance(probabilities, AttainmentScore):
+            self._probabilities = [
+                probabilities.attained, probabilities.constrained
+            ] * 10
+        else:
+            self._probabilities = probabilities.to_list()
+
+    def classify_document_for_original_values_with_attainment(
+            self,
+            segments: Iterable[str],
+            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+    ) -> Generator[Tuple[OriginalValuesWithAttainment, str], None, None]:
+        for segment in segments:
+            draw = pick_one_attainment(draw_list(self._probabilities))
+            yield OriginalValuesWithAttainment.from_list(draw), segment
+
+
+class RandomRefinedCoarseValuesWithAttainmentClassifier(RefinedCoarseValuesWithAttainmentClassifier):
+    """
+    Classifier that assigns values at random.
+    """
+
+    _probabilities: list[float]
+
+    def __init__(
+            self,
+            probabilities: RefinedCoarseValuesWithAttainment | AttainmentScore
+            = AttainmentScore(attained=0.2929, constrained=0.2929)
+    ):
+        """
+        Creates a random classifier.
+
+        :param probabilities: The probabilities for each value (and attainment;
+        default is 0.2929 so that at least one attainment is drawn at 50%)
+        :type probabilities: RefinedCoarseValuesWithAttainment
+        """
+        if isinstance(probabilities, AttainmentScore):
+            self._probabilities = [
+                probabilities.attained, probabilities.constrained
+            ] * 12
+        else:
+            self._probabilities = probabilities.to_list()
+
+    def classify_document_for_refined_coarse_values_with_attainment(
+            self,
+            segments: Iterable[str],
+            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+    ) -> Generator[Tuple[RefinedCoarseValuesWithAttainment, str], None, None]:
+        for segment in segments:
+            draw = pick_one_attainment(draw_list(self._probabilities))
+            yield RefinedCoarseValuesWithAttainment.from_list(draw), segment
+
+
+class RandomRefinedValuesWithAttainmentClassifier(RefinedValuesWithAttainmentClassifier):
+    """
+    Classifier that assigns values at random.
+    """
+
+    _probabilities: list[float]
+
+    def __init__(
+            self,
+            probabilities: RefinedValuesWithAttainment | AttainmentScore
+            = AttainmentScore(attained=0.2929, constrained=0.2929)
+    ):
+        """
+        Creates a random classifier.
+        
+        :param probabilities: The probabilities for each value (and attainment;
+        default is 0.2929 so that at least one attainment is drawn at 50%)
+        :type probabilities: RefinedValuesWithAttainment
+        """
+        if isinstance(probabilities, AttainmentScore):
+            self._probabilities = [
+                probabilities.attained, probabilities.constrained
+            ] * 19
+        else:
+            self._probabilities = probabilities.to_list()
+
+    def classify_document_for_refined_values_with_attainment(
+            self,
+            segments: Iterable[str],
+            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+    ) -> Generator[Tuple[RefinedValuesWithAttainment, str], None, None]:
+        for segment in segments:
+            draw = pick_one_attainment(draw_list(self._probabilities))
+            yield RefinedValuesWithAttainment.from_list(draw), segment
+
+
+def draw_list(probabilities: list[float]):
+    return [float(probability >= random.random()) for probability in probabilities]
+
+def pick_one_attainment(draw):
+    for i in range(int(len(draw) / 2)):
+        if draw[i + 0] + draw[i + 1] > 1:
+            draw[i + random.randint(0, 1)] = 0
+    return draw
