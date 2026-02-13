@@ -397,7 +397,8 @@ class ValuesWithTextWriter(Generic[VALUES]):
 
 
 class Values(ABC, BaseModel):
-    """ Scores (with or without attainment) for any system of values.
+    """
+    Scores (with or without attainment) for any system of values.
     """
     @classmethod
     @abstractmethod
@@ -525,7 +526,8 @@ class Values(ABC, BaseModel):
 
 
 class ValuesWithoutAttainment(Values):
-    """ Scores without attainment for any system of values.
+    """
+    Scores without attainment for any system of values.
     """
     @classmethod
     def from_labels(cls, labels: Iterable[str]) -> Self:
@@ -549,7 +551,8 @@ class ValuesWithoutAttainment(Values):
 
     @staticmethod
     def plot_all(value_scores_list: Sequence["ValuesWithoutAttainment"], **kwargs):
-        """ Plot scores in a radar plot.
+        """
+        Plot scores in a radar plot.
 
         Returns the matplotlib module, so one can directly use `savefig(file)` or `show()`
         on the returned value.
@@ -559,6 +562,10 @@ class ValuesWithoutAttainment(Values):
             import pyvalues
             values = pyvalues.OriginalValues.from_list([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0])
             pyvalues.plot_value_scores([values], labels=["my values"]).show()
+        
+        :param value_scores_list: The scores to plot
+        :type value_scores_list: Sequence["ValuesWithoutAttainment"]
+        :param kwargs: Arguments to pass on for plotting
         """
         assert len(value_scores_list) > 0
         assert all(
@@ -595,7 +602,8 @@ class ValuesWithoutAttainment(Values):
 
 
 class ValuesWithAttainment(Values):
-    """ Scores with attainment for any system of values.
+    """
+    Scores with attainment for any system of values.
     """
     @classmethod
     def from_labels(cls, labels: Iterable[str]) -> Self:
@@ -665,7 +673,8 @@ class ValuesWithAttainment(Values):
 
 
 class OriginalValues(ValuesWithoutAttainment):
-    """ Scores for the ten values from Schwartz original system.
+    """
+    Scores for the ten values from Schwartz original system.
     """
     self_direction: Score = Field(
         default=0.0,
@@ -756,7 +765,8 @@ class OriginalValues(ValuesWithoutAttainment):
 
 
 class RefinedCoarseValues(ValuesWithoutAttainment):
-    """ Scores for the twelve values from Schwartz refined system (19 values)
+    """
+    Scores for the twelve values from Schwartz refined system (19 values)
     when combining values with same name prefix.
     """
     self_direction: Score = Field(
@@ -864,8 +874,8 @@ class RefinedCoarseValues(ValuesWithoutAttainment):
         """
         Drops Face and Humility scores.
 
-        Returns:
-        - OriginalValues: The reduced scores
+        :return: The reduced scores
+        :rtype: OriginalValues
         """
         return OriginalValues(
             self_direction=self.self_direction,
@@ -882,7 +892,8 @@ class RefinedCoarseValues(ValuesWithoutAttainment):
 
 
 class RefinedValues(ValuesWithoutAttainment):
-    """ Scores for the 19 values from Schwartz refined system.
+    """
+    Scores for the 19 values from Schwartz refined system.
     """
     self_direction_thought: Score = Field(
         default=0.0,
@@ -1041,11 +1052,10 @@ class RefinedValues(ValuesWithoutAttainment):
         E.g., 'Universalism: concern', 'Universalism: nature', and
         'Universalism: tolerance' to 'Universalism'.
 
-        Parameters:
-        - mode: Function to combine the scores (default: max)
-
-        Returns:
-        - RefinedCoarseValues: The combined scores
+        :param mode: Function to combine the scores (default: max)
+        :type mode: Callable[[Iterable[float]], float]
+        :return: The combined scores
+        :rtype: RefinedCoarseValues
         """
         return RefinedCoarseValues(
             self_direction=mode([self.self_direction_action, self.self_direction_thought]),
@@ -1070,17 +1080,17 @@ class RefinedValues(ValuesWithoutAttainment):
         E.g., 'Universalism: concern', 'Universalism: nature', and
         'Universalism: tolerance' to 'Universalism'.
 
-        Parameters:
-        - mode: Function to combine the scores (default: max)
-
-        Returns:
-        - OriginalValues: The combined and reduced scores
+        :param mode: Function to combine the scores (default: max)
+        :type mode: Callable[[Iterable[float]], float]
+        :return: The combined and reduced scores
+        :rtype: OriginalValues
         """
         return self.coarse_values(mode=mode).original_values()
 
 
 class OriginalValuesWithAttainment(ValuesWithAttainment):
-    """ Scores with attainment for the ten values from Schwartz original system.
+    """
+    Scores with attainment for the ten values from Schwartz original system.
     """
     self_direction: AttainmentScore = Field(
         default=AttainmentScore(),
@@ -1187,8 +1197,8 @@ class OriginalValuesWithAttainment(ValuesWithAttainment):
         E.g., 'Achievement attained' and 'Achievement constrained' to
         'Achievement'.
 
-        Returns:
-        - OriginalValues: The combined scores
+        :return: The combined and scores
+        :rtype: OriginalValues
         """
         return OriginalValues(
             self_direction=self.self_direction.total(),
@@ -1207,8 +1217,8 @@ class OriginalValuesWithAttainment(ValuesWithAttainment):
         """
         Takes the scores of the values for attained only, dropping for constrained.
 
-        Returns:
-        - OriginalValues: The attained scores
+        :return: The attained scores
+        :rtype: OriginalValues
         """
         return OriginalValues(
             self_direction=self.self_direction.attained,
@@ -1227,8 +1237,8 @@ class OriginalValuesWithAttainment(ValuesWithAttainment):
         """
         Takes the scores of the values for constrained only, dropping for attained.
 
-        Returns:
-        - OriginalValues: The constrained scores
+        :return: The constrained scores
+        :rtype: OriginalValues
         """
         return OriginalValues(
             self_direction=self.self_direction.constrained,
@@ -1245,7 +1255,8 @@ class OriginalValuesWithAttainment(ValuesWithAttainment):
 
 
 class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
-    """ Scores with attainment for the twelve values from Schwartz refined
+    """
+    Scores with attainment for the twelve values from Schwartz refined
     system (19 values) when combining values with same name prefix.
     """
     self_direction: AttainmentScore = Field(
@@ -1365,8 +1376,8 @@ class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
         """
         Drops Face and Humility scores.
 
-        Returns:
-        - OriginalValuesWithAttainment: The reduced scores
+        :return: The reduced scores
+        :rtype: OriginalValuesWithAttainment
         """
         return OriginalValuesWithAttainment(
             self_direction=self.self_direction,
@@ -1389,8 +1400,8 @@ class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
         E.g., 'Achievement attained' and 'Achievement constrained' to
         'Achievement'.
 
-        Returns:
-        - RefinedCoarseValues: The combined scores
+        :return: The combined scores
+        :rtype: RefinedCoarseValues
         """
         return RefinedCoarseValues(
             self_direction=self.self_direction.total(),
@@ -1411,8 +1422,8 @@ class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
         """
         Takes the scores of the values for attained only, dropping for constrained.
 
-        Returns:
-        - RefinedCoarseValues: The attained scores
+        :return: The attained scores
+        :rtype: RefinedCoarseValues
         """
         return RefinedCoarseValues(
             self_direction=self.self_direction.attained,
@@ -1433,8 +1444,8 @@ class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
         """
         Takes the scores of the values for constrained only, dropping for attained.
 
-        Returns:
-        - RefinedCoarseValues: The constrained scores
+        :return: The constrained scores
+        :rtype: RefinedCoarseValues
         """
         return RefinedCoarseValues(
             self_direction=self.self_direction.constrained,
@@ -1453,7 +1464,8 @@ class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
 
 
 class RefinedValuesWithAttainment(ValuesWithAttainment):
-    """ Scores with attainment for the 19 values from Schwartz refined system.
+    """
+    Scores with attainment for the 19 values from Schwartz refined system.
     """
     self_direction_thought: AttainmentScore = Field(
         default=AttainmentScore(),
@@ -1631,11 +1643,10 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
         E.g., 'Universalism: concern attained', 'Universalism: nature attained',
         and 'Universalism: tolerance attained' to 'Universalism attained'.
 
-        Parameters:
-        - mode: Function to combine the scores (default: max)
-
-        Returns:
-        - RefinedCoarseValuesWithAttainment: The combined scores
+        :param mode: Function to combine the scores (default: max)
+        :type mode: Callable[[Iterable[float]], float]
+        :return: The combined scores
+        :rtype: RefinedCoarseValuesWithAttainment
         """
         return RefinedCoarseValuesWithAttainment(
             self_direction=combine_attainment_scores(
@@ -1666,11 +1677,10 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
         E.g., 'Universalism: concern attained', 'Universalism: nature attained',
         and 'Universalism: tolerance attained' to 'Universalism attained'.
 
-        Parameters:
-        - mode: Function to combine the scores (default: max)
-
-        Returns:
-        - OriginalValuesWithAttainment: The combined and reduced scores
+        :param mode: Function to combine the scores (default: max)
+        :type mode: Callable[[Iterable[float]], float]
+        :return: The combined and reduced scores
+        :rtype: OriginalValuesWithAttainment
         """
         return self.coarse_values(mode=mode).original_values()
 
@@ -1682,8 +1692,8 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
         E.g., 'Achievement attained' and 'Achievement constrained' to
         'Achievement'.
 
-        Returns:
-        - RefinedValues: The combined scores
+        :return: The combined scores
+        :rtype: RefinedValues
         """
         return RefinedValues(
             self_direction_action=self.self_direction_action.total(),
@@ -1711,8 +1721,8 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
         """
         Takes the scores of the values for attained only, dropping for constrained.
 
-        Returns:
-        - RefinedValues: The attained scores
+        :return: The attained scores
+        :rtype: RefinedValues
         """
         return RefinedValues(
             self_direction_action=self.self_direction_action.attained,
@@ -1740,8 +1750,8 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
         """
         Takes the scores of the values for constrained only, dropping for attained.
 
-        Returns:
-        - RefinedValues: The constrained scores
+        :return: The constrained scores
+        :rtype: RefinedValues
         """
         return RefinedValues(
             self_direction_action=self.self_direction_action.constrained,

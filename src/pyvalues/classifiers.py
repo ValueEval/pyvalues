@@ -23,6 +23,13 @@ class OriginalValuesClassifier(ABC):
         pass
 
     def _raise_unsupported_language(self, language):
+        """
+        Raises the appropriate error when being asked for an unsupported
+        language.
+        
+        :param self: Description
+        :param language: Description
+        """
         supported = "'" + "', '".join(self.get_supported_languages()) + "'"
         raise ValueError(
             f"Unsupported language: {language}. Supported: {supported}."
