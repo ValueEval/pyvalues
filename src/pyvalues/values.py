@@ -3,10 +3,13 @@ import csv
 from pathlib import Path
 from typing import Annotated, Callable, ClassVar, Generator, Generic, Iterable, Self, Sequence, TextIO, Tuple, Type, TypeVar
 from pydantic import AliasChoices, BaseModel, ConfigDict, Field, model_validator
+from pydantic_extra_types.language_code import LanguageAlpha2
 from .radarplot import plot_radar
 import matplotlib.pyplot as plt
 
-original_values = [
+DEFAULT_LANGUAGE: LanguageAlpha2 = LanguageAlpha2("en")
+
+ORIGINAL_VALUES = [
     "Self-direction",
     "Stimulation",
     "Hedonism",
@@ -20,7 +23,7 @@ original_values = [
 ]
 
 # Based on https://sashamaps.net/docs/resources/20-colors/
-original_values_colors = [
+ORIGINAL_VALUES_COLORS = [
     "#ffe119",  # self-direction
     "#fffac8",  # stimulation
     "#bfef45",  # hedonism
@@ -33,12 +36,12 @@ original_values_colors = [
     "#f58231",  # universalism
 ]
 
-original_values_with_attainment = sum(
-    [[v + " attained", v + "constrained"] for v in original_values],
+ORIGINAL_VALUES_WITH_ATTAINMENT = sum(
+    [[v + " attained", v + "constrained"] for v in ORIGINAL_VALUES],
     []
 )
 
-refined_coarse_values = [
+REFINED_COARSE_VALUES = [
     "Self-direction",
     "Stimulation",
     "Hedonism",
@@ -54,7 +57,7 @@ refined_coarse_values = [
 ]
 
 # Based on https://sashamaps.net/docs/resources/20-colors/
-refined_coarse_values_colors = [
+REFINED_COARSE_VALUES_COLORS = [
     "#ffe119",  # self-direction
     "#fffac8",  # stimulation
     "#bfef45",  # hedonism
@@ -69,12 +72,12 @@ refined_coarse_values_colors = [
     "#f58231",  # universalism
 ]
 
-refined_coarse_values_with_attainment = sum(
-    [[v + " attained", v + "constrained"] for v in refined_coarse_values],
+REFINED_COARSE_VALUES_WITH_ATTAINMENT = sum(
+    [[v + " attained", v + "constrained"] for v in REFINED_COARSE_VALUES],
     []
 )
 
-refined_values = [
+REFINED_VALUES = [
     "Self-direction: action",
     "Self-direction: thought",
     "Stimulation",
@@ -97,7 +100,7 @@ refined_values = [
 ]
 
 # Based on https://sashamaps.net/docs/resources/20-colors/
-refined_values_colors = [
+REFINED_VALUES_COLORS = [
     "#808000", "#ffe119",  # self-direction
     "#fffac8",  # stimulation
     "#bfef45",  # hedonism
@@ -112,8 +115,8 @@ refined_values_colors = [
     "#9a6324", "#f58231", "#ffd8b1"  # universalism
 ]
 
-refined_values_with_attainment = sum(
-    [[v + " attained", v + "constrained"] for v in refined_values],
+REFINED_VALUES_WITH_ATTAINMENT = sum(
+    [[v + " attained", v + "constrained"] for v in REFINED_VALUES],
     []
 )
 
@@ -257,11 +260,11 @@ class Evaluation(Generic[VALUES_WITHOUT_ATTAINMENT]):
         num_values = len(self._value_evaluations.keys())
         colors = None
         if num_values == 10:
-            colors = original_values_colors
+            colors = ORIGINAL_VALUES_COLORS
         elif num_values == 12:
-            colors = refined_coarse_values_colors
+            colors = REFINED_COARSE_VALUES_COLORS
         elif num_values == 19:
-            colors = refined_values_colors
+            colors = REFINED_VALUES_COLORS
         else:
             raise ValueError(f"Invalid number of values: {num_values}")
 
@@ -282,14 +285,13 @@ class Evaluation(Generic[VALUES_WITHOUT_ATTAINMENT]):
 
 class Document(BaseModel, Generic[VALUES]):
     id: str | None = None
-    language: str = "EN"
+    language: LanguageAlpha2 = DEFAULT_LANGUAGE
     values: list[VALUES] | None = None
     segments: list[str] | None = None
 
     SEGMENT_FIELD: ClassVar[str] = "Text"
     ID_FIELD: ClassVar[str] = "ID"
     LANGUAGE_FIELD: ClassVar[str] = "Language"
-    LANGUAGE_DEFAULT: ClassVar[str] = "EN"
 
 
 class ValuesWriter(Generic[VALUES]):
@@ -325,7 +327,7 @@ class ValuesWithTextWriter(Generic[VALUES]):
     _write_document_id: bool
     _default_document_id: str | None
     _write_language: bool
-    _default_language: str | None
+    _default_language: LanguageAlpha2 | None
 
     def __init__(
             self,
@@ -335,7 +337,7 @@ class ValuesWithTextWriter(Generic[VALUES]):
             write_document_id: bool = True,
             default_document_id: str | None = None,
             write_language: bool = True,
-            default_language: str | None = Document.LANGUAGE_DEFAULT
+            default_language: LanguageAlpha2 | None = DEFAULT_LANGUAGE
     ):
         self._write_document_id = write_document_id
         self._default_document_id = default_document_id
@@ -362,7 +364,7 @@ class ValuesWithTextWriter(Generic[VALUES]):
             values: VALUES,
             segment: str,
             document_id: str | None = None,
-            language: str | None = None
+            language: LanguageAlpha2 | None = None
     ):
         line: dict[str, float | str] = {
             value: score for (value, score) in zip(values.names(), values.to_list())
@@ -386,10 +388,11 @@ class ValuesWithTextWriter(Generic[VALUES]):
 
     def write_all(
             self,
-            values_with_segments: Iterable[Tuple[VALUES, str, str]],
+            values_with_segments: Iterable[Tuple[VALUES, str]],
+            language: LanguageAlpha2,
             document_id: str | None = None
     ):
-        for values, segment, language in values_with_segments:
+        for values, segment in values_with_segments:
             self.write(values=values, document_id=document_id, segment=segment, language=language)
 
 
@@ -428,7 +431,7 @@ class Values(ABC, BaseModel):
         input_file: str | Path,
         read_values: bool = True,
         document_id: str | None = None,
-        language: str = Document.LANGUAGE_DEFAULT,
+        language: LanguageAlpha2 = DEFAULT_LANGUAGE,
         delimiter: str = "\t",
         id_field: str | None = Document.ID_FIELD,
         language_field: str | None = Document.LANGUAGE_FIELD,
@@ -436,7 +439,7 @@ class Values(ABC, BaseModel):
         **kwargs
     ) -> Generator[Document[Self], None, None]:
         current_document_id = document_id
-        current_language = language
+        current_language: LanguageAlpha2 = language
         values: list[Self] | None = None
         segments: list[str] | None = None
         with open(input_file, newline='') as input_file_handle:
@@ -457,7 +460,7 @@ class Values(ABC, BaseModel):
                         values = None
                 current_document_id = row_document_id
                 if language_field is not None:
-                    current_language = row.get(language_field, language)
+                    current_language = LanguageAlpha2(row.get(language_field, language))
                 if read_values:
                     if values is None:
                         values = []
@@ -495,7 +498,7 @@ class Values(ABC, BaseModel):
         write_document_id: bool = True,
         default_document_id: str | None = None,
         write_language: bool = True,
-        default_language: str | None = "EN"
+        default_language: LanguageAlpha2 | None = DEFAULT_LANGUAGE
     ) -> ValuesWithTextWriter[Self]:
         return ValuesWithTextWriter[Self](
             cls=cls,
@@ -540,7 +543,7 @@ class ValuesWithoutAttainment(Values):
             value_evaluations={
                 value: [
                     instance_evaluation[value] for instance_evaluation in instance_evaluations
-                ] for value in original_values
+                ] for value in ORIGINAL_VALUES
             }
         )
 
@@ -735,7 +738,7 @@ class OriginalValues(ValuesWithoutAttainment):
 
     @classmethod
     def names(cls) -> list[str]:
-        return original_values
+        return ORIGINAL_VALUES
 
     def to_list(self) -> list[float]:
         return [
@@ -839,7 +842,7 @@ class RefinedCoarseValues(ValuesWithoutAttainment):
 
     @classmethod
     def names(cls) -> list[str]:
-        return refined_coarse_values
+        return REFINED_COARSE_VALUES
 
     def to_list(self) -> list[float]:
         return [
@@ -1006,7 +1009,7 @@ class RefinedValues(ValuesWithoutAttainment):
 
     @classmethod
     def names(cls) -> list[str]:
-        return refined_values
+        return REFINED_VALUES
 
     def to_list(self) -> list[float]:
         return [
@@ -1150,7 +1153,7 @@ class OriginalValuesWithAttainment(ValuesWithAttainment):
 
     @classmethod
     def names(cls) -> list[str]:
-        return original_values_with_attainment
+        return ORIGINAL_VALUES_WITH_ATTAINMENT
 
     def to_list(self) -> list[float]:
         return [
@@ -1328,7 +1331,7 @@ class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
 
     @classmethod
     def names(cls) -> list[str]:
-        return refined_coarse_values_with_attainment
+        return REFINED_COARSE_VALUES_WITH_ATTAINMENT
 
     def to_list(self) -> list[float]:
         return [
@@ -1577,7 +1580,7 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
 
     @classmethod
     def names(cls) -> list[str]:
-        return refined_values_with_attainment
+        return REFINED_VALUES_WITH_ATTAINMENT
 
     def to_list(self) -> list[float]:
         return [

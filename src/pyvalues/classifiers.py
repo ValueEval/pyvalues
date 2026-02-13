@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Generator, Iterable, Tuple
+from typing import Generator, Iterable, Set, Tuple
 from pydantic_extra_types.language_code import LanguageAlpha2
 
 from .values import (
@@ -8,10 +8,9 @@ from .values import (
     OriginalValues,
     RefinedValuesWithAttainment,
     RefinedCoarseValuesWithAttainment,
-    OriginalValuesWithAttainment
+    OriginalValuesWithAttainment,
+    DEFAULT_LANGUAGE
 )
-
-DEFAULT_LANGUAGE = LanguageAlpha2("en")
 
 
 class OriginalValuesClassifier(ABC):
@@ -19,19 +18,32 @@ class OriginalValuesClassifier(ABC):
     Classifier for the ten values from Schwartz original system.
     """
 
+    @abstractmethod
+    def get_supported_languages(self) -> Set[LanguageAlpha2]:
+        pass
+
+    def _raise_unsupported_language(self, language):
+        supported = "'" + "', '".join(self.get_supported_languages()) + "'"
+        raise ValueError(
+            f"Unsupported language: {language}. Supported: {supported}."
+        )
+
     def classify_for_original_values(
             self,
             segment: str,
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Tuple[OriginalValues, str, str]:
-        return self.classify_document_for_original_values([segment], language).__next__()
+    ) -> OriginalValues:
+        return self.classify_document_for_original_values(
+            [segment],
+            language
+        ).__next__()[0]
 
     @abstractmethod
     def classify_document_for_original_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[OriginalValues, str, str], None, None]:
+    ) -> Generator[Tuple[OriginalValues, str], None, None]:
         pass
 
 
@@ -45,32 +57,37 @@ class RefinedCoarseValuesClassifier(OriginalValuesClassifier):
             self,
             segment: str,
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Tuple[OriginalValues, str, str]:
-        values, t, lang = self.classify_for_refined_coarse_values(segment=segment, language=language)
-        return values.original_values(), t, lang
+    ) -> OriginalValues:
+        values = self.classify_for_refined_coarse_values(
+            segment=segment,
+            language=language
+        )
+        return values.original_values()
 
     def classify_for_refined_coarse_values(
             self,
             segment: str,
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Tuple[RefinedCoarseValues, str, str]:
-        return self.classify_document_for_refined_coarse_values([segment], language).__next__()
+    ) -> RefinedCoarseValues:
+        return self.classify_document_for_refined_coarse_values(
+            [segment],
+            language
+        ).__next__()[0]
 
-    @abstractmethod
     def classify_document_for_original_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[OriginalValues, str, str], None, None]:
-        for values, t, lang in self.classify_document_for_refined_coarse_values(segments, language):
-            yield values.original_values(), t, lang
+    ) -> Generator[Tuple[OriginalValues, str], None, None]:
+        for values, segment in self.classify_document_for_refined_coarse_values(segments, language):
+            yield values.original_values(), segment
 
     @abstractmethod
     def classify_document_for_refined_coarse_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedCoarseValues, str, str], None, None]:
+    ) -> Generator[Tuple[RefinedCoarseValues, str], None, None]:
         pass
 
 
@@ -83,31 +100,37 @@ class RefinedValuesClassifier(RefinedCoarseValuesClassifier):
             self,
             segment: str,
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Tuple[RefinedCoarseValues, str, str]:
-        values, t, lang = self.classify_for_refined_values(segment=segment, language=language)
-        return values.coarse_values(), t, lang
+    ) -> RefinedCoarseValues:
+        values = self.classify_for_refined_values(
+            segment=segment,
+            language=language
+        )
+        return values.coarse_values()
 
     def classify_for_refined_values(
             self,
             segment: str,
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Tuple[RefinedValues, str, str]:
-        return self.classify_document_for_refined_values([segment], language).__next__()
+    ) -> RefinedValues:
+        return self.classify_document_for_refined_values(
+            [segment],
+            language
+        ).__next__()[0]
 
     def classify_document_for_refined_coarse_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedCoarseValues, str, str], None, None]:
-        for values, t, lang in self.classify_document_for_refined_values(segments, language):
-            yield values.coarse_values(), t, lang
+    ) -> Generator[Tuple[RefinedCoarseValues, str], None, None]:
+        for values, segment in self.classify_document_for_refined_values(segments, language):
+            yield values.coarse_values(), segment
 
     @abstractmethod
     def classify_document_for_refined_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedValues, str, str], None, None]:
+    ) -> Generator[Tuple[RefinedValues, str], None, None]:
         pass
 
 
@@ -120,34 +143,37 @@ class OriginalValuesWithAttainmentClassifier(OriginalValuesClassifier):
             self,
             segment: str,
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Tuple[OriginalValues, str, str]:
-        values, t, lang = self.classify_for_original_values_with_attainment(
+    ) -> OriginalValues:
+        values = self.classify_for_original_values_with_attainment(
             segment=segment,
             language=language
         )
-        return values.without_attainment(), t, lang
+        return values.without_attainment()
 
     def classify_for_original_values_with_attainment(
             self,
             segment: str,
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Tuple[OriginalValuesWithAttainment, str, str]:
-        return self.classify_document_for_original_values_with_attainment([segment], language).__next__()
+    ) -> OriginalValuesWithAttainment:
+        return self.classify_document_for_original_values_with_attainment(
+            [segment],
+            language
+        ).__next__()[0]
 
     def classify_document_for_original_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[OriginalValues, str, str], None, None]:
-        for values, t, lang in self.classify_document_for_original_values_with_attainment(segments, language):
-            yield values.without_attainment(), t, lang
+    ) -> Generator[Tuple[OriginalValues, str], None, None]:
+        for values, segment in self.classify_document_for_original_values_with_attainment(segments, language):
+            yield values.without_attainment(), segment
 
     @abstractmethod
     def classify_document_for_original_values_with_attainment(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[OriginalValuesWithAttainment, str, str], None, None]:
+    ) -> Generator[Tuple[OriginalValuesWithAttainment, str], None, None]:
         pass
 
 
@@ -162,49 +188,54 @@ class RefinedCoarseValuesWithAttainmentClassifier(
             self,
             segment: str,
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Tuple[RefinedCoarseValues, str, str]:
-        values, t, lang = self.classify_for_refined_coarse_values_with_attainment(
-            segment=segment, language=language)
-        return values.without_attainment(), t, lang
+    ) -> RefinedCoarseValues:
+        values = self.classify_for_refined_coarse_values_with_attainment(
+            segment=segment,
+            language=language
+        )
+        return values.without_attainment()
 
     def classify_for_original_values_with_attainment(
             self,
             segment: str,
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Tuple[OriginalValuesWithAttainment, str, str]:
-        values, t, lang = self.classify_for_refined_coarse_values_with_attainment(
+    ) -> OriginalValuesWithAttainment:
+        values = self.classify_for_refined_coarse_values_with_attainment(
             segment=segment, language=language)
-        return values.original_values(), t, lang
+        return values.original_values()
 
     def classify_for_refined_coarse_values_with_attainment(
             self,
             segment: str,
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Tuple[RefinedCoarseValuesWithAttainment, str, str]:
-        return self.classify_document_for_refined_coarse_values_with_attainment([segment], language).__next__()
+    ) -> RefinedCoarseValuesWithAttainment:
+        return self.classify_document_for_refined_coarse_values_with_attainment(
+            [segment],
+            language
+        ).__next__()[0]
 
     def classify_document_for_refined_coarse_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedCoarseValues, str, str], None, None]:
-        for values, t, lang in self.classify_document_for_refined_coarse_values_with_attainment(segments, language):
-            yield values.without_attainment(), t, lang
+    ) -> Generator[Tuple[RefinedCoarseValues, str], None, None]:
+        for values, segment in self.classify_document_for_refined_coarse_values_with_attainment(segments, language):
+            yield values.without_attainment(), segment
 
     def classify_document_for_original_values_with_attainment(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[OriginalValuesWithAttainment, str, str], None, None]:
-        for values, t, lang in self.classify_document_for_refined_coarse_values_with_attainment(segments, language):
-            yield values.original_values(), t, lang
+    ) -> Generator[Tuple[OriginalValuesWithAttainment, str], None, None]:
+        for values, segment in self.classify_document_for_refined_coarse_values_with_attainment(segments, language):
+            yield values.original_values(), segment
 
     @abstractmethod
     def classify_document_for_refined_coarse_values_with_attainment(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedCoarseValuesWithAttainment, str, str], None, None]:
+    ) -> Generator[Tuple[RefinedCoarseValuesWithAttainment, str], None, None]:
         pass
 
 
@@ -218,47 +249,54 @@ class RefinedValuesWithAttainmentClassifier(
             self,
             segment: str,
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Tuple[RefinedValues, str, str]:
-        values, t, lang = self.classify_for_refined_values_with_attainment(
-            segment=segment, language=language)
-        return values.without_attainment(), t, lang
+    ) -> RefinedValues:
+        values = self.classify_for_refined_values_with_attainment(
+            segment=segment,
+            language=language
+        )
+        return values.without_attainment()
 
     def classify_for_refined_coarse_values_with_attainment(
             self,
             segment: str,
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Tuple[RefinedCoarseValuesWithAttainment, str, str]:
-        values, t, lang = self.classify_for_refined_values_with_attainment(
-            segment=segment, language=language)
-        return values.coarse_values(), t, lang
+    ) -> RefinedCoarseValuesWithAttainment:
+        values = self.classify_for_refined_values_with_attainment(
+            segment=segment,
+            language=language
+        )
+        return values.coarse_values()
 
     def classify_for_refined_values_with_attainment(
             self,
             segment: str,
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Tuple[RefinedValuesWithAttainment, str, str]:
-        return self.classify_document_for_refined_values_with_attainment([segment], language).__next__()
+    ) -> RefinedValuesWithAttainment:
+        return self.classify_document_for_refined_values_with_attainment(
+            [segment],
+            language
+        ).__next__()[0]
 
     def classify_document_for_refined_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedValues, str, str], None, None]:
-        for values, t, lang in self.classify_document_for_refined_values_with_attainment(segments, language):
-            yield values.without_attainment(), t, lang
+    ) -> Generator[Tuple[RefinedValues, str], None, None]:
+        for values, segment in self.classify_document_for_refined_values_with_attainment(segments, language):
+            yield values.without_attainment(), segment
 
     def classify_document_for_refined_coarse_values_with_attainment(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedCoarseValuesWithAttainment, str, str], None, None]:
-        for values, t, lang in self.classify_document_for_refined_values_with_attainment(segments, language):
-            yield values.coarse_values(), t, lang
+    ) -> Generator[Tuple[RefinedCoarseValuesWithAttainment, str], None, None]:
+        for values, segment in self.classify_document_for_refined_values_with_attainment(segments, language):
+            yield values.coarse_values(), segment
 
     @abstractmethod
     def classify_document_for_refined_values_with_attainment(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedValuesWithAttainment, str, str], None, None]:
+    ) -> Generator[Tuple[RefinedValuesWithAttainment, str], None, None]:
         pass
