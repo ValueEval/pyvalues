@@ -562,7 +562,7 @@ class ValuesWithoutAttainment(Values):
             import pyvalues
             values = pyvalues.OriginalValues.from_list([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0])
             pyvalues.plot_value_scores([values], labels=["my values"]).show()
-        
+
         :param value_scores_list: The scores to plot
         :type value_scores_list: Sequence["ValuesWithoutAttainment"]
         :param kwargs: Arguments to pass on for plotting

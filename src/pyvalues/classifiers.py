@@ -26,7 +26,7 @@ class OriginalValuesClassifier(ABC):
         """
         Raises the appropriate error when being asked for an unsupported
         language.
-        
+
         :param self: Description
         :param language: Description
         """

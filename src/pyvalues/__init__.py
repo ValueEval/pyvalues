@@ -12,7 +12,12 @@ from .classifiers import (
     OriginalValuesClassifier,
     RefinedValuesWithAttainmentClassifier,
     RefinedCoarseValuesWithAttainmentClassifier,
-    OriginalValuesWithAttainmentClassifier
+    OriginalValuesWithAttainmentClassifier,
+)
+
+from .baselines import (
+    AllAttainedClassifier,
+    AllConstrainedClassifier,
 )
 
 __all__ = [
@@ -28,6 +33,8 @@ __all__ = [
     "RefinedValuesWithAttainmentClassifier",
     "RefinedCoarseValuesWithAttainmentClassifier",
     "OriginalValuesWithAttainmentClassifier",
+    "AllAttainedClassifier",
+    "AllConstrainedClassifier",
 ]
 
 from importlib import metadata
