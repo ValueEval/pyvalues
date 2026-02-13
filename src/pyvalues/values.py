@@ -858,6 +858,12 @@ class RefinedCoarseValues(ValuesWithoutAttainment):
         ]
 
     def original_values(self) -> OriginalValues:
+        """
+        Drops Face and Humility scores.
+
+        Returns:
+        - OriginalValues: The reduced scores
+        """
         return OriginalValues(
             self_direction=self.self_direction,
             stimulation=self.stimulation,
@@ -1026,6 +1032,18 @@ class RefinedValues(ValuesWithoutAttainment):
         ]
 
     def coarse_values(self, mode: Callable[[Iterable[float]], float] = max) -> RefinedCoarseValues:
+        """
+        Combines the scores of the values with the same prefix.
+
+        E.g., 'Universalism: concern', 'Universalism: nature', and
+        'Universalism: tolerance' to 'Universalism'.
+
+        Parameters:
+        - mode: Function to combine the scores (default: max)
+
+        Returns:
+        - RefinedCoarseValues: The combined scores
+        """
         return RefinedCoarseValues(
             self_direction=mode([self.self_direction_action, self.self_direction_thought]),
             stimulation=self.stimulation,
@@ -1042,6 +1060,19 @@ class RefinedValues(ValuesWithoutAttainment):
         )
 
     def original_values(self, mode: Callable[[Iterable[float]], float] = max) -> OriginalValues:
+        """
+        Combines the scores of the values with the same prefix and drops Face
+        and Humility.
+
+        E.g., 'Universalism: concern', 'Universalism: nature', and
+        'Universalism: tolerance' to 'Universalism'.
+
+        Parameters:
+        - mode: Function to combine the scores (default: max)
+
+        Returns:
+        - OriginalValues: The combined and reduced scores
+        """
         return self.coarse_values(mode=mode).original_values()
 
 
@@ -1146,6 +1177,16 @@ class OriginalValuesWithAttainment(ValuesWithAttainment):
         ]
 
     def without_attainment(self) -> OriginalValues:
+        """
+        Combines the scores of the values with the same attainment by taking
+        their sum.
+
+        E.g., 'Achievement attained' and 'Achievement constrained' to
+        'Achievement'.
+
+        Returns:
+        - OriginalValues: The combined scores
+        """
         return OriginalValues(
             self_direction=self.self_direction.total(),
             stimulation=self.stimulation.total(),
@@ -1160,6 +1201,12 @@ class OriginalValuesWithAttainment(ValuesWithAttainment):
         )
 
     def attained(self) -> OriginalValues:
+        """
+        Takes the scores of the values for attained only, dropping for constrained.
+
+        Returns:
+        - OriginalValues: The attained scores
+        """
         return OriginalValues(
             self_direction=self.self_direction.attained,
             stimulation=self.stimulation.attained,
@@ -1174,6 +1221,12 @@ class OriginalValuesWithAttainment(ValuesWithAttainment):
         )
 
     def constrained(self) -> OriginalValues:
+        """
+        Takes the scores of the values for constrained only, dropping for attained.
+
+        Returns:
+        - OriginalValues: The constrained scores
+        """
         return OriginalValues(
             self_direction=self.self_direction.constrained,
             stimulation=self.stimulation.constrained,
@@ -1306,6 +1359,12 @@ class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
         ]
 
     def original_values(self) -> OriginalValuesWithAttainment:
+        """
+        Drops Face and Humility scores.
+
+        Returns:
+        - OriginalValuesWithAttainment: The reduced scores
+        """
         return OriginalValuesWithAttainment(
             self_direction=self.self_direction,
             stimulation=self.stimulation,
@@ -1320,6 +1379,16 @@ class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
         )
 
     def without_attainment(self) -> RefinedCoarseValues:
+        """
+        Combines the scores of the values with the same attainment by taking
+        their sum.
+
+        E.g., 'Achievement attained' and 'Achievement constrained' to
+        'Achievement'.
+
+        Returns:
+        - RefinedCoarseValues: The combined scores
+        """
         return RefinedCoarseValues(
             self_direction=self.self_direction.total(),
             stimulation=self.stimulation.total(),
@@ -1336,6 +1405,12 @@ class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
         )
 
     def attained(self) -> RefinedCoarseValues:
+        """
+        Takes the scores of the values for attained only, dropping for constrained.
+
+        Returns:
+        - RefinedCoarseValues: The attained scores
+        """
         return RefinedCoarseValues(
             self_direction=self.self_direction.attained,
             stimulation=self.stimulation.attained,
@@ -1352,6 +1427,12 @@ class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
         )
 
     def constrained(self) -> RefinedCoarseValues:
+        """
+        Takes the scores of the values for constrained only, dropping for attained.
+
+        Returns:
+        - RefinedCoarseValues: The constrained scores
+        """
         return RefinedCoarseValues(
             self_direction=self.self_direction.constrained,
             stimulation=self.stimulation.constrained,
@@ -1541,6 +1622,18 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
         ]
 
     def coarse_values(self, mode: Callable[[Iterable[float]], float] = max) -> RefinedCoarseValuesWithAttainment:
+        """
+        Combines the scores of the values with the same prefix and attainment.
+
+        E.g., 'Universalism: concern attained', 'Universalism: nature attained',
+        and 'Universalism: tolerance attained' to 'Universalism attained'.
+
+        Parameters:
+        - mode: Function to combine the scores (default: max)
+
+        Returns:
+        - RefinedCoarseValuesWithAttainment: The combined scores
+        """
         return RefinedCoarseValuesWithAttainment(
             self_direction=combine_attainment_scores(
                 [self.self_direction_action, self.self_direction_thought], mode=mode),
@@ -1563,9 +1656,32 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
         )
 
     def original_values(self, mode: Callable[[Iterable[float]], float] = max) -> OriginalValuesWithAttainment:
+        """
+        Combines the scores of the values with the same prefix and attainment,
+        and drops Face and Humility.
+
+        E.g., 'Universalism: concern attained', 'Universalism: nature attained',
+        and 'Universalism: tolerance attained' to 'Universalism attained'.
+
+        Parameters:
+        - mode: Function to combine the scores (default: max)
+
+        Returns:
+        - OriginalValuesWithAttainment: The combined and reduced scores
+        """
         return self.coarse_values(mode=mode).original_values()
 
     def without_attainment(self) -> RefinedValues:
+        """
+        Combines the scores of the values with the same attainment by taking
+        their sum.
+
+        E.g., 'Achievement attained' and 'Achievement constrained' to
+        'Achievement'.
+
+        Returns:
+        - RefinedValues: The combined scores
+        """
         return RefinedValues(
             self_direction_action=self.self_direction_action.total(),
             self_direction_thought=self.self_direction_thought.total(),
@@ -1589,29 +1705,41 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
         )
 
     def attained(self) -> RefinedValues:
+        """
+        Takes the scores of the values for attained only, dropping for constrained.
+
+        Returns:
+        - RefinedValues: The attained scores
+        """
         return RefinedValues(
-            self_direction_action=self.self_direction_action.constrained,
-            self_direction_thought=self.self_direction_thought.constrained,
-            stimulation=self.stimulation.constrained,
-            hedonism=self.hedonism.constrained,
-            achievement=self.achievement.constrained,
-            power_dominance=self.power_dominance.constrained,
-            power_resources=self.power_resources.constrained,
-            face=self.face.constrained,
-            security_personal=self.security_personal.constrained,
-            security_societal=self.security_societal.constrained,
-            tradition=self.tradition.constrained,
-            conformity_rules=self.conformity_rules.constrained,
-            conformity_interpersonal=self.conformity_interpersonal.constrained,
-            humility=self.humility.constrained,
-            benevolence_caring=self.benevolence_caring.constrained,
-            benevolence_dependability=self.benevolence_dependability.constrained,
-            universalism_concern=self.universalism_concern.constrained,
-            universalism_nature=self.universalism_nature.constrained,
-            universalism_tolerance=self.universalism_tolerance.constrained,
+            self_direction_action=self.self_direction_action.attained,
+            self_direction_thought=self.self_direction_thought.attained,
+            stimulation=self.stimulation.attained,
+            hedonism=self.hedonism.attained,
+            achievement=self.achievement.attained,
+            power_dominance=self.power_dominance.attained,
+            power_resources=self.power_resources.attained,
+            face=self.face.attained,
+            security_personal=self.security_personal.attained,
+            security_societal=self.security_societal.attained,
+            tradition=self.tradition.attained,
+            conformity_rules=self.conformity_rules.attained,
+            conformity_interpersonal=self.conformity_interpersonal.attained,
+            humility=self.humility.attained,
+            benevolence_caring=self.benevolence_caring.attained,
+            benevolence_dependability=self.benevolence_dependability.attained,
+            universalism_concern=self.universalism_concern.attained,
+            universalism_nature=self.universalism_nature.attained,
+            universalism_tolerance=self.universalism_tolerance.attained,
         )
 
     def constrained(self) -> RefinedValues:
+        """
+        Takes the scores of the values for constrained only, dropping for attained.
+
+        Returns:
+        - RefinedValues: The constrained scores
+        """
         return RefinedValues(
             self_direction_action=self.self_direction_action.constrained,
             self_direction_thought=self.self_direction_thought.constrained,
