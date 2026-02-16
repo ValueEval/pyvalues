@@ -1,12 +1,41 @@
 import random
 from typing import Generator, Iterable, Tuple, TypeVar
 from pydantic_extra_types.language_code import LanguageAlpha2
-from .classifiers import OriginalValuesClassifier, OriginalValuesWithAttainmentClassifier, RefinedCoarseValuesClassifier, RefinedCoarseValuesWithAttainmentClassifier, RefinedValuesClassifier, RefinedValuesWithAttainmentClassifier
-from .values import DEFAULT_LANGUAGE, AttainmentScore, OriginalValues, OriginalValuesWithAttainment, RefinedCoarseValues, RefinedCoarseValuesWithAttainment, RefinedValues, RefinedValuesWithAttainment, Values, ValuesWithoutAttainment
+from .classifiers import (
+    OriginalValuesClassifier,
+    OriginalValuesWithAttainmentClassifier,
+    RefinedCoarseValuesClassifier,
+    RefinedCoarseValuesWithAttainmentClassifier,
+    RefinedValuesClassifier,
+    RefinedValuesWithAttainmentClassifier,
+)
+from .values import (
+    DEFAULT_LANGUAGE,
+    AttainmentScore,
+    OriginalValues,
+    OriginalValuesWithAttainment,
+    RefinedCoarseValues,
+    RefinedCoarseValuesWithAttainment,
+    RefinedValues,
+    RefinedValuesWithAttainment,
+    Values,
+    ValuesWithoutAttainment,
+)
 
 
 VALUES = TypeVar("VALUES", bound="Values")
 VALUES_WITHOUT_ATTAINMENT = TypeVar("VALUES_WITHOUT_ATTAINMENT", bound="ValuesWithoutAttainment")
+
+
+def draw_list(probabilities: list[float]):
+    return [float(probability >= random.random()) for probability in probabilities]
+
+
+def pick_one_attainment(draw):
+    for i in range(int(len(draw) / 2)):
+        if draw[i + 0] + draw[i + 1] > 1:
+            draw[i + random.randint(0, 1)] = 0
+    return draw
 
 
 class AllAttainedClassifier(RefinedValuesWithAttainmentClassifier):
@@ -90,14 +119,14 @@ class RandomOriginalValuesClassifier(OriginalValuesClassifier):
     ):
         """
         Creates a random classifier.
-        
+
         :param probabilities: The probabilities for each value
         :type probabilities: OriginalValues
         """
         if isinstance(probabilities, OriginalValues):
             self._probabilities = probabilities.to_list()
         else:
-            self._probabilities = [ probabilities ] * 10
+            self._probabilities = [probabilities] * 10
 
     def classify_document_for_original_values(
             self,
@@ -122,14 +151,14 @@ class RandomRefinedCoarseValuesClassifier(RefinedCoarseValuesClassifier):
     ):
         """
         Creates a random classifier.
-        
+
         :param probabilities: The probabilities for each value
         :type probabilities: RefinedCoarseValues
         """
         if isinstance(probabilities, RefinedCoarseValues):
             self._probabilities = probabilities.to_list()
         else:
-            self._probabilities = [ probabilities ] * 12
+            self._probabilities = [probabilities] * 12
 
     def classify_document_for_refined_coarse_values(
             self,
@@ -154,14 +183,14 @@ class RandomRefinedValuesClassifier(RefinedValuesClassifier):
     ):
         """
         Creates a random classifier.
-        
+
         :param probabilities: The probabilities for each value
         :type probabilities: RefinedValues
         """
         if isinstance(probabilities, RefinedValues):
             self._probabilities = probabilities.to_list()
         else:
-            self._probabilities = [ probabilities ] * 19
+            self._probabilities = [probabilities] * 19
 
     def classify_document_for_refined_values(
             self,
@@ -259,7 +288,7 @@ class RandomRefinedValuesWithAttainmentClassifier(RefinedValuesWithAttainmentCla
     ):
         """
         Creates a random classifier.
-        
+
         :param probabilities: The probabilities for each value (and attainment;
         default is 0.2929 so that at least one attainment is drawn at 50%)
         :type probabilities: RefinedValuesWithAttainment
@@ -279,13 +308,3 @@ class RandomRefinedValuesWithAttainmentClassifier(RefinedValuesWithAttainmentCla
         for segment in segments:
             draw = pick_one_attainment(draw_list(self._probabilities))
             yield RefinedValuesWithAttainment.from_list(draw), segment
-
-
-def draw_list(probabilities: list[float]):
-    return [float(probability >= random.random()) for probability in probabilities]
-
-def pick_one_attainment(draw):
-    for i in range(int(len(draw) / 2)):
-        if draw[i + 0] + draw[i + 1] > 1:
-            draw[i + random.randint(0, 1)] = 0
-    return draw

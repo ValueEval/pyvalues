@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Generator, Iterable, Set, Tuple
+from typing import Generator, Iterable, Tuple
 from pydantic_extra_types.language_code import LanguageAlpha2
 
 from .values import (
@@ -18,11 +18,8 @@ class OriginalValuesClassifier(ABC):
     Classifier for the ten values from Schwartz original system.
     """
 
-    @abstractmethod
-    def get_supported_languages(self) -> Set[LanguageAlpha2]:
-        pass
-
-    def _raise_unsupported_language(self, language):
+    @staticmethod
+    def _raise_unsupported_language(language):
         """
         Raises the appropriate error when being asked for an unsupported
         language.
@@ -30,9 +27,8 @@ class OriginalValuesClassifier(ABC):
         :param self: Description
         :param language: Description
         """
-        supported = "'" + "', '".join(self.get_supported_languages()) + "'"
         raise ValueError(
-            f"Unsupported language: {language}. Supported: {supported}."
+            f"Unsupported language: {language}."
         )
 
     def classify_for_original_values(
