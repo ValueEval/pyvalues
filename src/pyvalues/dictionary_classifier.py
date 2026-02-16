@@ -138,14 +138,15 @@ class DictionaryClassifier():
                         value_scores_total[value[0]] += (value[1] + value[2])
                     else:
                         value_scores_total[value[0]] = (value[1] + value[2])
-                    if value[0] in value_scores_attained:
-                        value_scores_attained[value[0]] += value[1]
-                    else:
-                        value_scores_attained[value[0]] = value[1]
-                    if value[0] in value_scores_constrained:
-                        value_scores_constrained[value[0]] += value[2]
-                    else:
-                        value_scores_constrained[value[0]] = value[2]
+                    if with_attainment:
+                        if value[0] in value_scores_attained:
+                            value_scores_attained[value[0]] += value[1]
+                        else:
+                            value_scores_attained[value[0]] = value[1]
+                        if value[0] in value_scores_constrained:
+                            value_scores_constrained[value[0]] += value[2]
+                        else:
+                            value_scores_constrained[value[0]] = value[2]
             value_scores_sorted = dict(sorted(
                 value_scores_total.items(), key=lambda item: item[1], reverse=True
             ))
