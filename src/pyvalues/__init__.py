@@ -14,10 +14,12 @@ from .classifiers import (
     RefinedCoarseValuesWithAttainmentClassifier,
     OriginalValuesWithAttainmentClassifier,
 )
-
 from .baselines import (
     AllAttainedClassifier,
     AllConstrainedClassifier,
+)
+from .dictionary_classifier import (
+    OriginalValuesDictionaryClassifier
 )
 
 __all__ = [
@@ -35,6 +37,7 @@ __all__ = [
     "OriginalValuesWithAttainmentClassifier",
     "AllAttainedClassifier",
     "AllConstrainedClassifier",
+    "OriginalValuesDictionaryClassifier",
 ]
 
 from importlib import metadata

@@ -27,6 +27,19 @@ class TestValueClasses(unittest.TestCase):
         self.assertEqual(0.8, values.benevolence)
         self.assertEqual(0.9, values.universalism)
 
+    def test_original_values_from_labels(self):
+        values = OriginalValues.from_labels(["Conformity", "Self-Direction"])
+        self.assertEqual(1.0, values.self_direction)
+        self.assertEqual(0.0, values.stimulation)
+        self.assertEqual(0.0, values.hedonism)
+        self.assertEqual(0.0, values.achievement)
+        self.assertEqual(0.0, values.power)
+        self.assertEqual(0.0, values.security)
+        self.assertEqual(0.0, values.tradition)
+        self.assertEqual(1.0, values.conformity)
+        self.assertEqual(0.0, values.benevolence)
+        self.assertEqual(0.0, values.universalism)
+
     def test_error_on_too_few(self):
         with self.assertRaises(AssertionError):
             OriginalValues.from_list([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8])

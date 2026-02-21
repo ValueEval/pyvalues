@@ -10,6 +10,7 @@ dependencies = [
     "matplotlib (>=3.10.8,<4.0.0)",
     "numpy (>=2.4.1,<3.0.0)",
     "pydantic-extra-types (>=2.11.0,<3.0.0)",
+    "pycountry (>=26.2.16,<27.0.0)",
 ]
 license = { file = "LICENSE" }
 keywords = [ "ai", "artificial intelligence", "classification", "human values", "schwartz values", "vallueeval" ]
@@ -26,6 +27,9 @@ maintainers = [
 
 [tool.poetry]
 packages = [{include = "pyvalues", from = "src"}]
+include = [
+    "src/pyvalues/assets/**/*"
+]
 
 [tool.poetry.group.development]
 optional = true

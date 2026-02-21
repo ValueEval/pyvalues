@@ -679,7 +679,7 @@ class OriginalValues(ValuesWithoutAttainment):
     self_direction: Score = Field(
         default=0.0,
         serialization_alias="Self-direction",
-        validation_alias=AliasChoices("self_direction", "Self-direction"),
+        validation_alias=AliasChoices("self_direction", "Self-direction", "Self-Direction"),
     )
     stimulation: Score = Field(
         default=0.0,
@@ -772,7 +772,7 @@ class RefinedCoarseValues(ValuesWithoutAttainment):
     self_direction: Score = Field(
         default=0.0,
         serialization_alias="Self-direction",
-        validation_alias=AliasChoices("self_direction", "Self-direction"),
+        validation_alias=AliasChoices("self_direction", "Self-direction", "Self-Direction"),
     )
     stimulation: Score = Field(
         default=0.0,
@@ -898,12 +898,12 @@ class RefinedValues(ValuesWithoutAttainment):
     self_direction_thought: Score = Field(
         default=0.0,
         serialization_alias="Self-direction: thought",
-        validation_alias=AliasChoices("self_direction_thought", "Self-direction: thought"),
+        validation_alias=AliasChoices("self_direction_thought", "Self-direction: thought", "Self-Direction: Thought"),
     )
     self_direction_action: Score = Field(
         default=0.0,
         serialization_alias="Self-direction: action",
-        validation_alias=AliasChoices("self_direction_action", "Self-direction: action"),
+        validation_alias=AliasChoices("self_direction_action", "Self-direction: action", "Self-Direction: Action"),
     )
     stimulation: Score = Field(
         default=0.0,
@@ -923,12 +923,12 @@ class RefinedValues(ValuesWithoutAttainment):
     power_dominance: Score = Field(
         default=0.0,
         serialization_alias="Power: dominance",
-        validation_alias=AliasChoices("power_dominance", "Power: dominance"),
+        validation_alias=AliasChoices("power_dominance", "Power: dominance", "Power: Dominance"),
     )
     power_resources: Score = Field(
         default=0.0,
         serialization_alias="Power: resources",
-        validation_alias=AliasChoices("power_resources", "Power: resources"),
+        validation_alias=AliasChoices("power_resources", "Power: resources", "Power: Resources"),
     )
     face: Score = Field(
         default=0.0,
@@ -938,12 +938,12 @@ class RefinedValues(ValuesWithoutAttainment):
     security_personal: Score = Field(
         default=0.0,
         serialization_alias="Security: personal",
-        validation_alias=AliasChoices("security_personal", "Security: personal"),
+        validation_alias=AliasChoices("security_personal", "Security: personal", "Security: Personal"),
     )
     security_societal: Score = Field(
         default=0.0,
         serialization_alias="Security: societal",
-        validation_alias=AliasChoices("security_societal", "Security: societal"),
+        validation_alias=AliasChoices("security_societal", "Security: societal", "Security: Societal"),
     )
     tradition: Score = Field(
         default=0.0,
@@ -953,12 +953,12 @@ class RefinedValues(ValuesWithoutAttainment):
     conformity_rules: Score = Field(
         default=0.0,
         serialization_alias="Conformity: rules",
-        validation_alias=AliasChoices("conformity_rules", "Conformity: rules"),
+        validation_alias=AliasChoices("conformity_rules", "Conformity: rules", "Conformity: Rules"),
     )
     conformity_interpersonal: Score = Field(
         default=0.0,
         serialization_alias="Conformity: interpersonal",
-        validation_alias=AliasChoices("conformity_interpersonal", "Conformity: interpersonal"),
+        validation_alias=AliasChoices("conformity_interpersonal", "Conformity: interpersonal", "Conformity: Interpersonal"),
     )
     humility: Score = Field(
         default=0.0,
@@ -968,27 +968,27 @@ class RefinedValues(ValuesWithoutAttainment):
     benevolence_caring: Score = Field(
         default=0.0,
         serialization_alias="Benevolence: caring",
-        validation_alias=AliasChoices("benevolence_caring", "Benevolence: caring"),
+        validation_alias=AliasChoices("benevolence_caring", "Benevolence: caring", "Benevolence: Caring"),
     )
     benevolence_dependability: Score = Field(
         default=0.0,
         serialization_alias="Benevolence: dependability",
-        validation_alias=AliasChoices("benevolence_dependability", "Benevolence: dependability"),
+        validation_alias=AliasChoices("benevolence_dependability", "Benevolence: dependability", "Benevolence: Dependability"),
     )
     universalism_concern: Score = Field(
         default=0.0,
         serialization_alias="Universalism: concern",
-        validation_alias=AliasChoices("universalism_concern", "Universalism: concern"),
+        validation_alias=AliasChoices("universalism_concern", "Universalism: concern", "Universalism: Concern"),
     )
     universalism_nature: Score = Field(
         default=0.0,
         serialization_alias="Universalism: nature",
-        validation_alias=AliasChoices("universalism_nature", "Universalism: nature"),
+        validation_alias=AliasChoices("universalism_nature", "Universalism: nature", "Universalism: Nature"),
     )
     universalism_tolerance: Score = Field(
         default=0.0,
         serialization_alias="Universalism: tolerance",
-        validation_alias=AliasChoices("universalism_tolerance", "Universalism: tolerance"),
+        validation_alias=AliasChoices("universalism_tolerance", "Universalism: tolerance", "Universalism: Tolerance"),
     )
 
     model_config = ConfigDict(extra="forbid", serialize_by_alias=True)
@@ -1095,7 +1095,7 @@ class OriginalValuesWithAttainment(ValuesWithAttainment):
     self_direction: AttainmentScore = Field(
         default=AttainmentScore(),
         serialization_alias="Self-direction",
-        validation_alias=AliasChoices("self_direction", "Self-direction"),
+        validation_alias=AliasChoices("self_direction", "Self-direction", "Self-Direction"),
     )
     stimulation: AttainmentScore = Field(
         default=AttainmentScore(),
@@ -1262,7 +1262,7 @@ class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
     self_direction: AttainmentScore = Field(
         default=AttainmentScore(),
         serialization_alias="Self-direction",
-        validation_alias=AliasChoices("self_direction", "Self-direction"),
+        validation_alias=AliasChoices("self_direction", "Self-direction", "Self-Direction"),
     )
     stimulation: AttainmentScore = Field(
         default=AttainmentScore(),
@@ -1470,12 +1470,12 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
     self_direction_thought: AttainmentScore = Field(
         default=AttainmentScore(),
         serialization_alias="Self-direction: thought",
-        validation_alias=AliasChoices("self_direction_thought", "Self-direction: thought"),
+        validation_alias=AliasChoices("self_direction_thought", "Self-direction: thought", "Self-Direction: Thought"),
     )
     self_direction_action: AttainmentScore = Field(
         default=AttainmentScore(),
         serialization_alias="Self-direction: action",
-        validation_alias=AliasChoices("self_direction_action", "Self-direction: action"),
+        validation_alias=AliasChoices("self_direction_action", "Self-direction: action", "Self-Direction: Action"),
     )
     stimulation: AttainmentScore = Field(
         default=AttainmentScore(),
@@ -1495,12 +1495,12 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
     power_dominance: AttainmentScore = Field(
         default=AttainmentScore(),
         serialization_alias="Power: dominance",
-        validation_alias=AliasChoices("power_dominance", "Power: dominance"),
+        validation_alias=AliasChoices("power_dominance", "Power: dominance", "Power: Dominance"),
     )
     power_resources: AttainmentScore = Field(
         default=AttainmentScore(),
         serialization_alias="Power: resources",
-        validation_alias=AliasChoices("power_resources", "Power: resources"),
+        validation_alias=AliasChoices("power_resources", "Power: resources", "Power: Resources"),
     )
     face: AttainmentScore = Field(
         default=AttainmentScore(),
@@ -1510,12 +1510,12 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
     security_personal: AttainmentScore = Field(
         default=AttainmentScore(),
         serialization_alias="Security: personal",
-        validation_alias=AliasChoices("security_personal", "Security: personal"),
+        validation_alias=AliasChoices("security_personal", "Security: personal", "Security: Personal"),
     )
     security_societal: AttainmentScore = Field(
         default=AttainmentScore(),
         serialization_alias="Security: societal",
-        validation_alias=AliasChoices("security_societal", "Security: societal"),
+        validation_alias=AliasChoices("security_societal", "Security: societal", "Security: Societal"),
     )
     tradition: AttainmentScore = Field(
         default=AttainmentScore(),
@@ -1525,12 +1525,12 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
     conformity_rules: AttainmentScore = Field(
         default=AttainmentScore(),
         serialization_alias="Conformity: rules",
-        validation_alias=AliasChoices("conformity_rules", "Conformity: rules"),
+        validation_alias=AliasChoices("conformity_rules", "Conformity: rules", "Conformity: Rules"),
     )
     conformity_interpersonal: AttainmentScore = Field(
         default=AttainmentScore(),
         serialization_alias="Conformity: interpersonal",
-        validation_alias=AliasChoices("conformity_interpersonal", "Conformity: interpersonal"),
+        validation_alias=AliasChoices("conformity_interpersonal", "Conformity: interpersonal", "Conformity: Interpersonal"),
     )
     humility: AttainmentScore = Field(
         default=AttainmentScore(),
@@ -1540,27 +1540,27 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
     benevolence_caring: AttainmentScore = Field(
         default=AttainmentScore(),
         serialization_alias="Benevolence: caring",
-        validation_alias=AliasChoices("benevolence_caring", "Benevolence: caring"),
+        validation_alias=AliasChoices("benevolence_caring", "Benevolence: caring", "Benevolence: Caring"),
     )
     benevolence_dependability: AttainmentScore = Field(
         default=AttainmentScore(),
         serialization_alias="Benevolence: dependability",
-        validation_alias=AliasChoices("benevolence_dependability", "Benevolence: dependability"),
+        validation_alias=AliasChoices("benevolence_dependability", "Benevolence: dependability", "Benevolence: Dependability"),
     )
     universalism_concern: AttainmentScore = Field(
         default=AttainmentScore(),
         serialization_alias="Universalism: concern",
-        validation_alias=AliasChoices("universalism_concern", "Universalism: concern"),
+        validation_alias=AliasChoices("universalism_concern", "Universalism: concern", "Universalism: "),
     )
     universalism_nature: AttainmentScore = Field(
         default=AttainmentScore(),
         serialization_alias="Universalism: nature",
-        validation_alias=AliasChoices("universalism_nature", "Universalism: nature"),
+        validation_alias=AliasChoices("universalism_nature", "Universalism: nature", "Universalism: Nature"),
     )
     universalism_tolerance: AttainmentScore = Field(
         default=AttainmentScore(),
         serialization_alias="Universalism: tolerance",
-        validation_alias=AliasChoices("universalism_tolerance", "Universalism: tolerance"),
+        validation_alias=AliasChoices("universalism_tolerance", "Universalism: tolerance", "Universalism: Tolerance"),
     )
 
     model_config = ConfigDict(extra="forbid", serialize_by_alias=True)
