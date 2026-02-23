@@ -36,6 +36,19 @@ class OriginalValuesClassifier(ABC):
             segment: str,
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
     ) -> OriginalValues:
+        """
+        Classifies the segment.
+
+        :param segment:
+            The segment to classify
+        :type segment: str
+        :param language:
+            The language of the segment
+        :type language: LanguageAlpha2
+        :return:
+            The classification
+        :rtype: OriginalValues
+        """
         return self.classify_document_for_original_values(
             [segment],
             language
@@ -85,6 +98,19 @@ class RefinedCoarseValuesClassifier(OriginalValuesClassifier):
             segment: str,
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
     ) -> RefinedCoarseValues:
+        """
+        Classifies the segment.
+
+        :param segment:
+            The segment to classify
+        :type segment: str
+        :param language:
+            The language of the segment
+        :type language: LanguageAlpha2
+        :return:
+            The classification
+        :rtype: RefinedCoarseValues
+        """
         return self.classify_document_for_refined_coarse_values(
             [segment],
             language
@@ -104,6 +130,19 @@ class RefinedCoarseValuesClassifier(OriginalValuesClassifier):
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
     ) -> Generator[Tuple[RefinedCoarseValues, str], None, None]:
+        """
+        Classifies each segment.
+
+        :param segments:
+            The segments to classify
+        :type segments: Iterable[str]
+        :param language:
+            The language of the segments
+        :type language: LanguageAlpha2
+        :return:
+            Tuples of classification and segment
+        :rtype: Generator[Tuple[RefinedCoarseValues, str], None, None]
+        """
         pass
 
 
@@ -128,6 +167,19 @@ class RefinedValuesClassifier(RefinedCoarseValuesClassifier):
             segment: str,
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
     ) -> RefinedValues:
+        """
+        Classifies the segment.
+
+        :param segment:
+            The segment to classify
+        :type segment: str
+        :param language:
+            The language of the segment
+        :type language: LanguageAlpha2
+        :return:
+            The classification
+        :rtype: RefinedValues
+        """
         return self.classify_document_for_refined_values(
             [segment],
             language
@@ -147,6 +199,19 @@ class RefinedValuesClassifier(RefinedCoarseValuesClassifier):
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
     ) -> Generator[Tuple[RefinedValues, str], None, None]:
+        """
+        Classifies each segment.
+
+        :param segments:
+            The segments to classify
+        :type segments: Iterable[str]
+        :param language:
+            The language of the segments
+        :type language: LanguageAlpha2
+        :return:
+            Tuples of classification and segment
+        :rtype: Generator[Tuple[RefinedValues, str], None, None]
+        """
         pass
 
 
@@ -171,6 +236,19 @@ class OriginalValuesWithAttainmentClassifier(OriginalValuesClassifier):
             segment: str,
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
     ) -> OriginalValuesWithAttainment:
+        """
+        Classifies the segment.
+
+        :param segment:
+            The segment to classify
+        :type segment: str
+        :param language:
+            The language of the segment
+        :type language: LanguageAlpha2
+        :return:
+            The classification
+        :rtype: OriginalValuesWithAttainment
+        """
         return self.classify_document_for_original_values_with_attainment(
             [segment],
             language
@@ -190,6 +268,19 @@ class OriginalValuesWithAttainmentClassifier(OriginalValuesClassifier):
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
     ) -> Generator[Tuple[OriginalValuesWithAttainment, str], None, None]:
+        """
+        Classifies each segment.
+
+        :param segments:
+            The segments to classify
+        :type segments: Iterable[str]
+        :param language:
+            The language of the segments
+        :type language: LanguageAlpha2
+        :return:
+            Tuples of classification and segment
+        :rtype: Generator[Tuple[OriginalValuesWithAttainment, str], None, None]
+        """
         pass
 
 
@@ -225,6 +316,19 @@ class RefinedCoarseValuesWithAttainmentClassifier(
             segment: str,
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
     ) -> RefinedCoarseValuesWithAttainment:
+        """
+        Classifies the segment.
+
+        :param segment:
+            The segment to classify
+        :type segment: str
+        :param language:
+            The language of the segment
+        :type language: LanguageAlpha2
+        :return:
+            The classification
+        :rtype: RefinedCoarseValuesWithAttainment
+        """
         return self.classify_document_for_refined_coarse_values_with_attainment(
             [segment],
             language
@@ -252,6 +356,19 @@ class RefinedCoarseValuesWithAttainmentClassifier(
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
     ) -> Generator[Tuple[RefinedCoarseValuesWithAttainment, str], None, None]:
+        """
+        Classifies each segment.
+
+        :param segments:
+            The segments to classify
+        :type segments: Iterable[str]
+        :param language:
+            The language of the segments
+        :type language: LanguageAlpha2
+        :return:
+            Tuples of classification and segment
+        :rtype: Generator[Tuple[RefinedCoarseValuesWithAttainment, str], None, None]
+        """
         pass
 
 
@@ -288,6 +405,19 @@ class RefinedValuesWithAttainmentClassifier(
             segment: str,
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
     ) -> RefinedValuesWithAttainment:
+        """
+        Classifies the segment.
+
+        :param segment:
+            The segment to classify
+        :type segment: str
+        :param language:
+            The language of the segment
+        :type language: LanguageAlpha2
+        :return:
+            The classification
+        :rtype: RefinedValuesWithAttainment
+        """
         return self.classify_document_for_refined_values_with_attainment(
             [segment],
             language
@@ -315,4 +445,17 @@ class RefinedValuesWithAttainmentClassifier(
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
     ) -> Generator[Tuple[RefinedValuesWithAttainment, str], None, None]:
+        """
+        Classifies each segment.
+
+        :param segments:
+            The segments to classify
+        :type segments: Iterable[str]
+        :param language:
+            The language of the segments
+        :type language: LanguageAlpha2
+        :return:
+            Tuples of classification and segment
+        :rtype: Generator[Tuple[RefinedValuesWithAttainment, str], None, None]
+        """
         pass
