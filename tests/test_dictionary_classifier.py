@@ -1,11 +1,9 @@
 import unittest
 
-from pydantic import ValidationError
 from pydantic_extra_types.language_code import LanguageAlpha2
 
-from pyvalues import (
-    OriginalValues,
-    OriginalValuesDictionaryClassifier
+from pyvalues.dictionary_classifier import (
+    OriginalValuesDictionaryClassifier,
 )
 
 
