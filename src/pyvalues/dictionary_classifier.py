@@ -24,8 +24,6 @@ from .values import (
     RefinedCoarseValuesWithAttainment,
     RefinedValues,
     RefinedValuesWithAttainment,
-    Values,
-    ValuesWithoutAttainment,
 )
 
 
@@ -83,7 +81,9 @@ def get_dictionaries(
                             set_attained = True
                             score_attained = 0.0
                     if not set_attained:
-                        raise ValueError(f"Neither 'attained' (or 'score') nor 'constrained' set for token '{token_entry['token']}'")
+                        raise ValueError(
+                            f"Neither 'attained' (or 'score') nor 'constrained' set for token '{token_entry['token']}'"
+                        )
                 if normalized_token not in dictionaries:
                     dictionaries[normalized_token] = {}
                 dictionaries[normalized_token][value] = AttainmentScore(
