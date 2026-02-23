@@ -4,6 +4,7 @@ import math
 import re
 from importlib.resources import files
 from typing import Callable, Generator, Iterable, Tuple
+import unicodedata
 from pydantic_extra_types.language_code import LanguageAlpha2
 
 from pyvalues.ensemble_classifier import OriginalValuesLanguageEnsembleClassifier
@@ -35,7 +36,11 @@ def normalize_dictionary_token(token: str, language: LanguageAlpha2) -> str:
 
 
 def simple_tokenize(text: str) -> list[str]:
-    return text.split()
+    punctuation_stripped = "".join(
+        character for character in text
+        if not unicodedata.category(character).startswith("P")
+    )
+    return punctuation_stripped.split()
 
 
 def get_dictionaries(
@@ -163,7 +168,7 @@ class DictionaryClassifier():
                         labels.append(value)
                 else:
                     break
-            if self._max_values > 0 and len(labels) == self._max_values:
+            if self._max_values > 0 and len(labels) > self._max_values:
                 labels = labels[0:self._max_values]
             yield labels, segment
 
