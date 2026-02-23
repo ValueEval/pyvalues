@@ -47,6 +47,19 @@ class OriginalValuesClassifier(ABC):
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
     ) -> Generator[Tuple[OriginalValues, str], None, None]:
+        """
+        Classifies each segment.
+
+        :param segments:
+            The segments to classify
+        :type segments: Iterable[str]
+        :param language:
+            The language of the segments
+        :type language: LanguageAlpha2
+        :return:
+            Tuples of classification and segment
+        :rtype: Generator[Tuple[OriginalValues, str], None, None]
+        """
         pass
 
 

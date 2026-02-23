@@ -14,7 +14,7 @@ from .classifiers import (
     RefinedCoarseValuesWithAttainmentClassifier,
     OriginalValuesWithAttainmentClassifier,
 )
-from .baselines import (
+from .baseline_classifier import (
     AllAttainedClassifier,
     AllConstrainedClassifier,
 )

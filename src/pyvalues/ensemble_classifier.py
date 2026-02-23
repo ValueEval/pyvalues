@@ -65,6 +65,13 @@ class OriginalValuesLanguageEnsembleClassifier(
             self,
             classifiers: dict[LanguageAlpha2, OriginalValuesClassifier] = {}
     ):
+        """
+        Creates an ensemble classifier that uses a different classifier for each
+        language.
+
+        :param classifiers: The probabilities for each value
+        :type classfiers: dict[LanguageAlpha2, OriginalValuesClassifier]
+        """
         super().__init__(classifiers=classifiers)
 
     def classify_document_for_original_values(

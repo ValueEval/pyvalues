@@ -1,7 +1,6 @@
 from io import FileIO
 import json
 import math
-import re
 from importlib.resources import files
 from typing import Callable, Generator, Iterable, Tuple
 import unicodedata
@@ -190,27 +189,33 @@ class OriginalValuesDictionaryClassifier(DictionaryClassifier, OriginalValuesCla
         """
         Creates a dictionary classifier for one language.
 
-        :param language: The language of the dictionaries
+        :param language:
+            The language of the dictionaries
         :type language: str
-        :param dictionaries: The dictionaries that map from token to value label
-        or a JSON file with the value label as keys and as value a list of
-        either strings (the tokens) or objects with values for "token" (the
-        token) and "score" (score associated with token)
+        :param dictionaries:
+            The dictionaries that map from token to value label
+            or a JSON file with the value label as keys and as value a list of
+            either strings (the tokens) or objects with values for "token" (the
+            token) and "score" (score associated with token)
         :type dictionaries: dict[str, str| Tuple[str, float, float]] | FileIO
-        :param tokenize: Function to split a text into tokens (to be normalized
-        and then looked up in the dictionaries; default: whitespace
-        tokenization)
+        :param tokenize:
+            Function to split a text into tokens (to be normalized
+            and then looked up in the dictionaries; default: whitespace
+            tokenization)
         :type tokenize: Callable[[str], list[str]]
-        :param normalize_token: Function to normalize a token before looking it
-        up in the dictionary, also used on the dictionaries (default: lowercase
-        and strip non-letters (a-z))
+        :param normalize_token:
+            Function to normalize a token before looking it
+            up in the dictionary, also used on the dictionaries (default: lowercase
+            and strip non-letters (a-z))
         :type normalize_token: Callable[[str], str]
-        :param score_threshold: Threshold that needs to be reached by summing up
-        the scores of all tokens for a value so that the value is assigned
-        (default: minimum positive float value)
+        :param score_threshold:
+            Threshold that needs to be reached by summing up
+            the scores of all tokens for a value so that the value is assigned
+            (default: minimum positive float value)
         :type score_threshold: float
-        :param max_values: Maximum number of values to assign, starting from
-        those with highest score (default: no maximum number)
+        :param max_values:
+            Maximum number of values to assign, starting from
+            those with highest score (default: no maximum number)
         """
         super().__init__(
             language=language,
@@ -250,3 +255,343 @@ class OriginalValuesDictionaryClassifier(DictionaryClassifier, OriginalValuesCla
                 with_attainment
         ):
             yield OriginalValues.from_labels(labels), segment
+
+
+class RefinedCoarseValuesDictionaryClassifier(DictionaryClassifier, RefinedCoarseValuesClassifier):
+    """
+    Classifier that assigns values based on a dictionary.
+    """
+
+    def __init__(
+            self,
+            language: LanguageAlpha2,
+            dictionaries: dict[str, str | Tuple[str, float, float]] | FileIO,
+            tokenize: Callable[[str], list[str]] = simple_tokenize,
+            normalize_token: Callable[[str, LanguageAlpha2], str] = normalize_dictionary_token,
+            score_threshold: float = math.ulp(0),
+            max_values: int = 0
+    ):
+        """
+        Creates a dictionary classifier for one language.
+
+        :param language:
+            The language of the dictionaries
+        :type language: str
+        :param dictionaries:
+            The dictionaries that map from token to value label
+            or a JSON file with the value label as keys and as value a list of
+            either strings (the tokens) or objects with values for "token" (the
+            token) and "score" (score associated with token)
+        :type dictionaries: dict[str, str| Tuple[str, float, float]] | FileIO
+        :param tokenize:
+            Function to split a text into tokens (to be normalized
+            and then looked up in the dictionaries; default: whitespace
+            tokenization)
+        :type tokenize: Callable[[str], list[str]]
+        :param normalize_token:
+            Function to normalize a token before looking it
+            up in the dictionary, also used on the dictionaries (default: lowercase
+            and strip non-letters (a-z))
+        :type normalize_token: Callable[[str], str]
+        :param score_threshold:
+            Threshold that needs to be reached by summing up
+            the scores of all tokens for a value so that the value is assigned
+            (default: minimum positive float value)
+        :type score_threshold: float
+        :param max_values:
+            Maximum number of values to assign, starting from
+            those with highest score (default: no maximum number)
+        """
+        super().__init__(
+            language=language,
+            dictionaries=dictionaries,
+            tokenize=tokenize,
+            normalize_token=normalize_token,
+            score_threshold=score_threshold,
+            max_values=max_values
+        )
+
+    def classify_document_for_refined_coarse_values(
+            self,
+            segments: Iterable[str],
+            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+    ) -> Generator[Tuple[RefinedCoarseValues, str], None, None]:
+        with_attainment = False
+        for labels, segment in self._classify_document(
+                segments,
+                language,
+                with_attainment
+        ):
+            yield RefinedCoarseValues.from_labels(labels), segment
+
+
+class RefinedValuesDictionaryClassifier(DictionaryClassifier, RefinedValuesClassifier):
+    """
+    Classifier that assigns values based on a dictionary.
+    """
+
+    def __init__(
+            self,
+            language: LanguageAlpha2,
+            dictionaries: dict[str, str | Tuple[str, float, float]] | FileIO,
+            tokenize: Callable[[str], list[str]] = simple_tokenize,
+            normalize_token: Callable[[str, LanguageAlpha2], str] = normalize_dictionary_token,
+            score_threshold: float = math.ulp(0),
+            max_values: int = 0
+    ):
+        """
+        Creates a dictionary classifier for one language.
+
+        :param language:
+            The language of the dictionaries
+        :type language: str
+        :param dictionaries:
+            The dictionaries that map from token to value label
+            or a JSON file with the value label as keys and as value a list of
+            either strings (the tokens) or objects with values for "token" (the
+            token) and "score" (score associated with token)
+        :type dictionaries: dict[str, str| Tuple[str, float, float]] | FileIO
+        :param tokenize:
+            Function to split a text into tokens (to be normalized
+            and then looked up in the dictionaries; default: whitespace
+            tokenization)
+        :type tokenize: Callable[[str], list[str]]
+        :param normalize_token:
+            Function to normalize a token before looking it
+            up in the dictionary, also used on the dictionaries (default: lowercase
+            and strip non-letters (a-z))
+        :type normalize_token: Callable[[str], str]
+        :param score_threshold:
+            Threshold that needs to be reached by summing up
+            the scores of all tokens for a value so that the value is assigned
+            (default: minimum positive float value)
+        :type score_threshold: float
+        :param max_values:
+            Maximum number of values to assign, starting from
+            those with highest score (default: no maximum number)
+        """
+        super().__init__(
+            language=language,
+            dictionaries=dictionaries,
+            tokenize=tokenize,
+            normalize_token=normalize_token,
+            score_threshold=score_threshold,
+            max_values=max_values
+        )
+
+    def classify_document_for_refined_values(
+            self,
+            segments: Iterable[str],
+            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+    ) -> Generator[Tuple[RefinedValues, str], None, None]:
+        with_attainment = False
+        for labels, segment in self._classify_document(
+                segments,
+                language,
+                with_attainment
+        ):
+            yield RefinedValues.from_labels(labels), segment
+
+
+class OriginalValuesWithAttainmentDictionaryClassifier(DictionaryClassifier, OriginalValuesWithAttainmentClassifier):
+    """
+    Classifier that assigns values based on a dictionary.
+    """
+
+    def __init__(
+            self,
+            language: LanguageAlpha2,
+            dictionaries: dict[str, str | Tuple[str, float, float]] | FileIO,
+            tokenize: Callable[[str], list[str]] = simple_tokenize,
+            normalize_token: Callable[[str, LanguageAlpha2], str] = normalize_dictionary_token,
+            score_threshold: float = math.ulp(0),
+            max_values: int = 0
+    ):
+        """
+        Creates a dictionary classifier for one language.
+
+        :param language:
+            The language of the dictionaries
+        :type language: str
+        :param dictionaries:
+            The dictionaries that map from token to value label
+            or a JSON file with the value label as keys and as value a list of
+            either strings (the tokens) or objects with values for "token" (the
+            token) and "score" (score associated with token)
+        :type dictionaries: dict[str, str| Tuple[str, float, float]] | FileIO
+        :param tokenize:
+            Function to split a text into tokens (to be normalized
+            and then looked up in the dictionaries; default: whitespace
+            tokenization)
+        :type tokenize: Callable[[str], list[str]]
+        :param normalize_token:
+            Function to normalize a token before looking it
+            up in the dictionary, also used on the dictionaries (default: lowercase
+            and strip non-letters (a-z))
+        :type normalize_token: Callable[[str], str]
+        :param score_threshold:
+            Threshold that needs to be reached by summing up
+            the scores of all tokens for a value so that the value is assigned
+            (default: minimum positive float value)
+        :type score_threshold: float
+        :param max_values:
+            Maximum number of values to assign, starting from
+            those with highest score (default: no maximum number)
+        """
+        super().__init__(
+            language=language,
+            dictionaries=dictionaries,
+            tokenize=tokenize,
+            normalize_token=normalize_token,
+            score_threshold=score_threshold,
+            max_values=max_values
+        )
+
+    def classify_document_for_original_values_with_attainment(
+            self,
+            segments: Iterable[str],
+            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+    ) -> Generator[Tuple[OriginalValuesWithAttainment, str], None, None]:
+        with_attainment = True
+        for labels, segment in self._classify_document(
+                segments,
+                language,
+                with_attainment
+        ):
+            yield OriginalValuesWithAttainment.from_labels(labels), segment
+
+
+class RefinedCoarseValuesWithAttainmentDictionaryClassifier(DictionaryClassifier, RefinedCoarseValuesWithAttainmentClassifier):
+    """
+    Classifier that assigns values based on a dictionary.
+    """
+
+    def __init__(
+            self,
+            language: LanguageAlpha2,
+            dictionaries: dict[str, str | Tuple[str, float, float]] | FileIO,
+            tokenize: Callable[[str], list[str]] = simple_tokenize,
+            normalize_token: Callable[[str, LanguageAlpha2], str] = normalize_dictionary_token,
+            score_threshold: float = math.ulp(0),
+            max_values: int = 0
+    ):
+        """
+        Creates a dictionary classifier for one language.
+
+        :param language:
+            The language of the dictionaries
+        :type language: str
+        :param dictionaries:
+            The dictionaries that map from token to value label
+            or a JSON file with the value label as keys and as value a list of
+            either strings (the tokens) or objects with values for "token" (the
+            token) and "score" (score associated with token)
+        :type dictionaries: dict[str, str| Tuple[str, float, float]] | FileIO
+        :param tokenize:
+            Function to split a text into tokens (to be normalized
+            and then looked up in the dictionaries; default: whitespace
+            tokenization)
+        :type tokenize: Callable[[str], list[str]]
+        :param normalize_token:
+            Function to normalize a token before looking it
+            up in the dictionary, also used on the dictionaries (default: lowercase
+            and strip non-letters (a-z))
+        :type normalize_token: Callable[[str], str]
+        :param score_threshold:
+            Threshold that needs to be reached by summing up
+            the scores of all tokens for a value so that the value is assigned
+            (default: minimum positive float value)
+        :type score_threshold: float
+        :param max_values:
+            Maximum number of values to assign, starting from
+            those with highest score (default: no maximum number)
+        """
+        super().__init__(
+            language=language,
+            dictionaries=dictionaries,
+            tokenize=tokenize,
+            normalize_token=normalize_token,
+            score_threshold=score_threshold,
+            max_values=max_values
+        )
+
+    def classify_document_for_refined_coarse_values_with_attainment(
+            self,
+            segments: Iterable[str],
+            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+    ) -> Generator[Tuple[RefinedCoarseValuesWithAttainment, str], None, None]:
+        with_attainment = True
+        for labels, segment in self._classify_document(
+                segments,
+                language,
+                with_attainment
+        ):
+            yield RefinedCoarseValuesWithAttainment.from_labels(labels), segment
+
+
+class RefinedValuesWithAttainmentDictionaryClassifier(DictionaryClassifier, RefinedValuesWithAttainmentClassifier):
+    """
+    Classifier that assigns values based on a dictionary.
+    """
+
+    def __init__(
+            self,
+            language: LanguageAlpha2,
+            dictionaries: dict[str, str | Tuple[str, float, float]] | FileIO,
+            tokenize: Callable[[str], list[str]] = simple_tokenize,
+            normalize_token: Callable[[str, LanguageAlpha2], str] = normalize_dictionary_token,
+            score_threshold: float = math.ulp(0),
+            max_values: int = 0
+    ):
+        """
+        Creates a dictionary classifier for one language.
+
+        :param language:
+            The language of the dictionaries
+        :type language: str
+        :param dictionaries:
+            The dictionaries that map from token to value label
+            or a JSON file with the value label as keys and as value a list of
+            either strings (the tokens) or objects with values for "token" (the
+            token) and "score" (score associated with token)
+        :type dictionaries: dict[str, str| Tuple[str, float, float]] | FileIO
+        :param tokenize:
+            Function to split a text into tokens (to be normalized
+            and then looked up in the dictionaries; default: whitespace
+            tokenization)
+        :type tokenize: Callable[[str], list[str]]
+        :param normalize_token:
+            Function to normalize a token before looking it
+            up in the dictionary, also used on the dictionaries (default: lowercase
+            and strip non-letters (a-z))
+        :type normalize_token: Callable[[str], str]
+        :param score_threshold:
+            Threshold that needs to be reached by summing up
+            the scores of all tokens for a value so that the value is assigned
+            (default: minimum positive float value)
+        :type score_threshold: float
+        :param max_values:
+            Maximum number of values to assign, starting from
+            those with highest score (default: no maximum number)
+        """
+        super().__init__(
+            language=language,
+            dictionaries=dictionaries,
+            tokenize=tokenize,
+            normalize_token=normalize_token,
+            score_threshold=score_threshold,
+            max_values=max_values
+        )
+
+    def classify_document_for_refined_values_with_attainment(
+            self,
+            segments: Iterable[str],
+            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+    ) -> Generator[Tuple[RefinedValuesWithAttainment, str], None, None]:
+        with_attainment = True
+        for labels, segment in self._classify_document(
+                segments,
+                language,
+                with_attainment
+        ):
+            yield RefinedValuesWithAttainment.from_labels(labels), segment
