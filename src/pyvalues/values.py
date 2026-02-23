@@ -545,7 +545,7 @@ class ValuesWithoutAttainment(Values):
             value_evaluations={
                 value: [
                     instance_evaluation[value] for instance_evaluation in instance_evaluations
-                ] for value in ORIGINAL_VALUES
+                ] for value in cls.names()
             }
         )
 
