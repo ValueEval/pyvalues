@@ -46,9 +46,9 @@ class AllAttainedClassifier(RefinedValuesWithAttainmentClassifier):
     def classify_document_for_refined_values_with_attainment(
             self,
             segments: Iterable[str],
-            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+            language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[RefinedValuesWithAttainment, None, None]:
-        for segment in segments:
+        for _ in segments:
             yield RefinedValuesWithAttainment(
                 self_direction_action=AttainmentScore(attained=1),
                 self_direction_thought=AttainmentScore(attained=1),
@@ -80,9 +80,9 @@ class AllConstrainedClassifier(RefinedValuesWithAttainmentClassifier):
     def classify_document_for_refined_values_with_attainment(
             self,
             segments: Iterable[str],
-            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+            language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[RefinedValuesWithAttainment, None, None]:
-        for segment in segments:
+        for _ in segments:
             yield RefinedValuesWithAttainment(
                 self_direction_action=AttainmentScore(constrained=1),
                 self_direction_thought=AttainmentScore(constrained=1),
@@ -131,7 +131,7 @@ class RandomOriginalValuesClassifier(OriginalValuesClassifier):
     def classify_document_for_original_values(
             self,
             segments: Iterable[str],
-            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+            language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[OriginalValues, None, None]:
         for _ in segments:
             draw = draw_list(self._probabilities)
@@ -163,7 +163,7 @@ class RandomRefinedCoarseValuesClassifier(RefinedCoarseValuesClassifier):
     def classify_document_for_refined_coarse_values(
             self,
             segments: Iterable[str],
-            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+            language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[RefinedCoarseValues, None, None]:
         for _ in segments:
             draw = draw_list(self._probabilities)
@@ -195,7 +195,7 @@ class RandomRefinedValuesClassifier(RefinedValuesClassifier):
     def classify_document_for_refined_values(
             self,
             segments: Iterable[str],
-            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+            language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[RefinedValues, None, None]:
         for _ in segments:
             draw = draw_list(self._probabilities)
@@ -231,7 +231,7 @@ class RandomOriginalValuesWithAttainmentClassifier(OriginalValuesWithAttainmentC
     def classify_document_for_original_values_with_attainment(
             self,
             segments: Iterable[str],
-            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+            language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[OriginalValuesWithAttainment, None, None]:
         for _ in segments:
             draw = pick_one_attainment(draw_list(self._probabilities))
@@ -267,7 +267,7 @@ class RandomRefinedCoarseValuesWithAttainmentClassifier(RefinedCoarseValuesWithA
     def classify_document_for_refined_coarse_values_with_attainment(
             self,
             segments: Iterable[str],
-            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+            language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[RefinedCoarseValuesWithAttainment, None, None]:
         for _ in segments:
             draw = pick_one_attainment(draw_list(self._probabilities))
@@ -303,7 +303,7 @@ class RandomRefinedValuesWithAttainmentClassifier(RefinedValuesWithAttainmentCla
     def classify_document_for_refined_values_with_attainment(
             self,
             segments: Iterable[str],
-            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+            language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[RefinedValuesWithAttainment, None, None]:
         for _ in segments:
             draw = pick_one_attainment(draw_list(self._probabilities))

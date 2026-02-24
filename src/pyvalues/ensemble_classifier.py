@@ -75,9 +75,9 @@ class OriginalValuesLanguageEnsembleClassifier(
     def classify_document_for_original_values(
             self,
             segments: Iterable[str],
-            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+            language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[OriginalValues, None, None]:
-        return self[language].classify_document_for_original_values(
+        return self[LanguageAlpha2(language)].classify_document_for_original_values(
             segments=segments,
             language=language
         )
@@ -109,9 +109,9 @@ class RefinedCoarseValuesLanguageEnsembleClassifier(
     def classify_document_for_refined_coarse_values(
             self,
             segments: Iterable[str],
-            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+            language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[RefinedCoarseValues, None, None]:
-        return self[language].classify_document_for_refined_coarse_values(
+        return self[LanguageAlpha2(language)].classify_document_for_refined_coarse_values(
             segments=segments,
             language=language
         )
@@ -143,9 +143,9 @@ class RefinedValuesLanguageEnsembleClassifier(
     def classify_document_for_refined_values(
             self,
             segments: Iterable[str],
-            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+            language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[RefinedValues, None, None]:
-        return self[language].classify_document_for_refined_values(
+        return self[LanguageAlpha2(language)].classify_document_for_refined_values(
             segments=segments,
             language=language
         )
@@ -177,9 +177,9 @@ class OriginalValuesWithAttainmentLanguageEnsembleClassifier(
     def classify_document_for_original_values_with_attainment(
             self,
             segments: Iterable[str],
-            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+            language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[OriginalValuesWithAttainment, None, None]:
-        return self[language].classify_document_for_original_values_with_attainment(
+        return self[LanguageAlpha2(language)].classify_document_for_original_values_with_attainment(
             segments=segments,
             language=language
         )
@@ -211,9 +211,9 @@ class RefinedCoarseValuesWithAttainmentLanguageEnsembleClassifier(
     def classify_document_for_refined_coarse_values_with_attainment(
             self,
             segments: Iterable[str],
-            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+            language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[RefinedCoarseValuesWithAttainment, None, None]:
-        return self[language].classify_document_for_refined_coarse_values_with_attainment(
+        return self[LanguageAlpha2(language)].classify_document_for_refined_coarse_values_with_attainment(
             segments=segments,
             language=language
         )
@@ -245,9 +245,9 @@ class RefinedValuesWithAttainmentLanguageEnsembleClassifier(
     def classify_document_for_refined_values_with_attainment(
             self,
             segments: Iterable[str],
-            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+            language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[RefinedValuesWithAttainment, None, None]:
-        return self[language].classify_document_for_refined_values_with_attainment(
+        return self[LanguageAlpha2(language)].classify_document_for_refined_values_with_attainment(
             segments=segments,
             language=language
         )

@@ -179,7 +179,7 @@ class OriginalValuesDictionaryClassifier(DictionaryClassifier, OriginalValuesCla
 
     def __init__(
             self,
-            language: LanguageAlpha2,
+            language: LanguageAlpha2 | str,
             dictionaries: dict[str, str | Tuple[str, float, float]] | FileIO,
             tokenize: Callable[[str], list[str]] = simple_tokenize,
             normalize_token: Callable[[str, LanguageAlpha2], str] = normalize_dictionary_token,
@@ -191,7 +191,7 @@ class OriginalValuesDictionaryClassifier(DictionaryClassifier, OriginalValuesCla
 
         :param language:
             The language of the dictionaries
-        :type language: str
+        :type language: LanguageAlpha2 | str
         :param dictionaries:
             The dictionaries that map from token to value label
             or a JSON file with the value label as keys and as value a list of
@@ -218,7 +218,7 @@ class OriginalValuesDictionaryClassifier(DictionaryClassifier, OriginalValuesCla
             those with highest score (default: no maximum number)
         """
         super().__init__(
-            language=language,
+            language=LanguageAlpha2(language),
             dictionaries=dictionaries,
             tokenize=tokenize,
             normalize_token=normalize_token,
@@ -246,12 +246,12 @@ class OriginalValuesDictionaryClassifier(DictionaryClassifier, OriginalValuesCla
     def classify_document_for_original_values(
             self,
             segments: Iterable[str],
-            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+            language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[OriginalValues, None, None]:
         with_attainment = False
         for labels in self._classify_document(
                 segments,
-                language,
+                LanguageAlpha2(language),
                 with_attainment
         ):
             yield OriginalValues.from_labels(labels)
@@ -264,7 +264,7 @@ class RefinedCoarseValuesDictionaryClassifier(DictionaryClassifier, RefinedCoars
 
     def __init__(
             self,
-            language: LanguageAlpha2,
+            language: LanguageAlpha2 | str,
             dictionaries: dict[str, str | Tuple[str, float, float]] | FileIO,
             tokenize: Callable[[str], list[str]] = simple_tokenize,
             normalize_token: Callable[[str, LanguageAlpha2], str] = normalize_dictionary_token,
@@ -276,7 +276,7 @@ class RefinedCoarseValuesDictionaryClassifier(DictionaryClassifier, RefinedCoars
 
         :param language:
             The language of the dictionaries
-        :type language: str
+        :type language: LanguageAlpha2 | str
         :param dictionaries:
             The dictionaries that map from token to value label
             or a JSON file with the value label as keys and as value a list of
@@ -303,7 +303,7 @@ class RefinedCoarseValuesDictionaryClassifier(DictionaryClassifier, RefinedCoars
             those with highest score (default: no maximum number)
         """
         super().__init__(
-            language=language,
+            language=LanguageAlpha2(language),
             dictionaries=dictionaries,
             tokenize=tokenize,
             normalize_token=normalize_token,
@@ -314,12 +314,12 @@ class RefinedCoarseValuesDictionaryClassifier(DictionaryClassifier, RefinedCoars
     def classify_document_for_refined_coarse_values(
             self,
             segments: Iterable[str],
-            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+            language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[RefinedCoarseValues, None, None]:
         with_attainment = False
         for labels in self._classify_document(
                 segments,
-                language,
+                LanguageAlpha2(language),
                 with_attainment
         ):
             yield RefinedCoarseValues.from_labels(labels)
@@ -332,7 +332,7 @@ class RefinedValuesDictionaryClassifier(DictionaryClassifier, RefinedValuesClass
 
     def __init__(
             self,
-            language: LanguageAlpha2,
+            language: LanguageAlpha2 | str,
             dictionaries: dict[str, str | Tuple[str, float, float]] | FileIO,
             tokenize: Callable[[str], list[str]] = simple_tokenize,
             normalize_token: Callable[[str, LanguageAlpha2], str] = normalize_dictionary_token,
@@ -344,7 +344,7 @@ class RefinedValuesDictionaryClassifier(DictionaryClassifier, RefinedValuesClass
 
         :param language:
             The language of the dictionaries
-        :type language: str
+        :type language: LanguageAlpha2 | str
         :param dictionaries:
             The dictionaries that map from token to value label
             or a JSON file with the value label as keys and as value a list of
@@ -371,7 +371,7 @@ class RefinedValuesDictionaryClassifier(DictionaryClassifier, RefinedValuesClass
             those with highest score (default: no maximum number)
         """
         super().__init__(
-            language=language,
+            language=LanguageAlpha2(language),
             dictionaries=dictionaries,
             tokenize=tokenize,
             normalize_token=normalize_token,
@@ -382,12 +382,12 @@ class RefinedValuesDictionaryClassifier(DictionaryClassifier, RefinedValuesClass
     def classify_document_for_refined_values(
             self,
             segments: Iterable[str],
-            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+            language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[RefinedValues, None, None]:
         with_attainment = False
         for labels in self._classify_document(
                 segments,
-                language,
+                LanguageAlpha2(language),
                 with_attainment
         ):
             yield RefinedValues.from_labels(labels)
@@ -400,7 +400,7 @@ class OriginalValuesWithAttainmentDictionaryClassifier(DictionaryClassifier, Ori
 
     def __init__(
             self,
-            language: LanguageAlpha2,
+            language: LanguageAlpha2 | str,
             dictionaries: dict[str, str | Tuple[str, float, float]] | FileIO,
             tokenize: Callable[[str], list[str]] = simple_tokenize,
             normalize_token: Callable[[str, LanguageAlpha2], str] = normalize_dictionary_token,
@@ -412,7 +412,7 @@ class OriginalValuesWithAttainmentDictionaryClassifier(DictionaryClassifier, Ori
 
         :param language:
             The language of the dictionaries
-        :type language: str
+        :type language: LanguageAlpha2 | str
         :param dictionaries:
             The dictionaries that map from token to value label
             or a JSON file with the value label as keys and as value a list of
@@ -439,7 +439,7 @@ class OriginalValuesWithAttainmentDictionaryClassifier(DictionaryClassifier, Ori
             those with highest score (default: no maximum number)
         """
         super().__init__(
-            language=language,
+            language=LanguageAlpha2(language),
             dictionaries=dictionaries,
             tokenize=tokenize,
             normalize_token=normalize_token,
@@ -450,12 +450,12 @@ class OriginalValuesWithAttainmentDictionaryClassifier(DictionaryClassifier, Ori
     def classify_document_for_original_values_with_attainment(
             self,
             segments: Iterable[str],
-            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+            language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[OriginalValuesWithAttainment, None, None]:
         with_attainment = True
         for labels in self._classify_document(
                 segments,
-                language,
+                LanguageAlpha2(language),
                 with_attainment
         ):
             yield OriginalValuesWithAttainment.from_labels(labels)
@@ -468,7 +468,7 @@ class RefinedCoarseValuesWithAttainmentDictionaryClassifier(DictionaryClassifier
 
     def __init__(
             self,
-            language: LanguageAlpha2,
+            language: LanguageAlpha2 | str,
             dictionaries: dict[str, str | Tuple[str, float, float]] | FileIO,
             tokenize: Callable[[str], list[str]] = simple_tokenize,
             normalize_token: Callable[[str, LanguageAlpha2], str] = normalize_dictionary_token,
@@ -480,7 +480,7 @@ class RefinedCoarseValuesWithAttainmentDictionaryClassifier(DictionaryClassifier
 
         :param language:
             The language of the dictionaries
-        :type language: str
+        :type language: LanguageAlpha2 | str
         :param dictionaries:
             The dictionaries that map from token to value label
             or a JSON file with the value label as keys and as value a list of
@@ -507,7 +507,7 @@ class RefinedCoarseValuesWithAttainmentDictionaryClassifier(DictionaryClassifier
             those with highest score (default: no maximum number)
         """
         super().__init__(
-            language=language,
+            language=LanguageAlpha2(language),
             dictionaries=dictionaries,
             tokenize=tokenize,
             normalize_token=normalize_token,
@@ -518,12 +518,12 @@ class RefinedCoarseValuesWithAttainmentDictionaryClassifier(DictionaryClassifier
     def classify_document_for_refined_coarse_values_with_attainment(
             self,
             segments: Iterable[str],
-            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+            language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[RefinedCoarseValuesWithAttainment, None, None]:
         with_attainment = True
         for labels in self._classify_document(
                 segments,
-                language,
+                LanguageAlpha2(language),
                 with_attainment
         ):
             yield RefinedCoarseValuesWithAttainment.from_labels(labels)
@@ -536,7 +536,7 @@ class RefinedValuesWithAttainmentDictionaryClassifier(DictionaryClassifier, Refi
 
     def __init__(
             self,
-            language: LanguageAlpha2,
+            language: LanguageAlpha2 | str,
             dictionaries: dict[str, str | Tuple[str, float, float]] | FileIO,
             tokenize: Callable[[str], list[str]] = simple_tokenize,
             normalize_token: Callable[[str, LanguageAlpha2], str] = normalize_dictionary_token,
@@ -548,7 +548,7 @@ class RefinedValuesWithAttainmentDictionaryClassifier(DictionaryClassifier, Refi
 
         :param language:
             The language of the dictionaries
-        :type language: str
+        :type language: LanguageAlpha2 | str
         :param dictionaries:
             The dictionaries that map from token to value label
             or a JSON file with the value label as keys and as value a list of
@@ -575,7 +575,7 @@ class RefinedValuesWithAttainmentDictionaryClassifier(DictionaryClassifier, Refi
             those with highest score (default: no maximum number)
         """
         super().__init__(
-            language=language,
+            language=LanguageAlpha2(language),
             dictionaries=dictionaries,
             tokenize=tokenize,
             normalize_token=normalize_token,
@@ -586,12 +586,12 @@ class RefinedValuesWithAttainmentDictionaryClassifier(DictionaryClassifier, Refi
     def classify_document_for_refined_values_with_attainment(
             self,
             segments: Iterable[str],
-            language: LanguageAlpha2 = DEFAULT_LANGUAGE
+            language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[RefinedValuesWithAttainment, None, None]:
         with_attainment = True
         for labels in self._classify_document(
                 segments,
-                language,
+                LanguageAlpha2(language),
                 with_attainment
         ):
             yield RefinedValuesWithAttainment.from_labels(labels)

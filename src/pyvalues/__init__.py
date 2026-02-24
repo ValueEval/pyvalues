@@ -1,4 +1,5 @@
 from .values import (
+    DEFAULT_LANGUAGE,
     Values,
     ValuesWithoutAttainment,
     ValuesWithAttainment,
@@ -19,6 +20,7 @@ from .classifiers import (
 )
 
 __all__ = [
+    "DEFAULT_LANGUAGE",
     "Values",
     "ValuesWithoutAttainment",
     "ValuesWithAttainment",
