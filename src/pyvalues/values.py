@@ -402,7 +402,26 @@ class Values(ABC, BaseModel):
     """
     @classmethod
     @abstractmethod
-    def from_list(cls, list: list[float]) -> Self:
+    def from_list(
+            cls,
+            scores: list[float],
+            cap_at_one: bool = False
+    ) -> Self:
+        """
+        Creates a value scores object from a list of scores
+        (in the order of names())
+
+        :param scores:
+            The scores in the order of names()
+        :type scores: list[float]
+        :param cap_at_one:
+            Whether to cap the scores at 1 - for scores with attainment, scale
+            attained and constrained down to have at most 1 total;
+            Default: False (throw an error instead of capping)
+        :return:
+            The value scores object
+        :rtype: Self
+        """
         pass
 
     @classmethod
@@ -730,19 +749,26 @@ class OriginalValues(ValuesWithoutAttainment):
     model_config = ConfigDict(extra="forbid", serialize_by_alias=True)
 
     @classmethod
-    def from_list(cls, list: list[float]) -> "OriginalValues":
-        assert len(list) == 10
+    def from_list(
+            cls,
+            scores: list[float],
+            cap_at_one: bool = False
+    ) -> "OriginalValues":
+        assert len(scores) == 10
+        scores_copy = scores
+        if cap_at_one:
+            scores_copy = [max(x, 1) for x in scores]
         return OriginalValues(
-            self_direction=list[0],
-            stimulation=list[1],
-            hedonism=list[2],
-            achievement=list[3],
-            power=list[4],
-            security=list[5],
-            tradition=list[6],
-            conformity=list[7],
-            benevolence=list[8],
-            universalism=list[9]
+            self_direction=scores_copy[0],
+            stimulation=scores_copy[1],
+            hedonism=scores_copy[2],
+            achievement=scores_copy[3],
+            power=scores_copy[4],
+            security=scores_copy[5],
+            tradition=scores_copy[6],
+            conformity=scores_copy[7],
+            benevolence=scores_copy[8],
+            universalism=scores_copy[9]
         )
 
     @classmethod
@@ -833,21 +859,28 @@ class RefinedCoarseValues(ValuesWithoutAttainment):
     model_config = ConfigDict(extra="forbid", serialize_by_alias=True)
 
     @classmethod
-    def from_list(cls, list: list[float]) -> "RefinedCoarseValues":
-        assert len(list) == 12
+    def from_list(
+            cls,
+            scores: list[float],
+            cap_at_one: bool = False
+    ) -> "RefinedCoarseValues":
+        assert len(scores) == 12
+        scores_copy = scores
+        if cap_at_one:
+            scores_copy = [max(x, 1) for x in scores]
         return RefinedCoarseValues(
-            self_direction=list[0],
-            stimulation=list[1],
-            hedonism=list[2],
-            achievement=list[3],
-            power=list[4],
-            face=list[5],
-            security=list[6],
-            tradition=list[7],
-            conformity=list[8],
-            humility=list[9],
-            benevolence=list[10],
-            universalism=list[11]
+            self_direction=scores_copy[0],
+            stimulation=scores_copy[1],
+            hedonism=scores_copy[2],
+            achievement=scores_copy[3],
+            power=scores_copy[4],
+            face=scores_copy[5],
+            security=scores_copy[6],
+            tradition=scores_copy[7],
+            conformity=scores_copy[8],
+            humility=scores_copy[9],
+            benevolence=scores_copy[10],
+            universalism=scores_copy[11]
         )
 
     @classmethod
@@ -994,28 +1027,35 @@ class RefinedValues(ValuesWithoutAttainment):
     model_config = ConfigDict(extra="forbid", serialize_by_alias=True)
 
     @classmethod
-    def from_list(cls, list: list[float]) -> "RefinedValues":
-        assert len(list) == 19
+    def from_list(
+            cls,
+            scores: list[float],
+            cap_at_one: bool = False
+    ) -> "RefinedValues":
+        assert len(scores) == 19
+        scores_copy = scores
+        if cap_at_one:
+            scores_copy = [max(x, 1) for x in scores]
         return RefinedValues(
-            self_direction_thought=list[0],
-            self_direction_action=list[1],
-            stimulation=list[2],
-            hedonism=list[3],
-            achievement=list[4],
-            power_dominance=list[5],
-            power_resources=list[6],
-            face=list[7],
-            security_personal=list[8],
-            security_societal=list[9],
-            tradition=list[10],
-            conformity_rules=list[11],
-            conformity_interpersonal=list[12],
-            humility=list[13],
-            benevolence_caring=list[14],
-            benevolence_dependability=list[15],
-            universalism_concern=list[16],
-            universalism_nature=list[17],
-            universalism_tolerance=list[18]
+            self_direction_thought=scores_copy[0],
+            self_direction_action=scores_copy[1],
+            stimulation=scores_copy[2],
+            hedonism=scores_copy[3],
+            achievement=scores_copy[4],
+            power_dominance=scores_copy[5],
+            power_resources=scores_copy[6],
+            face=scores_copy[7],
+            security_personal=scores_copy[8],
+            security_societal=scores_copy[9],
+            tradition=scores_copy[10],
+            conformity_rules=scores_copy[11],
+            conformity_interpersonal=scores_copy[12],
+            humility=scores_copy[13],
+            benevolence_caring=scores_copy[14],
+            benevolence_dependability=scores_copy[15],
+            universalism_concern=scores_copy[16],
+            universalism_nature=scores_copy[17],
+            universalism_tolerance=scores_copy[18]
         )
 
     @classmethod
@@ -1146,19 +1186,35 @@ class OriginalValuesWithAttainment(ValuesWithAttainment):
     model_config = ConfigDict(extra="forbid", serialize_by_alias=True)
 
     @classmethod
-    def from_list(cls, list: list[float]) -> "OriginalValuesWithAttainment":
-        assert len(list) == 20
+    def from_list(
+            cls,
+            scores: list[float],
+            cap_at_one: bool = False
+    ) -> "OriginalValuesWithAttainment":
+        assert len(scores) == 20
+        scores_copy = scores
+        if cap_at_one:
+            scores_copy = []
+            for i in range(19):
+                score_attained = scores[i * 2]
+                score_constrained = scores[i * 2 + 1]
+                score_total = score_attained + score_constrained
+                if score_total > 1.0:
+                    score_attained = score_attained / score_total
+                    score_constrained = score_constrained / score_total
+                scores_copy.append(score_attained)
+                scores_copy.append(score_constrained)
         return OriginalValuesWithAttainment(
-            self_direction=AttainmentScore(attained=list[0], constrained=list[1]),
-            stimulation=AttainmentScore(attained=list[2], constrained=list[3]),
-            hedonism=AttainmentScore(attained=list[4], constrained=list[5]),
-            achievement=AttainmentScore(attained=list[6], constrained=list[7]),
-            power=AttainmentScore(attained=list[8], constrained=list[9]),
-            security=AttainmentScore(attained=list[10], constrained=list[11]),
-            tradition=AttainmentScore(attained=list[12], constrained=list[13]),
-            conformity=AttainmentScore(attained=list[14], constrained=list[15]),
-            benevolence=AttainmentScore(attained=list[16], constrained=list[17]),
-            universalism=AttainmentScore(attained=list[18], constrained=list[19])
+            self_direction=AttainmentScore(attained=scores_copy[0], constrained=scores_copy[1]),
+            stimulation=AttainmentScore(attained=scores_copy[2], constrained=scores_copy[3]),
+            hedonism=AttainmentScore(attained=scores_copy[4], constrained=scores_copy[5]),
+            achievement=AttainmentScore(attained=scores_copy[6], constrained=scores_copy[7]),
+            power=AttainmentScore(attained=scores_copy[8], constrained=scores_copy[9]),
+            security=AttainmentScore(attained=scores_copy[10], constrained=scores_copy[11]),
+            tradition=AttainmentScore(attained=scores_copy[12], constrained=scores_copy[13]),
+            conformity=AttainmentScore(attained=scores_copy[14], constrained=scores_copy[15]),
+            benevolence=AttainmentScore(attained=scores_copy[16], constrained=scores_copy[17]),
+            universalism=AttainmentScore(attained=scores_copy[18], constrained=scores_copy[19])
         )
 
     @classmethod
@@ -1323,21 +1379,37 @@ class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
     model_config = ConfigDict(extra="forbid", serialize_by_alias=True)
 
     @classmethod
-    def from_list(cls, list: list[float]) -> "RefinedCoarseValuesWithAttainment":
-        assert len(list) == 24
+    def from_list(
+            cls,
+            scores: list[float],
+            cap_at_one: bool = False
+    ) -> "RefinedCoarseValuesWithAttainment":
+        assert len(scores) == 24
+        scores_copy = scores
+        if cap_at_one:
+            scores_copy = []
+            for i in range(19):
+                score_attained = scores[i * 2]
+                score_constrained = scores[i * 2 + 1]
+                score_total = score_attained + score_constrained
+                if score_total > 1.0:
+                    score_attained = score_attained / score_total
+                    score_constrained = score_constrained / score_total
+                scores_copy.append(score_attained)
+                scores_copy.append(score_constrained)
         return RefinedCoarseValuesWithAttainment(
-            self_direction=AttainmentScore(attained=list[0], constrained=list[1]),
-            stimulation=AttainmentScore(attained=list[2], constrained=list[3]),
-            hedonism=AttainmentScore(attained=list[4], constrained=list[5]),
-            achievement=AttainmentScore(attained=list[6], constrained=list[7]),
-            power=AttainmentScore(attained=list[8], constrained=list[9]),
-            face=AttainmentScore(attained=list[10], constrained=list[11]),
-            security=AttainmentScore(attained=list[12], constrained=list[13]),
-            tradition=AttainmentScore(attained=list[14], constrained=list[15]),
-            conformity=AttainmentScore(attained=list[16], constrained=list[17]),
-            humility=AttainmentScore(attained=list[18], constrained=list[19]),
-            benevolence=AttainmentScore(attained=list[20], constrained=list[21]),
-            universalism=AttainmentScore(attained=list[22], constrained=list[23])
+            self_direction=AttainmentScore(attained=scores_copy[0], constrained=scores_copy[1]),
+            stimulation=AttainmentScore(attained=scores_copy[2], constrained=scores_copy[3]),
+            hedonism=AttainmentScore(attained=scores_copy[4], constrained=scores_copy[5]),
+            achievement=AttainmentScore(attained=scores_copy[6], constrained=scores_copy[7]),
+            power=AttainmentScore(attained=scores_copy[8], constrained=scores_copy[9]),
+            face=AttainmentScore(attained=scores_copy[10], constrained=scores_copy[11]),
+            security=AttainmentScore(attained=scores_copy[12], constrained=scores_copy[13]),
+            tradition=AttainmentScore(attained=scores_copy[14], constrained=scores_copy[15]),
+            conformity=AttainmentScore(attained=scores_copy[16], constrained=scores_copy[17]),
+            humility=AttainmentScore(attained=scores_copy[18], constrained=scores_copy[19]),
+            benevolence=AttainmentScore(attained=scores_copy[20], constrained=scores_copy[21]),
+            universalism=AttainmentScore(attained=scores_copy[22], constrained=scores_copy[23])
         )
 
     @classmethod
@@ -1566,28 +1638,44 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
     model_config = ConfigDict(extra="forbid", serialize_by_alias=True)
 
     @classmethod
-    def from_list(cls, list: list[float]) -> "RefinedValuesWithAttainment":
-        assert len(list) == 38
+    def from_list(
+            cls,
+            scores: list[float],
+            cap_at_one: bool = False
+    ) -> "RefinedValuesWithAttainment":
+        assert len(scores) == 38
+        scores_copy = scores
+        if cap_at_one:
+            scores_copy = []
+            for i in range(19):
+                score_attained = scores[i * 2]
+                score_constrained = scores[i * 2 + 1]
+                score_total = score_attained + score_constrained
+                if score_total > 1.0:
+                    score_attained = score_attained / score_total
+                    score_constrained = score_constrained / score_total
+                scores_copy.append(score_attained)
+                scores_copy.append(score_constrained)
         return RefinedValuesWithAttainment(
-            self_direction_action=AttainmentScore(attained=list[0], constrained=list[1]),
-            self_direction_thought=AttainmentScore(attained=list[2], constrained=list[3]),
-            stimulation=AttainmentScore(attained=list[4], constrained=list[5]),
-            hedonism=AttainmentScore(attained=list[6], constrained=list[7]),
-            achievement=AttainmentScore(attained=list[8], constrained=list[9]),
-            power_dominance=AttainmentScore(attained=list[10], constrained=list[11]),
-            power_resources=AttainmentScore(attained=list[12], constrained=list[13]),
-            face=AttainmentScore(attained=list[14], constrained=list[15]),
-            security_personal=AttainmentScore(attained=list[16], constrained=list[17]),
-            security_societal=AttainmentScore(attained=list[18], constrained=list[19]),
-            tradition=AttainmentScore(attained=list[20], constrained=list[21]),
-            conformity_rules=AttainmentScore(attained=list[22], constrained=list[23]),
-            conformity_interpersonal=AttainmentScore(attained=list[24], constrained=list[25]),
-            humility=AttainmentScore(attained=list[26], constrained=list[27]),
-            benevolence_caring=AttainmentScore(attained=list[28], constrained=list[29]),
-            benevolence_dependability=AttainmentScore(attained=list[30], constrained=list[31]),
-            universalism_concern=AttainmentScore(attained=list[32], constrained=list[33]),
-            universalism_nature=AttainmentScore(attained=list[34], constrained=list[35]),
-            universalism_tolerance=AttainmentScore(attained=list[36], constrained=list[37])
+            self_direction_action=AttainmentScore(attained=scores_copy[0], constrained=scores_copy[1]),
+            self_direction_thought=AttainmentScore(attained=scores_copy[2], constrained=scores_copy[3]),
+            stimulation=AttainmentScore(attained=scores_copy[4], constrained=scores_copy[5]),
+            hedonism=AttainmentScore(attained=scores_copy[6], constrained=scores_copy[7]),
+            achievement=AttainmentScore(attained=scores_copy[8], constrained=scores_copy[9]),
+            power_dominance=AttainmentScore(attained=scores_copy[10], constrained=scores_copy[11]),
+            power_resources=AttainmentScore(attained=scores_copy[12], constrained=scores_copy[13]),
+            face=AttainmentScore(attained=scores_copy[14], constrained=scores_copy[15]),
+            security_personal=AttainmentScore(attained=scores_copy[16], constrained=scores_copy[17]),
+            security_societal=AttainmentScore(attained=scores_copy[18], constrained=scores_copy[19]),
+            tradition=AttainmentScore(attained=scores_copy[20], constrained=scores_copy[21]),
+            conformity_rules=AttainmentScore(attained=scores_copy[22], constrained=scores_copy[23]),
+            conformity_interpersonal=AttainmentScore(attained=scores_copy[24], constrained=scores_copy[25]),
+            humility=AttainmentScore(attained=scores_copy[26], constrained=scores_copy[27]),
+            benevolence_caring=AttainmentScore(attained=scores_copy[28], constrained=scores_copy[29]),
+            benevolence_dependability=AttainmentScore(attained=scores_copy[30], constrained=scores_copy[31]),
+            universalism_concern=AttainmentScore(attained=scores_copy[32], constrained=scores_copy[33]),
+            universalism_nature=AttainmentScore(attained=scores_copy[34], constrained=scores_copy[35]),
+            universalism_tolerance=AttainmentScore(attained=scores_copy[36], constrained=scores_copy[37])
         )
 
     @classmethod
