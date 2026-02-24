@@ -1,5 +1,5 @@
 import random
-from typing import Generator, Iterable, Tuple, TypeVar
+from typing import Generator, Iterable, TypeVar
 from pydantic_extra_types.language_code import LanguageAlpha2
 from .classifiers import (
     OriginalValuesClassifier,
@@ -47,7 +47,7 @@ class AllAttainedClassifier(RefinedValuesWithAttainmentClassifier):
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedValuesWithAttainment, str], None, None]:
+    ) -> Generator[RefinedValuesWithAttainment, None, None]:
         for segment in segments:
             yield RefinedValuesWithAttainment(
                 self_direction_action=AttainmentScore(attained=1),
@@ -69,7 +69,7 @@ class AllAttainedClassifier(RefinedValuesWithAttainmentClassifier):
                 universalism_concern=AttainmentScore(attained=1),
                 universalism_nature=AttainmentScore(attained=1),
                 universalism_tolerance=AttainmentScore(attained=1),
-            ), segment
+            )
 
 
 class AllConstrainedClassifier(RefinedValuesWithAttainmentClassifier):
@@ -81,7 +81,7 @@ class AllConstrainedClassifier(RefinedValuesWithAttainmentClassifier):
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedValuesWithAttainment, str], None, None]:
+    ) -> Generator[RefinedValuesWithAttainment, None, None]:
         for segment in segments:
             yield RefinedValuesWithAttainment(
                 self_direction_action=AttainmentScore(constrained=1),
@@ -103,7 +103,7 @@ class AllConstrainedClassifier(RefinedValuesWithAttainmentClassifier):
                 universalism_concern=AttainmentScore(constrained=1),
                 universalism_nature=AttainmentScore(constrained=1),
                 universalism_tolerance=AttainmentScore(constrained=1),
-            ), segment
+            )
 
 
 class RandomOriginalValuesClassifier(OriginalValuesClassifier):
@@ -132,10 +132,10 @@ class RandomOriginalValuesClassifier(OriginalValuesClassifier):
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[OriginalValues, str], None, None]:
-        for segment in segments:
+    ) -> Generator[OriginalValues, None, None]:
+        for _ in segments:
             draw = draw_list(self._probabilities)
-            yield OriginalValues.from_list(draw), segment
+            yield OriginalValues.from_list(draw)
 
 
 class RandomRefinedCoarseValuesClassifier(RefinedCoarseValuesClassifier):
@@ -164,10 +164,10 @@ class RandomRefinedCoarseValuesClassifier(RefinedCoarseValuesClassifier):
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedCoarseValues, str], None, None]:
-        for segment in segments:
+    ) -> Generator[RefinedCoarseValues, None, None]:
+        for _ in segments:
             draw = draw_list(self._probabilities)
-            yield RefinedCoarseValues.from_list(draw), segment
+            yield RefinedCoarseValues.from_list(draw)
 
 
 class RandomRefinedValuesClassifier(RefinedValuesClassifier):
@@ -196,10 +196,10 @@ class RandomRefinedValuesClassifier(RefinedValuesClassifier):
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedValues, str], None, None]:
-        for segment in segments:
+    ) -> Generator[RefinedValues, None, None]:
+        for _ in segments:
             draw = draw_list(self._probabilities)
-            yield RefinedValues.from_list(draw), segment
+            yield RefinedValues.from_list(draw)
 
 
 class RandomOriginalValuesWithAttainmentClassifier(OriginalValuesWithAttainmentClassifier):
@@ -232,10 +232,10 @@ class RandomOriginalValuesWithAttainmentClassifier(OriginalValuesWithAttainmentC
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[OriginalValuesWithAttainment, str], None, None]:
-        for segment in segments:
+    ) -> Generator[OriginalValuesWithAttainment, None, None]:
+        for _ in segments:
             draw = pick_one_attainment(draw_list(self._probabilities))
-            yield OriginalValuesWithAttainment.from_list(draw), segment
+            yield OriginalValuesWithAttainment.from_list(draw)
 
 
 class RandomRefinedCoarseValuesWithAttainmentClassifier(RefinedCoarseValuesWithAttainmentClassifier):
@@ -268,10 +268,10 @@ class RandomRefinedCoarseValuesWithAttainmentClassifier(RefinedCoarseValuesWithA
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedCoarseValuesWithAttainment, str], None, None]:
-        for segment in segments:
+    ) -> Generator[RefinedCoarseValuesWithAttainment, None, None]:
+        for _ in segments:
             draw = pick_one_attainment(draw_list(self._probabilities))
-            yield RefinedCoarseValuesWithAttainment.from_list(draw), segment
+            yield RefinedCoarseValuesWithAttainment.from_list(draw)
 
 
 class RandomRefinedValuesWithAttainmentClassifier(RefinedValuesWithAttainmentClassifier):
@@ -304,7 +304,7 @@ class RandomRefinedValuesWithAttainmentClassifier(RefinedValuesWithAttainmentCla
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedValuesWithAttainment, str], None, None]:
-        for segment in segments:
+    ) -> Generator[RefinedValuesWithAttainment, None, None]:
+        for _ in segments:
             draw = pick_one_attainment(draw_list(self._probabilities))
-            yield RefinedValuesWithAttainment.from_list(draw), segment
+            yield RefinedValuesWithAttainment.from_list(draw)

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Generator, Iterable, Tuple
+from typing import Generator, Iterable
 from pydantic_extra_types.language_code import LanguageAlpha2
 
 from .values import (
@@ -52,14 +52,14 @@ class OriginalValuesClassifier(ABC):
         return self.classify_document_for_original_values(
             [segment],
             language
-        ).__next__()[0]
+        ).__next__()
 
     @abstractmethod
     def classify_document_for_original_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[OriginalValues, str], None, None]:
+    ) -> Generator[OriginalValues, None, None]:
         """
         Classifies each segment.
 
@@ -70,8 +70,8 @@ class OriginalValuesClassifier(ABC):
             The language of the segments
         :type language: LanguageAlpha2
         :return:
-            Tuples of classification and segment
-        :rtype: Generator[Tuple[OriginalValues, str], None, None]
+            Classifications for each segment
+        :rtype: Generator[OriginalValues, None, None]
         """
         pass
 
@@ -114,22 +114,22 @@ class RefinedCoarseValuesClassifier(OriginalValuesClassifier):
         return self.classify_document_for_refined_coarse_values(
             [segment],
             language
-        ).__next__()[0]
+        ).__next__()
 
     def classify_document_for_original_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[OriginalValues, str], None, None]:
-        for values, segment in self.classify_document_for_refined_coarse_values(segments, language):
-            yield values.original_values(), segment
+    ) -> Generator[OriginalValues, None, None]:
+        for values in self.classify_document_for_refined_coarse_values(segments, language):
+            yield values.original_values()
 
     @abstractmethod
     def classify_document_for_refined_coarse_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedCoarseValues, str], None, None]:
+    ) -> Generator[RefinedCoarseValues, None, None]:
         """
         Classifies each segment.
 
@@ -140,8 +140,8 @@ class RefinedCoarseValuesClassifier(OriginalValuesClassifier):
             The language of the segments
         :type language: LanguageAlpha2
         :return:
-            Tuples of classification and segment
-        :rtype: Generator[Tuple[RefinedCoarseValues, str], None, None]
+            Classification for each segment
+        :rtype: Generator[RefinedCoarseValues, None, None]
         """
         pass
 
@@ -183,22 +183,22 @@ class RefinedValuesClassifier(RefinedCoarseValuesClassifier):
         return self.classify_document_for_refined_values(
             [segment],
             language
-        ).__next__()[0]
+        ).__next__()
 
     def classify_document_for_refined_coarse_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedCoarseValues, str], None, None]:
-        for values, segment in self.classify_document_for_refined_values(segments, language):
-            yield values.coarse_values(), segment
+    ) -> Generator[RefinedCoarseValues, None, None]:
+        for values in self.classify_document_for_refined_values(segments, language):
+            yield values.coarse_values()
 
     @abstractmethod
     def classify_document_for_refined_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedValues, str], None, None]:
+    ) -> Generator[RefinedValues, None, None]:
         """
         Classifies each segment.
 
@@ -209,8 +209,8 @@ class RefinedValuesClassifier(RefinedCoarseValuesClassifier):
             The language of the segments
         :type language: LanguageAlpha2
         :return:
-            Tuples of classification and segment
-        :rtype: Generator[Tuple[RefinedValues, str], None, None]
+            Classifications for each segment
+        :rtype: Generator[RefinedValues, None, None]
         """
         pass
 
@@ -252,22 +252,22 @@ class OriginalValuesWithAttainmentClassifier(OriginalValuesClassifier):
         return self.classify_document_for_original_values_with_attainment(
             [segment],
             language
-        ).__next__()[0]
+        ).__next__()
 
     def classify_document_for_original_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[OriginalValues, str], None, None]:
-        for values, segment in self.classify_document_for_original_values_with_attainment(segments, language):
-            yield values.without_attainment(), segment
+    ) -> Generator[OriginalValues, None, None]:
+        for values in self.classify_document_for_original_values_with_attainment(segments, language):
+            yield values.without_attainment()
 
     @abstractmethod
     def classify_document_for_original_values_with_attainment(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[OriginalValuesWithAttainment, str], None, None]:
+    ) -> Generator[OriginalValuesWithAttainment, None, None]:
         """
         Classifies each segment.
 
@@ -278,8 +278,8 @@ class OriginalValuesWithAttainmentClassifier(OriginalValuesClassifier):
             The language of the segments
         :type language: LanguageAlpha2
         :return:
-            Tuples of classification and segment
-        :rtype: Generator[Tuple[OriginalValuesWithAttainment, str], None, None]
+            Classification for each segment
+        :rtype: Generator[OriginalValuesWithAttainment, None, None]
         """
         pass
 
@@ -332,30 +332,30 @@ class RefinedCoarseValuesWithAttainmentClassifier(
         return self.classify_document_for_refined_coarse_values_with_attainment(
             [segment],
             language
-        ).__next__()[0]
+        ).__next__()
 
     def classify_document_for_refined_coarse_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedCoarseValues, str], None, None]:
-        for values, segment in self.classify_document_for_refined_coarse_values_with_attainment(segments, language):
-            yield values.without_attainment(), segment
+    ) -> Generator[RefinedCoarseValues, None, None]:
+        for values in self.classify_document_for_refined_coarse_values_with_attainment(segments, language):
+            yield values.without_attainment()
 
     def classify_document_for_original_values_with_attainment(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[OriginalValuesWithAttainment, str], None, None]:
-        for values, segment in self.classify_document_for_refined_coarse_values_with_attainment(segments, language):
-            yield values.original_values(), segment
+    ) -> Generator[OriginalValuesWithAttainment, None, None]:
+        for values in self.classify_document_for_refined_coarse_values_with_attainment(segments, language):
+            yield values.original_values()
 
     @abstractmethod
     def classify_document_for_refined_coarse_values_with_attainment(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedCoarseValuesWithAttainment, str], None, None]:
+    ) -> Generator[RefinedCoarseValuesWithAttainment, None, None]:
         """
         Classifies each segment.
 
@@ -366,8 +366,8 @@ class RefinedCoarseValuesWithAttainmentClassifier(
             The language of the segments
         :type language: LanguageAlpha2
         :return:
-            Tuples of classification and segment
-        :rtype: Generator[Tuple[RefinedCoarseValuesWithAttainment, str], None, None]
+            Classifications for each segment
+        :rtype: Generator[RefinedCoarseValuesWithAttainment, None, None]
         """
         pass
 
@@ -421,30 +421,30 @@ class RefinedValuesWithAttainmentClassifier(
         return self.classify_document_for_refined_values_with_attainment(
             [segment],
             language
-        ).__next__()[0]
+        ).__next__()
 
     def classify_document_for_refined_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedValues, str], None, None]:
-        for values, segment in self.classify_document_for_refined_values_with_attainment(segments, language):
-            yield values.without_attainment(), segment
+    ) -> Generator[RefinedValues, None, None]:
+        for values in self.classify_document_for_refined_values_with_attainment(segments, language):
+            yield values.without_attainment()
 
     def classify_document_for_refined_coarse_values_with_attainment(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedCoarseValuesWithAttainment, str], None, None]:
-        for values, segment in self.classify_document_for_refined_values_with_attainment(segments, language):
-            yield values.coarse_values(), segment
+    ) -> Generator[RefinedCoarseValuesWithAttainment, None, None]:
+        for values in self.classify_document_for_refined_values_with_attainment(segments, language):
+            yield values.coarse_values()
 
     @abstractmethod
     def classify_document_for_refined_values_with_attainment(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedValuesWithAttainment, str], None, None]:
+    ) -> Generator[RefinedValuesWithAttainment, None, None]:
         """
         Classifies each segment.
 
@@ -455,7 +455,7 @@ class RefinedValuesWithAttainmentClassifier(
             The language of the segments
         :type language: LanguageAlpha2
         :return:
-            Tuples of classification and segment
-        :rtype: Generator[Tuple[RefinedValuesWithAttainment, str], None, None]
+            Classifications for each segment
+        :rtype: Generator[RefinedValuesWithAttainment, None, None]
         """
         pass

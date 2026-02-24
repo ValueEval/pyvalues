@@ -1,4 +1,4 @@
-from typing import Generator, Generic, Iterable, Tuple, TypeVar
+from typing import Generator, Generic, Iterable, TypeVar
 
 from pydantic_extra_types.language_code import LanguageAlpha2
 from .classifiers import (
@@ -76,7 +76,7 @@ class OriginalValuesLanguageEnsembleClassifier(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[OriginalValues, str], None, None]:
+    ) -> Generator[OriginalValues, None, None]:
         return self[language].classify_document_for_original_values(
             segments=segments,
             language=language
@@ -110,7 +110,7 @@ class RefinedCoarseValuesLanguageEnsembleClassifier(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedCoarseValues, str], None, None]:
+    ) -> Generator[RefinedCoarseValues, None, None]:
         return self[language].classify_document_for_refined_coarse_values(
             segments=segments,
             language=language
@@ -144,7 +144,7 @@ class RefinedValuesLanguageEnsembleClassifier(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedValues, str], None, None]:
+    ) -> Generator[RefinedValues, None, None]:
         return self[language].classify_document_for_refined_values(
             segments=segments,
             language=language
@@ -178,7 +178,7 @@ class OriginalValuesWithAttainmentLanguageEnsembleClassifier(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[OriginalValuesWithAttainment, str], None, None]:
+    ) -> Generator[OriginalValuesWithAttainment, None, None]:
         return self[language].classify_document_for_original_values_with_attainment(
             segments=segments,
             language=language
@@ -212,7 +212,7 @@ class RefinedCoarseValuesWithAttainmentLanguageEnsembleClassifier(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedCoarseValuesWithAttainment, str], None, None]:
+    ) -> Generator[RefinedCoarseValuesWithAttainment, None, None]:
         return self[language].classify_document_for_refined_coarse_values_with_attainment(
             segments=segments,
             language=language
@@ -246,7 +246,7 @@ class RefinedValuesWithAttainmentLanguageEnsembleClassifier(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedValuesWithAttainment, str], None, None]:
+    ) -> Generator[RefinedValuesWithAttainment, None, None]:
         return self[language].classify_document_for_refined_values_with_attainment(
             segments=segments,
             language=language

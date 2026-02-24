@@ -127,7 +127,7 @@ class DictionaryClassifier():
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE,
             with_attainment: bool = False,
-    ) -> Generator[Tuple[list[str], str], None, None]:
+    ) -> Generator[list[str], None, None]:
         if language != self._language:
             OriginalValuesClassifier._raise_unsupported_language(language)
 
@@ -169,7 +169,7 @@ class DictionaryClassifier():
                     break
             if self._max_values > 0 and len(labels) > self._max_values:
                 labels = labels[0:self._max_values]
-            yield labels, segment
+            yield labels
 
 
 class OriginalValuesDictionaryClassifier(DictionaryClassifier, OriginalValuesClassifier):
@@ -247,14 +247,14 @@ class OriginalValuesDictionaryClassifier(DictionaryClassifier, OriginalValuesCla
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[OriginalValues, str], None, None]:
+    ) -> Generator[OriginalValues, None, None]:
         with_attainment = False
-        for labels, segment in self._classify_document(
+        for labels in self._classify_document(
                 segments,
                 language,
                 with_attainment
         ):
-            yield OriginalValues.from_labels(labels), segment
+            yield OriginalValues.from_labels(labels)
 
 
 class RefinedCoarseValuesDictionaryClassifier(DictionaryClassifier, RefinedCoarseValuesClassifier):
@@ -315,14 +315,14 @@ class RefinedCoarseValuesDictionaryClassifier(DictionaryClassifier, RefinedCoars
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedCoarseValues, str], None, None]:
+    ) -> Generator[RefinedCoarseValues, None, None]:
         with_attainment = False
-        for labels, segment in self._classify_document(
+        for labels in self._classify_document(
                 segments,
                 language,
                 with_attainment
         ):
-            yield RefinedCoarseValues.from_labels(labels), segment
+            yield RefinedCoarseValues.from_labels(labels)
 
 
 class RefinedValuesDictionaryClassifier(DictionaryClassifier, RefinedValuesClassifier):
@@ -383,14 +383,14 @@ class RefinedValuesDictionaryClassifier(DictionaryClassifier, RefinedValuesClass
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedValues, str], None, None]:
+    ) -> Generator[RefinedValues, None, None]:
         with_attainment = False
-        for labels, segment in self._classify_document(
+        for labels in self._classify_document(
                 segments,
                 language,
                 with_attainment
         ):
-            yield RefinedValues.from_labels(labels), segment
+            yield RefinedValues.from_labels(labels)
 
 
 class OriginalValuesWithAttainmentDictionaryClassifier(DictionaryClassifier, OriginalValuesWithAttainmentClassifier):
@@ -451,14 +451,14 @@ class OriginalValuesWithAttainmentDictionaryClassifier(DictionaryClassifier, Ori
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[OriginalValuesWithAttainment, str], None, None]:
+    ) -> Generator[OriginalValuesWithAttainment, None, None]:
         with_attainment = True
-        for labels, segment in self._classify_document(
+        for labels in self._classify_document(
                 segments,
                 language,
                 with_attainment
         ):
-            yield OriginalValuesWithAttainment.from_labels(labels), segment
+            yield OriginalValuesWithAttainment.from_labels(labels)
 
 
 class RefinedCoarseValuesWithAttainmentDictionaryClassifier(DictionaryClassifier, RefinedCoarseValuesWithAttainmentClassifier):
@@ -519,14 +519,14 @@ class RefinedCoarseValuesWithAttainmentDictionaryClassifier(DictionaryClassifier
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedCoarseValuesWithAttainment, str], None, None]:
+    ) -> Generator[RefinedCoarseValuesWithAttainment, None, None]:
         with_attainment = True
-        for labels, segment in self._classify_document(
+        for labels in self._classify_document(
                 segments,
                 language,
                 with_attainment
         ):
-            yield RefinedCoarseValuesWithAttainment.from_labels(labels), segment
+            yield RefinedCoarseValuesWithAttainment.from_labels(labels)
 
 
 class RefinedValuesWithAttainmentDictionaryClassifier(DictionaryClassifier, RefinedValuesWithAttainmentClassifier):
@@ -587,11 +587,11 @@ class RefinedValuesWithAttainmentDictionaryClassifier(DictionaryClassifier, Refi
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    ) -> Generator[Tuple[RefinedValuesWithAttainment, str], None, None]:
+    ) -> Generator[RefinedValuesWithAttainment, None, None]:
         with_attainment = True
-        for labels, segment in self._classify_document(
+        for labels in self._classify_document(
                 segments,
                 language,
                 with_attainment
         ):
-            yield RefinedValuesWithAttainment.from_labels(labels), segment
+            yield RefinedValuesWithAttainment.from_labels(labels)

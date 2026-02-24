@@ -14,7 +14,7 @@ class TestDictionaryClassifier(unittest.TestCase):
 
         results = list(classifier.classify_document_for_original_values([
             "Jobs! Jobs! Jobs! Less party and joy, more work and struggle!"
-        ], LanguageAlpha2("en")))[0][0]
+        ], LanguageAlpha2("en")))[0]
         self.assertEqual(results.self_direction, 0)
         self.assertEqual(results.stimulation, 1)
         self.assertEqual(results.hedonism, 1)
@@ -28,7 +28,7 @@ class TestDictionaryClassifier(unittest.TestCase):
 
         results = list(classifier.classify_document_for_original_values([
             "Die Behörden befolgen entschlossen die Anweisungen."
-        ], LanguageAlpha2("de")))[0][0]
+        ], LanguageAlpha2("de")))[0]
         self.assertEqual(results.self_direction, 1)
         self.assertEqual(results.stimulation, 0)
         self.assertEqual(results.hedonism, 0)
@@ -47,7 +47,7 @@ class TestDictionaryClassifier(unittest.TestCase):
 
         results = list(classifier.classify_document_for_original_values([
             "Jobs! Jobs! Jobs! Less party and joy, more work and struggle!"
-        ], LanguageAlpha2("en")))[0][0]
+        ], LanguageAlpha2("en")))[0]
         self.assertEqual(results.self_direction, 0)
         self.assertEqual(results.stimulation, 0)
         self.assertEqual(results.hedonism, 1)
@@ -61,7 +61,7 @@ class TestDictionaryClassifier(unittest.TestCase):
 
         results = list(classifier.classify_document_for_original_values([
             "Die Behörden befolgen entschlossen die Anweisungen."
-        ], LanguageAlpha2("de")))[0][0]
+        ], LanguageAlpha2("de")))[0]
         self.assertEqual(results.self_direction, 0)
         self.assertEqual(results.stimulation, 0)
         self.assertEqual(results.hedonism, 0)
@@ -80,7 +80,7 @@ class TestDictionaryClassifier(unittest.TestCase):
 
         results = list(classifier.classify_document_for_original_values([
             "Jobs! Jobs! Jobs! Less party and joy, more work and struggle!"
-        ], LanguageAlpha2("en")))[0][0]
+        ], LanguageAlpha2("en")))[0]
         self.assertEqual(results.self_direction, 0)
         self.assertEqual(results.stimulation, 0)
         self.assertEqual(results.hedonism, 0)
@@ -94,7 +94,7 @@ class TestDictionaryClassifier(unittest.TestCase):
 
         results = list(classifier.classify_document_for_original_values([
             "Die Behörden befolgen entschlossen die Anweisungen."
-        ], LanguageAlpha2("de")))[0][0]
+        ], LanguageAlpha2("de")))[0]
         self.assertEqual(results.self_direction, 0)
         self.assertEqual(results.stimulation, 0)
         self.assertEqual(results.hedonism, 0)
@@ -113,7 +113,7 @@ class TestDictionaryClassifier(unittest.TestCase):
 
         results = list(classifier.classify_document_for_original_values([
             "Jobs! Jobs! Jobs! Less party and joy, more work and struggle!"
-        ], LanguageAlpha2("en")))[0][0]
+        ], LanguageAlpha2("en")))[0]
         self.assertEqual(results.self_direction, 0)
         self.assertEqual(results.stimulation, 0)
         self.assertEqual(results.hedonism, 0)
@@ -127,7 +127,7 @@ class TestDictionaryClassifier(unittest.TestCase):
 
         results = list(classifier.classify_document_for_original_values([
             "Die Behörden befolgen entschlossen die Anweisungen."
-        ], LanguageAlpha2("de")))[0][0]
+        ], LanguageAlpha2("de")))[0]
         self.assertEqual(results.self_direction, 0)
         self.assertEqual(results.stimulation, 0)
         self.assertEqual(results.hedonism, 0)
