@@ -37,7 +37,7 @@ ORIGINAL_VALUES_COLORS = [
 ]
 
 ORIGINAL_VALUES_WITH_ATTAINMENT = sum(
-    [[v + " attained", v + "constrained"] for v in ORIGINAL_VALUES],
+    [[v + " attained", v + " constrained"] for v in ORIGINAL_VALUES],
     []
 )
 
@@ -73,7 +73,7 @@ REFINED_COARSE_VALUES_COLORS = [
 ]
 
 REFINED_COARSE_VALUES_WITH_ATTAINMENT = sum(
-    [[v + " attained", v + "constrained"] for v in REFINED_COARSE_VALUES],
+    [[v + " attained", v + " constrained"] for v in REFINED_COARSE_VALUES],
     []
 )
 
@@ -116,7 +116,7 @@ REFINED_VALUES_COLORS = [
 ]
 
 REFINED_VALUES_WITH_ATTAINMENT = sum(
-    [[v + " attained", v + "constrained"] for v in REFINED_VALUES],
+    [[v + " attained", v + " constrained"] for v in REFINED_VALUES],
     []
 )
 
@@ -665,9 +665,9 @@ class ValuesWithAttainment(Values):
 
     def plot(self, **kwargs):
         return ValuesWithoutAttainment.plot_all(
-            [self.attained(), self.constrained(), self.total()],
-            labels=["Attained", "Constrained", "Total"],
-            linecolors=["green", "red", "black"],
+            [self.total(), self.attained(), self.constrained()],
+            labels=["Total", "Attained", "Constrained"],
+            linecolors=["black", "green", "red"],
             **kwargs
         )
 
