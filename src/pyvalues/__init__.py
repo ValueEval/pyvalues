@@ -1,4 +1,7 @@
 from .values import (
+    Values,
+    ValuesWithoutAttainment,
+    ValuesWithAttainment,
     RefinedValues,
     RefinedCoarseValues,
     OriginalValues,
@@ -16,6 +19,9 @@ from .classifiers import (
 )
 
 __all__ = [
+    "Values",
+    "ValuesWithoutAttainment",
+    "ValuesWithAttainment",
     "RefinedValues",
     "RefinedCoarseValues",
     "OriginalValues",
