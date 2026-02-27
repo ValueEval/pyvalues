@@ -3,12 +3,7 @@ import unittest
 from pydantic import ValidationError
 
 from pyvalues import (
-    RefinedValues,
-    RefinedCoarseValues,
     OriginalValues,
-    RefinedValuesWithAttainment,
-    RefinedCoarseValuesWithAttainment,
-    OriginalValuesWithAttainment
 )
 
 
