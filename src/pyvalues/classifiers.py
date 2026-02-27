@@ -76,7 +76,7 @@ class OriginalValuesClassifier(ABC):
             document.segments,
             document.language
         ))
-        return ValuesAnnotatedDocument(
+        return ValuesAnnotatedDocument[OriginalValues](
             id=document.id,
             language=document.language,
             segments=document.segments,
@@ -165,7 +165,7 @@ class RefinedCoarseValuesClassifier(OriginalValuesClassifier):
             document.segments,
             document.language
         ))
-        return ValuesAnnotatedDocument(
+        return ValuesAnnotatedDocument[RefinedCoarseValues](
             id=document.id,
             language=document.language,
             segments=document.segments,
@@ -261,7 +261,7 @@ class RefinedValuesClassifier(RefinedCoarseValuesClassifier):
             document.segments,
             document.language
         ))
-        return ValuesAnnotatedDocument(
+        return ValuesAnnotatedDocument[RefinedValues](
             id=document.id,
             language=document.language,
             segments=document.segments,
@@ -357,7 +357,7 @@ class OriginalValuesWithAttainmentClassifier(OriginalValuesClassifier):
             document.segments,
             document.language
         ))
-        return ValuesAnnotatedDocument(
+        return ValuesAnnotatedDocument[OriginalValuesWithAttainment](
             id=document.id,
             language=document.language,
             segments=document.segments,
@@ -464,7 +464,7 @@ class RefinedCoarseValuesWithAttainmentClassifier(
             document.segments,
             document.language
         ))
-        return ValuesAnnotatedDocument(
+        return ValuesAnnotatedDocument[RefinedCoarseValuesWithAttainment](
             id=document.id,
             language=document.language,
             segments=document.segments,
@@ -580,7 +580,7 @@ class RefinedValuesWithAttainmentClassifier(
             document.segments,
             document.language
         ))
-        return ValuesAnnotatedDocument(
+        return ValuesAnnotatedDocument[RefinedValuesWithAttainment](
             id=document.id,
             language=document.language,
             segments=document.segments,

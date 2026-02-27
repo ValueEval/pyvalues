@@ -1,6 +1,6 @@
 [project]
 name = "pyvalues"
-version = "0.5.0"
+version = "0.5.1"
 description = "Python library for processing, evaluating, and visualizing (Schwartz) human value scores"
 requires-python = ">=3.11"
 readme = "README.md"
