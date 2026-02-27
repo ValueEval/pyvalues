@@ -8,4 +8,4 @@ Python library for processing, evaluating, and visualizing (Schwartz) human valu
    :caption: Contents:
 
    pyvalues
-   pyvalues.dictionary_classifier
+   pyvalues_dictionary_classifier
