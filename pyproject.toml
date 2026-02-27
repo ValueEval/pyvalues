@@ -20,6 +20,7 @@ maintainers = [
 ]
 
 [project.urls]
+"Documentation" = "https://valueeval.github.io/pyvalues/main/"
 "Source" = "https://github.com/ValueEval/pyvalues"
 "Issues" = "https://github.com/ValueEval/pyvalues/issues"
 
