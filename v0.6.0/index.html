@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pyvalues &#8212; pyvalues 0.6.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=8fa8b3e9"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pyvalues" href="pyvalues.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="pyvalues">
+<h1>pyvalues<a class="headerlink" href="#pyvalues" title="Link to this heading">¶</a></h1>
+<p>Python library for processing, evaluating, and visualizing (Schwartz) human value scores</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pyvalues.html">pyvalues</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues.html#pyvalues.Document"><code class="docutils literal notranslate"><span class="pre">Document</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues.html#pyvalues.OriginalValues"><code class="docutils literal notranslate"><span class="pre">OriginalValues</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues.html#pyvalues.OriginalValuesWithAttainment"><code class="docutils literal notranslate"><span class="pre">OriginalValuesWithAttainment</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValues"><code class="docutils literal notranslate"><span class="pre">RefinedCoarseValues</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValuesWithAttainment"><code class="docutils literal notranslate"><span class="pre">RefinedCoarseValuesWithAttainment</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues.html#pyvalues.RefinedValues"><code class="docutils literal notranslate"><span class="pre">RefinedValues</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues.html#pyvalues.RefinedValuesWithAttainment"><code class="docutils literal notranslate"><span class="pre">RefinedValuesWithAttainment</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues.html#pyvalues.Values"><code class="docutils literal notranslate"><span class="pre">Values</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues.html#pyvalues.ValuesAnnotatedDocument"><code class="docutils literal notranslate"><span class="pre">ValuesAnnotatedDocument</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues.html#pyvalues.ValuesWithAttainment"><code class="docutils literal notranslate"><span class="pre">ValuesWithAttainment</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues.html#pyvalues.ValuesWithoutAttainment"><code class="docutils literal notranslate"><span class="pre">ValuesWithoutAttainment</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyvalues_classifier.html">pyvalues.classifier</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_classifier.html#pyvalues.classifier.OriginalValuesClassifier"><code class="docutils literal notranslate"><span class="pre">OriginalValuesClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_classifier.html#pyvalues.classifier.OriginalValuesWithAttainmentClassifier"><code class="docutils literal notranslate"><span class="pre">OriginalValuesWithAttainmentClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_classifier.html#pyvalues.classifier.RefinedCoarseValuesClassifier"><code class="docutils literal notranslate"><span class="pre">RefinedCoarseValuesClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_classifier.html#pyvalues.classifier.RefinedCoarseValuesWithAttainmentClassifier"><code class="docutils literal notranslate"><span class="pre">RefinedCoarseValuesWithAttainmentClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_classifier.html#pyvalues.classifier.RefinedValuesClassifier"><code class="docutils literal notranslate"><span class="pre">RefinedValuesClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_classifier.html#pyvalues.classifier.RefinedValuesWithAttainmentClassifier"><code class="docutils literal notranslate"><span class="pre">RefinedValuesWithAttainmentClassifier</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyvalues_baseline_classifier.html">pyvalues.baseline_classifier</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_baseline_classifier.html#pyvalues.baseline_classifier.AllAttainedClassifier"><code class="docutils literal notranslate"><span class="pre">AllAttainedClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_baseline_classifier.html#pyvalues.baseline_classifier.AllConstrainedClassifier"><code class="docutils literal notranslate"><span class="pre">AllConstrainedClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_baseline_classifier.html#pyvalues.baseline_classifier.RandomOriginalValuesClassifier"><code class="docutils literal notranslate"><span class="pre">RandomOriginalValuesClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_baseline_classifier.html#pyvalues.baseline_classifier.RandomOriginalValuesWithAttainmentClassifier"><code class="docutils literal notranslate"><span class="pre">RandomOriginalValuesWithAttainmentClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_baseline_classifier.html#pyvalues.baseline_classifier.RandomRefinedCoarseValuesClassifier"><code class="docutils literal notranslate"><span class="pre">RandomRefinedCoarseValuesClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_baseline_classifier.html#pyvalues.baseline_classifier.RandomRefinedCoarseValuesWithAttainmentClassifier"><code class="docutils literal notranslate"><span class="pre">RandomRefinedCoarseValuesWithAttainmentClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_baseline_classifier.html#pyvalues.baseline_classifier.RandomRefinedValuesClassifier"><code class="docutils literal notranslate"><span class="pre">RandomRefinedValuesClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_baseline_classifier.html#pyvalues.baseline_classifier.RandomRefinedValuesWithAttainmentClassifier"><code class="docutils literal notranslate"><span class="pre">RandomRefinedValuesWithAttainmentClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_baseline_classifier.html#pyvalues.baseline_classifier.draw_list"><code class="docutils literal notranslate"><span class="pre">draw_list()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_baseline_classifier.html#pyvalues.baseline_classifier.pick_one_attainment"><code class="docutils literal notranslate"><span class="pre">pick_one_attainment()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyvalues_dictionary_classifier.html">pyvalues.dictionary_classifier</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_dictionary_classifier.html#pyvalues.dictionary_classifier.DictionaryClassifier"><code class="docutils literal notranslate"><span class="pre">DictionaryClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_dictionary_classifier.html#pyvalues.dictionary_classifier.OriginalValuesDictionaryClassifier"><code class="docutils literal notranslate"><span class="pre">OriginalValuesDictionaryClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_dictionary_classifier.html#pyvalues.dictionary_classifier.OriginalValuesWithAttainmentDictionaryClassifier"><code class="docutils literal notranslate"><span class="pre">OriginalValuesWithAttainmentDictionaryClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_dictionary_classifier.html#pyvalues.dictionary_classifier.RefinedCoarseValuesDictionaryClassifier"><code class="docutils literal notranslate"><span class="pre">RefinedCoarseValuesDictionaryClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_dictionary_classifier.html#pyvalues.dictionary_classifier.RefinedCoarseValuesWithAttainmentDictionaryClassifier"><code class="docutils literal notranslate"><span class="pre">RefinedCoarseValuesWithAttainmentDictionaryClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_dictionary_classifier.html#pyvalues.dictionary_classifier.RefinedValuesDictionaryClassifier"><code class="docutils literal notranslate"><span class="pre">RefinedValuesDictionaryClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_dictionary_classifier.html#pyvalues.dictionary_classifier.RefinedValuesWithAttainmentDictionaryClassifier"><code class="docutils literal notranslate"><span class="pre">RefinedValuesWithAttainmentDictionaryClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_dictionary_classifier.html#pyvalues.dictionary_classifier.get_dictionaries"><code class="docutils literal notranslate"><span class="pre">get_dictionaries()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_dictionary_classifier.html#pyvalues.dictionary_classifier.normalize_dictionary_token"><code class="docutils literal notranslate"><span class="pre">normalize_dictionary_token()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_dictionary_classifier.html#pyvalues.dictionary_classifier.simple_tokenize"><code class="docutils literal notranslate"><span class="pre">simple_tokenize()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyvalues_ensemble_classifier.html">pyvalues.ensemble_classifier</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_ensemble_classifier.html#pyvalues.ensemble_classifier.LanguageEnsembleClassifier"><code class="docutils literal notranslate"><span class="pre">LanguageEnsembleClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_ensemble_classifier.html#pyvalues.ensemble_classifier.OriginalValuesLanguageEnsembleClassifier"><code class="docutils literal notranslate"><span class="pre">OriginalValuesLanguageEnsembleClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_ensemble_classifier.html#pyvalues.ensemble_classifier.OriginalValuesWithAttainmentLanguageEnsembleClassifier"><code class="docutils literal notranslate"><span class="pre">OriginalValuesWithAttainmentLanguageEnsembleClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_ensemble_classifier.html#pyvalues.ensemble_classifier.RefinedCoarseValuesLanguageEnsembleClassifier"><code class="docutils literal notranslate"><span class="pre">RefinedCoarseValuesLanguageEnsembleClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_ensemble_classifier.html#pyvalues.ensemble_classifier.RefinedCoarseValuesWithAttainmentLanguageEnsembleClassifier"><code class="docutils literal notranslate"><span class="pre">RefinedCoarseValuesWithAttainmentLanguageEnsembleClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_ensemble_classifier.html#pyvalues.ensemble_classifier.RefinedValuesLanguageEnsembleClassifier"><code class="docutils literal notranslate"><span class="pre">RefinedValuesLanguageEnsembleClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_ensemble_classifier.html#pyvalues.ensemble_classifier.RefinedValuesWithAttainmentLanguageEnsembleClassifier"><code class="docutils literal notranslate"><span class="pre">RefinedValuesWithAttainmentLanguageEnsembleClassifier</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyvalues_values_writer.html">pyvalues.values_writer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_values_writer.html#pyvalues.values_writer.ValuesWithTextWriter"><code class="docutils literal notranslate"><span class="pre">ValuesWithTextWriter</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyvalues_values_writer.html#pyvalues.values_writer.ValuesWriter"><code class="docutils literal notranslate"><span class="pre">ValuesWriter</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">pyvalues</a></h1>
+
+
+
+<p class="blurb">Version 0.6.0</p>
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pyvalues.html">pyvalues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyvalues_classifier.html">pyvalues.classifier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyvalues_baseline_classifier.html">pyvalues.baseline_classifier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyvalues_dictionary_classifier.html">pyvalues.dictionary_classifier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyvalues_ensemble_classifier.html">pyvalues.ensemble_classifier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyvalues_values_writer.html">pyvalues.values_writer</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="pyvalues.html" title="next chapter">pyvalues</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

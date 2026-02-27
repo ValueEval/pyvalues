@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pyvalues.baseline_classifier &#8212; pyvalues 0.6.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=8fa8b3e9"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pyvalues.dictionary_classifier" href="pyvalues_dictionary_classifier.html" />
+    <link rel="prev" title="pyvalues.classifier" href="pyvalues_classifier.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-pyvalues.baseline_classifier">
+<span id="pyvalues-baseline-classifier"></span><h1>pyvalues.baseline_classifier<a class="headerlink" href="#module-pyvalues.baseline_classifier" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvalues.baseline_classifier.AllAttainedClassifier">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyvalues.baseline_classifier.</span></span><span class="sig-name descname"><span class="pre">AllAttainedClassifier</span></span><a class="headerlink" href="#pyvalues.baseline_classifier.AllAttainedClassifier" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyvalues_classifier.html#pyvalues.classifier.RefinedValuesWithAttainmentClassifier" title="pyvalues.classifier.RefinedValuesWithAttainmentClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefinedValuesWithAttainmentClassifier</span></code></a></p>
+<p>Classifier that assigns all values as attained to each text.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.baseline_classifier.AllAttainedClassifier.classify_segments_for_refined_values_with_attainment">
+<span class="sig-name descname"><span class="pre">classify_segments_for_refined_values_with_attainment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvalues.html#pyvalues.RefinedValuesWithAttainment" title="pyvalues.values.RefinedValuesWithAttainment"><span class="pre">RefinedValuesWithAttainment</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.baseline_classifier.AllAttainedClassifier.classify_segments_for_refined_values_with_attainment" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies each segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segments</strong> (<em>Iterable</em><em>[</em><em>str</em><em>]</em>) – The segments to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Classifications for each segment</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Generator[<a class="reference internal" href="pyvalues.html#pyvalues.RefinedValuesWithAttainment" title="pyvalues.RefinedValuesWithAttainment">RefinedValuesWithAttainment</a>, None, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvalues.baseline_classifier.AllConstrainedClassifier">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyvalues.baseline_classifier.</span></span><span class="sig-name descname"><span class="pre">AllConstrainedClassifier</span></span><a class="headerlink" href="#pyvalues.baseline_classifier.AllConstrainedClassifier" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyvalues_classifier.html#pyvalues.classifier.RefinedValuesWithAttainmentClassifier" title="pyvalues.classifier.RefinedValuesWithAttainmentClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefinedValuesWithAttainmentClassifier</span></code></a></p>
+<p>Classifier that assigns all values as constrained to each text.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.baseline_classifier.AllConstrainedClassifier.classify_segments_for_refined_values_with_attainment">
+<span class="sig-name descname"><span class="pre">classify_segments_for_refined_values_with_attainment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvalues.html#pyvalues.RefinedValuesWithAttainment" title="pyvalues.values.RefinedValuesWithAttainment"><span class="pre">RefinedValuesWithAttainment</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.baseline_classifier.AllConstrainedClassifier.classify_segments_for_refined_values_with_attainment" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies each segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segments</strong> (<em>Iterable</em><em>[</em><em>str</em><em>]</em>) – The segments to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Classifications for each segment</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Generator[<a class="reference internal" href="pyvalues.html#pyvalues.RefinedValuesWithAttainment" title="pyvalues.RefinedValuesWithAttainment">RefinedValuesWithAttainment</a>, None, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvalues.baseline_classifier.RandomOriginalValuesClassifier">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyvalues.baseline_classifier.</span></span><span class="sig-name descname"><span class="pre">RandomOriginalValuesClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">probabilities</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvalues.html#pyvalues.OriginalValues" title="pyvalues.values.OriginalValues"><span class="pre">OriginalValues</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvalues.baseline_classifier.RandomOriginalValuesClassifier" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyvalues_classifier.html#pyvalues.classifier.OriginalValuesClassifier" title="pyvalues.classifier.OriginalValuesClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">OriginalValuesClassifier</span></code></a></p>
+<p>Classifier that assigns values at random.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.baseline_classifier.RandomOriginalValuesClassifier.classify_segments_for_original_values">
+<span class="sig-name descname"><span class="pre">classify_segments_for_original_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvalues.html#pyvalues.OriginalValues" title="pyvalues.values.OriginalValues"><span class="pre">OriginalValues</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.baseline_classifier.RandomOriginalValuesClassifier.classify_segments_for_original_values" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies each segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segments</strong> (<em>Iterable</em><em>[</em><em>str</em><em>]</em>) – The segments to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Classifications for each segment</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Generator[<a class="reference internal" href="pyvalues.html#pyvalues.OriginalValues" title="pyvalues.OriginalValues">OriginalValues</a>, None, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvalues.baseline_classifier.RandomOriginalValuesWithAttainmentClassifier">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyvalues.baseline_classifier.</span></span><span class="sig-name descname"><span class="pre">RandomOriginalValuesWithAttainmentClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">probabilities</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvalues.html#pyvalues.OriginalValuesWithAttainment" title="pyvalues.values.OriginalValuesWithAttainment"><span class="pre">OriginalValuesWithAttainment</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">AttainmentScore</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">AttainmentScore(attained=0.2929,</span> <span class="pre">constrained=0.2929)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvalues.baseline_classifier.RandomOriginalValuesWithAttainmentClassifier" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyvalues_classifier.html#pyvalues.classifier.OriginalValuesWithAttainmentClassifier" title="pyvalues.classifier.OriginalValuesWithAttainmentClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">OriginalValuesWithAttainmentClassifier</span></code></a></p>
+<p>Classifier that assigns values at random.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.baseline_classifier.RandomOriginalValuesWithAttainmentClassifier.classify_segments_for_original_values_with_attainment">
+<span class="sig-name descname"><span class="pre">classify_segments_for_original_values_with_attainment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvalues.html#pyvalues.OriginalValuesWithAttainment" title="pyvalues.values.OriginalValuesWithAttainment"><span class="pre">OriginalValuesWithAttainment</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.baseline_classifier.RandomOriginalValuesWithAttainmentClassifier.classify_segments_for_original_values_with_attainment" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies each segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segments</strong> (<em>Iterable</em><em>[</em><em>str</em><em>]</em>) – The segments to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Classification for each segment</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Generator[<a class="reference internal" href="pyvalues.html#pyvalues.OriginalValuesWithAttainment" title="pyvalues.OriginalValuesWithAttainment">OriginalValuesWithAttainment</a>, None, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvalues.baseline_classifier.RandomRefinedCoarseValuesClassifier">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyvalues.baseline_classifier.</span></span><span class="sig-name descname"><span class="pre">RandomRefinedCoarseValuesClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">probabilities</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValues" title="pyvalues.values.RefinedCoarseValues"><span class="pre">RefinedCoarseValues</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvalues.baseline_classifier.RandomRefinedCoarseValuesClassifier" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyvalues_classifier.html#pyvalues.classifier.RefinedCoarseValuesClassifier" title="pyvalues.classifier.RefinedCoarseValuesClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefinedCoarseValuesClassifier</span></code></a></p>
+<p>Classifier that assigns values at random.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.baseline_classifier.RandomRefinedCoarseValuesClassifier.classify_segments_for_refined_coarse_values">
+<span class="sig-name descname"><span class="pre">classify_segments_for_refined_coarse_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValues" title="pyvalues.values.RefinedCoarseValues"><span class="pre">RefinedCoarseValues</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.baseline_classifier.RandomRefinedCoarseValuesClassifier.classify_segments_for_refined_coarse_values" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies each segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segments</strong> (<em>Iterable</em><em>[</em><em>str</em><em>]</em>) – The segments to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Classification for each segment</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Generator[<a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValues" title="pyvalues.RefinedCoarseValues">RefinedCoarseValues</a>, None, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvalues.baseline_classifier.RandomRefinedCoarseValuesWithAttainmentClassifier">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyvalues.baseline_classifier.</span></span><span class="sig-name descname"><span class="pre">RandomRefinedCoarseValuesWithAttainmentClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">probabilities</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValuesWithAttainment" title="pyvalues.values.RefinedCoarseValuesWithAttainment"><span class="pre">RefinedCoarseValuesWithAttainment</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">AttainmentScore</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">AttainmentScore(attained=0.2929,</span> <span class="pre">constrained=0.2929)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvalues.baseline_classifier.RandomRefinedCoarseValuesWithAttainmentClassifier" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyvalues_classifier.html#pyvalues.classifier.RefinedCoarseValuesWithAttainmentClassifier" title="pyvalues.classifier.RefinedCoarseValuesWithAttainmentClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefinedCoarseValuesWithAttainmentClassifier</span></code></a></p>
+<p>Classifier that assigns values at random.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.baseline_classifier.RandomRefinedCoarseValuesWithAttainmentClassifier.classify_segments_for_refined_coarse_values_with_attainment">
+<span class="sig-name descname"><span class="pre">classify_segments_for_refined_coarse_values_with_attainment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValuesWithAttainment" title="pyvalues.values.RefinedCoarseValuesWithAttainment"><span class="pre">RefinedCoarseValuesWithAttainment</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.baseline_classifier.RandomRefinedCoarseValuesWithAttainmentClassifier.classify_segments_for_refined_coarse_values_with_attainment" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies each segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segments</strong> (<em>Iterable</em><em>[</em><em>str</em><em>]</em>) – The segments to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Classifications for each segment</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Generator[<a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValuesWithAttainment" title="pyvalues.RefinedCoarseValuesWithAttainment">RefinedCoarseValuesWithAttainment</a>, None, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvalues.baseline_classifier.RandomRefinedValuesClassifier">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyvalues.baseline_classifier.</span></span><span class="sig-name descname"><span class="pre">RandomRefinedValuesClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">probabilities</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvalues.html#pyvalues.RefinedValues" title="pyvalues.values.RefinedValues"><span class="pre">RefinedValues</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvalues.baseline_classifier.RandomRefinedValuesClassifier" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyvalues_classifier.html#pyvalues.classifier.RefinedValuesClassifier" title="pyvalues.classifier.RefinedValuesClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefinedValuesClassifier</span></code></a></p>
+<p>Classifier that assigns values at random.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.baseline_classifier.RandomRefinedValuesClassifier.classify_segments_for_refined_values">
+<span class="sig-name descname"><span class="pre">classify_segments_for_refined_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvalues.html#pyvalues.RefinedValues" title="pyvalues.values.RefinedValues"><span class="pre">RefinedValues</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.baseline_classifier.RandomRefinedValuesClassifier.classify_segments_for_refined_values" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies each segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segments</strong> (<em>Iterable</em><em>[</em><em>str</em><em>]</em>) – The segments to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Classifications for each segment</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Generator[<a class="reference internal" href="pyvalues.html#pyvalues.RefinedValues" title="pyvalues.RefinedValues">RefinedValues</a>, None, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvalues.baseline_classifier.RandomRefinedValuesWithAttainmentClassifier">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyvalues.baseline_classifier.</span></span><span class="sig-name descname"><span class="pre">RandomRefinedValuesWithAttainmentClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">probabilities</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvalues.html#pyvalues.RefinedValuesWithAttainment" title="pyvalues.values.RefinedValuesWithAttainment"><span class="pre">RefinedValuesWithAttainment</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">AttainmentScore</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">AttainmentScore(attained=0.2929,</span> <span class="pre">constrained=0.2929)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvalues.baseline_classifier.RandomRefinedValuesWithAttainmentClassifier" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyvalues_classifier.html#pyvalues.classifier.RefinedValuesWithAttainmentClassifier" title="pyvalues.classifier.RefinedValuesWithAttainmentClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefinedValuesWithAttainmentClassifier</span></code></a></p>
+<p>Classifier that assigns values at random.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.baseline_classifier.RandomRefinedValuesWithAttainmentClassifier.classify_segments_for_refined_values_with_attainment">
+<span class="sig-name descname"><span class="pre">classify_segments_for_refined_values_with_attainment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvalues.html#pyvalues.RefinedValuesWithAttainment" title="pyvalues.values.RefinedValuesWithAttainment"><span class="pre">RefinedValuesWithAttainment</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.baseline_classifier.RandomRefinedValuesWithAttainmentClassifier.classify_segments_for_refined_values_with_attainment" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies each segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segments</strong> (<em>Iterable</em><em>[</em><em>str</em><em>]</em>) – The segments to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Classifications for each segment</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Generator[<a class="reference internal" href="pyvalues.html#pyvalues.RefinedValuesWithAttainment" title="pyvalues.RefinedValuesWithAttainment">RefinedValuesWithAttainment</a>, None, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvalues.baseline_classifier.draw_list">
+<span class="sig-prename descclassname"><span class="pre">pyvalues.baseline_classifier.</span></span><span class="sig-name descname"><span class="pre">draw_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">probabilities</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvalues.baseline_classifier.draw_list" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvalues.baseline_classifier.pick_one_attainment">
+<span class="sig-prename descclassname"><span class="pre">pyvalues.baseline_classifier.</span></span><span class="sig-name descname"><span class="pre">pick_one_attainment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">draw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvalues.baseline_classifier.pick_one_attainment" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">pyvalues</a></h1>
+
+
+
+<p class="blurb">Version 0.6.0</p>
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="pyvalues.html">pyvalues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyvalues_classifier.html">pyvalues.classifier</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pyvalues.baseline_classifier</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pyvalues.baseline_classifier.AllAttainedClassifier"><code class="docutils literal notranslate"><span class="pre">AllAttainedClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyvalues.baseline_classifier.AllConstrainedClassifier"><code class="docutils literal notranslate"><span class="pre">AllConstrainedClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyvalues.baseline_classifier.RandomOriginalValuesClassifier"><code class="docutils literal notranslate"><span class="pre">RandomOriginalValuesClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyvalues.baseline_classifier.RandomOriginalValuesWithAttainmentClassifier"><code class="docutils literal notranslate"><span class="pre">RandomOriginalValuesWithAttainmentClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyvalues.baseline_classifier.RandomRefinedCoarseValuesClassifier"><code class="docutils literal notranslate"><span class="pre">RandomRefinedCoarseValuesClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyvalues.baseline_classifier.RandomRefinedCoarseValuesWithAttainmentClassifier"><code class="docutils literal notranslate"><span class="pre">RandomRefinedCoarseValuesWithAttainmentClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyvalues.baseline_classifier.RandomRefinedValuesClassifier"><code class="docutils literal notranslate"><span class="pre">RandomRefinedValuesClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyvalues.baseline_classifier.RandomRefinedValuesWithAttainmentClassifier"><code class="docutils literal notranslate"><span class="pre">RandomRefinedValuesWithAttainmentClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyvalues.baseline_classifier.draw_list"><code class="docutils literal notranslate"><span class="pre">draw_list()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyvalues.baseline_classifier.pick_one_attainment"><code class="docutils literal notranslate"><span class="pre">pick_one_attainment()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyvalues_dictionary_classifier.html">pyvalues.dictionary_classifier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyvalues_ensemble_classifier.html">pyvalues.ensemble_classifier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyvalues_values_writer.html">pyvalues.values_writer</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="pyvalues_classifier.html" title="previous chapter">pyvalues.classifier</a></li>
+      <li>Next: <a href="pyvalues_dictionary_classifier.html" title="next chapter">pyvalues.dictionary_classifier</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/pyvalues_baseline_classifier.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

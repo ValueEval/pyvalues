@@ -68,11 +68,6 @@ dictionary.</p>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="pyvalues.dictionary_classifier.OriginalValuesDictionaryClassifier.get_default">
-<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvalues.dictionary_classifier.OriginalValuesDictionaryClassifier.get_default" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
@@ -210,21 +205,6 @@ dictionary.</p>
 
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="pyvalues.dictionary_classifier.get_dictionaries">
-<span class="sig-prename descclassname"><span class="pre">pyvalues.dictionary_classifier.</span></span><span class="sig-name descname"><span class="pre">get_dictionaries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">input:</span> <span class="pre">dict[str,</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">~typing.Tuple[str,</span> <span class="pre">float,</span> <span class="pre">float]]</span> <span class="pre">|</span> <span class="pre">~io.FileIO,</span> <span class="pre">language:</span> <span class="pre">~pydantic_extra_types.language_code.LanguageAlpha2,</span> <span class="pre">normalize_token:</span> <span class="pre">~typing.Callable[[str,</span> <span class="pre">~pydantic_extra_types.language_code.LanguageAlpha2],</span> <span class="pre">str]</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">normalize_dictionary_token&gt;</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">AttainmentScore</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.dictionary_classifier.get_dictionaries" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyvalues.dictionary_classifier.normalize_dictionary_token">
-<span class="sig-prename descclassname"><span class="pre">pyvalues.dictionary_classifier.</span></span><span class="sig-name descname"><span class="pre">normalize_dictionary_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#pyvalues.dictionary_classifier.normalize_dictionary_token" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyvalues.dictionary_classifier.simple_tokenize">
-<span class="sig-prename descclassname"><span class="pre">pyvalues.dictionary_classifier.</span></span><span class="sig-name descname"><span class="pre">simple_tokenize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.dictionary_classifier.simple_tokenize" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </section>
 
 
@@ -237,6 +217,8 @@ dictionary.</p>
 <h1 class="logo"><a href="index.html">pyvalues</a></h1>
 
 
+
+<p class="blurb">Version 0.6.0</p>
 
 
 
@@ -266,9 +248,6 @@ dictionary.</p>
 <li class="toctree-l2"><a class="reference internal" href="#pyvalues.dictionary_classifier.RefinedCoarseValuesWithAttainmentDictionaryClassifier"><code class="docutils literal notranslate"><span class="pre">RefinedCoarseValuesWithAttainmentDictionaryClassifier</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#pyvalues.dictionary_classifier.RefinedValuesDictionaryClassifier"><code class="docutils literal notranslate"><span class="pre">RefinedValuesDictionaryClassifier</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#pyvalues.dictionary_classifier.RefinedValuesWithAttainmentDictionaryClassifier"><code class="docutils literal notranslate"><span class="pre">RefinedValuesWithAttainmentDictionaryClassifier</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#pyvalues.dictionary_classifier.get_dictionaries"><code class="docutils literal notranslate"><span class="pre">get_dictionaries()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#pyvalues.dictionary_classifier.normalize_dictionary_token"><code class="docutils literal notranslate"><span class="pre">normalize_dictionary_token()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#pyvalues.dictionary_classifier.simple_tokenize"><code class="docutils literal notranslate"><span class="pre">simple_tokenize()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pyvalues_ensemble_classifier.html">pyvalues.ensemble_classifier</a></li>
