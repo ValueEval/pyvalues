@@ -29,13 +29,10 @@ include = [
     "src/pyvalues/assets/**/*"
 ]
 
-[tool.poetry.dependencies]
-python = ">=3.12"
-
-[tool.poetry.group.dev]
+[tool.poetry.group.development]
 optional = true
 
-[tool.poetry.group.dev.dependencies]
+[tool.poetry.group.development.dependencies]
 flake8 = "*"
 sphinx = ">=8.0.0,<9.0.0"
 sphinx-multiversion = "^0.2.4"

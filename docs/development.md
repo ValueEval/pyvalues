@@ -1,7 +1,7 @@
 # pyvalues Development Notes
 
 ```shell
-poetry install --with dev
+poetry install --with development
 ```
 
 ## Build documentation
