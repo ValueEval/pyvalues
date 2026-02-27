@@ -13,13 +13,11 @@ release = meta["Version"]
 
 extensions = [
     "sphinx.ext.autodoc",
-    "sphinx.ext.autosummary",
     "sphinx.ext.githubpages",
     "sphinx_multiversion",
 ]
 
 html_theme = "furo"
-autosummary_generate = True
 
 # Optional: configure version selector
 smv_tag_whitelist = r"^v\d+\.\d+\.\d+$"
