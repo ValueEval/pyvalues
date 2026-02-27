@@ -1,6 +1,8 @@
 from typing import Generator, Generic, Iterable, TypeVar
 
 from pydantic_extra_types.language_code import LanguageAlpha2
+
+from pyvalues.document import DEFAULT_LANGUAGE
 from .classifiers import (
     OriginalValuesClassifier,
     OriginalValuesWithAttainmentClassifier,
@@ -10,7 +12,6 @@ from .classifiers import (
     RefinedValuesWithAttainmentClassifier,
 )
 from .values import (
-    DEFAULT_LANGUAGE,
     OriginalValues,
     OriginalValuesWithAttainment,
     RefinedCoarseValues,
@@ -72,12 +73,12 @@ class OriginalValuesLanguageEnsembleClassifier(
         """
         super().__init__(classifiers=classifiers)
 
-    def classify_document_for_original_values(
+    def classify_segments_for_original_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[OriginalValues, None, None]:
-        return self[LanguageAlpha2(language)].classify_document_for_original_values(
+        return self[LanguageAlpha2(language)].classify_segments_for_original_values(
             segments=segments,
             language=language
         )
@@ -106,12 +107,12 @@ class RefinedCoarseValuesLanguageEnsembleClassifier(
         """
         super().__init__(classifiers=classifiers)
 
-    def classify_document_for_refined_coarse_values(
+    def classify_segments_for_refined_coarse_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[RefinedCoarseValues, None, None]:
-        return self[LanguageAlpha2(language)].classify_document_for_refined_coarse_values(
+        return self[LanguageAlpha2(language)].classify_segments_for_refined_coarse_values(
             segments=segments,
             language=language
         )
@@ -140,12 +141,12 @@ class RefinedValuesLanguageEnsembleClassifier(
         """
         super().__init__(classifiers=classifiers)
 
-    def classify_document_for_refined_values(
+    def classify_segments_for_refined_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[RefinedValues, None, None]:
-        return self[LanguageAlpha2(language)].classify_document_for_refined_values(
+        return self[LanguageAlpha2(language)].classify_segments_for_refined_values(
             segments=segments,
             language=language
         )
@@ -174,12 +175,12 @@ class OriginalValuesWithAttainmentLanguageEnsembleClassifier(
         """
         super().__init__(classifiers=classifiers)
 
-    def classify_document_for_original_values_with_attainment(
+    def classify_segments_for_original_values_with_attainment(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[OriginalValuesWithAttainment, None, None]:
-        return self[LanguageAlpha2(language)].classify_document_for_original_values_with_attainment(
+        return self[LanguageAlpha2(language)].classify_segments_for_original_values_with_attainment(
             segments=segments,
             language=language
         )
@@ -208,12 +209,12 @@ class RefinedCoarseValuesWithAttainmentLanguageEnsembleClassifier(
         """
         super().__init__(classifiers=classifiers)
 
-    def classify_document_for_refined_coarse_values_with_attainment(
+    def classify_segments_for_refined_coarse_values_with_attainment(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[RefinedCoarseValuesWithAttainment, None, None]:
-        return self[LanguageAlpha2(language)].classify_document_for_refined_coarse_values_with_attainment(
+        return self[LanguageAlpha2(language)].classify_segments_for_refined_coarse_values_with_attainment(
             segments=segments,
             language=language
         )
@@ -242,12 +243,12 @@ class RefinedValuesWithAttainmentLanguageEnsembleClassifier(
         """
         super().__init__(classifiers=classifiers)
 
-    def classify_document_for_refined_values_with_attainment(
+    def classify_segments_for_refined_values_with_attainment(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[RefinedValuesWithAttainment, None, None]:
-        return self[LanguageAlpha2(language)].classify_document_for_refined_values_with_attainment(
+        return self[LanguageAlpha2(language)].classify_segments_for_refined_values_with_attainment(
             segments=segments,
             language=language
         )

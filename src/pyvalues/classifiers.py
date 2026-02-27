@@ -2,6 +2,8 @@ from abc import ABC, abstractmethod
 from typing import Generator, Iterable
 from pydantic_extra_types.language_code import LanguageAlpha2
 
+from pyvalues.document import Document, ValuesAnnotatedDocument
+
 from .values import (
     RefinedValues,
     RefinedCoarseValues,
@@ -49,13 +51,40 @@ class OriginalValuesClassifier(ABC):
             The classification
         :rtype: OriginalValues
         """
-        return self.classify_document_for_original_values(
+        return self.classify_segments_for_original_values(
             [segment],
             language
         ).__next__()
 
-    @abstractmethod
     def classify_document_for_original_values(
+            self,
+            document: Document
+    ) -> ValuesAnnotatedDocument[OriginalValues]:
+        """
+        Classifies each segment.
+
+        :param document:
+            The document to classify
+        :type document: Document
+        :return:
+            A copy of the document with the classified values
+        :rtype: ValuesAnnotatedDocument[OriginalValues]
+        """
+        if document.segments is None:
+            raise ValueError("Segments is None")
+        values = list(self.classify_segments_for_original_values(
+            document.segments,
+            document.language
+        ))
+        return ValuesAnnotatedDocument(
+            id=document.id,
+            language=document.language,
+            segments=document.segments,
+            values=values
+        )
+
+    @abstractmethod
+    def classify_segments_for_original_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
@@ -111,21 +140,48 @@ class RefinedCoarseValuesClassifier(OriginalValuesClassifier):
             The classification
         :rtype: RefinedCoarseValues
         """
-        return self.classify_document_for_refined_coarse_values(
+        return self.classify_segments_for_refined_coarse_values(
             [segment],
             language
         ).__next__()
 
-    def classify_document_for_original_values(
+    def classify_document_for_refined_coarse_values(
+            self,
+            document: Document
+    ) -> ValuesAnnotatedDocument[RefinedCoarseValues]:
+        """
+        Classifies each segment.
+
+        :param document:
+            The document to classify
+        :type document: Document
+        :return:
+            A copy of the document with the classified values
+        :rtype: ValuesAnnotatedDocument[RefinedCoarseValues]
+        """
+        if document.segments is None:
+            raise ValueError("Segments is None")
+        values = list(self.classify_segments_for_refined_coarse_values(
+            document.segments,
+            document.language
+        ))
+        return ValuesAnnotatedDocument(
+            id=document.id,
+            language=document.language,
+            segments=document.segments,
+            values=values
+        )
+
+    def classify_segments_for_original_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[OriginalValues, None, None]:
-        for values in self.classify_document_for_refined_coarse_values(segments, language):
+        for values in self.classify_segments_for_refined_coarse_values(segments, language):
             yield values.original_values()
 
     @abstractmethod
-    def classify_document_for_refined_coarse_values(
+    def classify_segments_for_refined_coarse_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
@@ -180,21 +236,48 @@ class RefinedValuesClassifier(RefinedCoarseValuesClassifier):
             The classification
         :rtype: RefinedValues
         """
-        return self.classify_document_for_refined_values(
+        return self.classify_segments_for_refined_values(
             [segment],
             language
         ).__next__()
 
-    def classify_document_for_refined_coarse_values(
+    def classify_document_for_refined_values(
+            self,
+            document: Document
+    ) -> ValuesAnnotatedDocument[RefinedValues]:
+        """
+        Classifies each segment.
+
+        :param document:
+            The document to classify
+        :type document: Document
+        :return:
+            A copy of the document with the classified values
+        :rtype: ValuesAnnotatedDocument[RefinedValues]
+        """
+        if document.segments is None:
+            raise ValueError("Segments is None")
+        values = list(self.classify_segments_for_refined_values(
+            document.segments,
+            document.language
+        ))
+        return ValuesAnnotatedDocument(
+            id=document.id,
+            language=document.language,
+            segments=document.segments,
+            values=values
+        )
+
+    def classify_segments_for_refined_coarse_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[RefinedCoarseValues, None, None]:
-        for values in self.classify_document_for_refined_values(segments, language):
+        for values in self.classify_segments_for_refined_values(segments, language):
             yield values.coarse_values()
 
     @abstractmethod
-    def classify_document_for_refined_values(
+    def classify_segments_for_refined_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
@@ -249,21 +332,48 @@ class OriginalValuesWithAttainmentClassifier(OriginalValuesClassifier):
             The classification
         :rtype: OriginalValuesWithAttainment
         """
-        return self.classify_document_for_original_values_with_attainment(
+        return self.classify_segments_for_original_values_with_attainment(
             [segment],
             language
         ).__next__()
 
-    def classify_document_for_original_values(
+    def classify_document_for_original_values_with_attainment(
+            self,
+            document: Document
+    ) -> ValuesAnnotatedDocument[OriginalValuesWithAttainment]:
+        """
+        Classifies each segment.
+
+        :param document:
+            The document to classify
+        :type document: Document
+        :return:
+            A copy of the document with the classified values
+        :rtype: ValuesAnnotatedDocument[OriginalValuesWithAttainment]
+        """
+        if document.segments is None:
+            raise ValueError("Segments is None")
+        values = list(self.classify_segments_for_original_values_with_attainment(
+            document.segments,
+            document.language
+        ))
+        return ValuesAnnotatedDocument(
+            id=document.id,
+            language=document.language,
+            segments=document.segments,
+            values=values
+        )
+
+    def classify_segments_for_original_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[OriginalValues, None, None]:
-        for values in self.classify_document_for_original_values_with_attainment(segments, language):
+        for values in self.classify_segments_for_original_values_with_attainment(segments, language):
             yield values.without_attainment()
 
     @abstractmethod
-    def classify_document_for_original_values_with_attainment(
+    def classify_segments_for_original_values_with_attainment(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
@@ -329,29 +439,56 @@ class RefinedCoarseValuesWithAttainmentClassifier(
             The classification
         :rtype: RefinedCoarseValuesWithAttainment
         """
-        return self.classify_document_for_refined_coarse_values_with_attainment(
+        return self.classify_segments_for_refined_coarse_values_with_attainment(
             [segment],
             language
         ).__next__()
 
-    def classify_document_for_refined_coarse_values(
+    def classify_document_for_refined_coarse_values_with_attainment(
+            self,
+            document: Document
+    ) -> ValuesAnnotatedDocument[RefinedCoarseValuesWithAttainment]:
+        """
+        Classifies each segment.
+
+        :param document:
+            The document to classify
+        :type document: Document
+        :return:
+            A copy of the document with the classified values
+        :rtype: ValuesAnnotatedDocument[RefinedCoarseValuesWithAttainment]
+        """
+        if document.segments is None:
+            raise ValueError("Segments is None")
+        values = list(self.classify_segments_for_refined_coarse_values_with_attainment(
+            document.segments,
+            document.language
+        ))
+        return ValuesAnnotatedDocument(
+            id=document.id,
+            language=document.language,
+            segments=document.segments,
+            values=values
+        )
+
+    def classify_segments_for_refined_coarse_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[RefinedCoarseValues, None, None]:
-        for values in self.classify_document_for_refined_coarse_values_with_attainment(segments, language):
+        for values in self.classify_segments_for_refined_coarse_values_with_attainment(segments, language):
             yield values.without_attainment()
 
-    def classify_document_for_original_values_with_attainment(
+    def classify_segments_for_original_values_with_attainment(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[OriginalValuesWithAttainment, None, None]:
-        for values in self.classify_document_for_refined_coarse_values_with_attainment(segments, language):
+        for values in self.classify_segments_for_refined_coarse_values_with_attainment(segments, language):
             yield values.original_values()
 
     @abstractmethod
-    def classify_document_for_refined_coarse_values_with_attainment(
+    def classify_segments_for_refined_coarse_values_with_attainment(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
@@ -418,29 +555,56 @@ class RefinedValuesWithAttainmentClassifier(
             The classification
         :rtype: RefinedValuesWithAttainment
         """
-        return self.classify_document_for_refined_values_with_attainment(
+        return self.classify_segments_for_refined_values_with_attainment(
             [segment],
             language
         ).__next__()
 
-    def classify_document_for_refined_values(
+    def classify_document_for_refined_values_with_attainment(
+            self,
+            document: Document
+    ) -> ValuesAnnotatedDocument[RefinedValuesWithAttainment]:
+        """
+        Classifies each segment.
+
+        :param document:
+            The document to classify
+        :type document: Document
+        :return:
+            A copy of the document with the classified values
+        :rtype: ValuesAnnotatedDocument[RefinedValuesWithAttainment]
+        """
+        if document.segments is None:
+            raise ValueError("Segments is None")
+        values = list(self.classify_segments_for_refined_values_with_attainment(
+            document.segments,
+            document.language
+        ))
+        return ValuesAnnotatedDocument(
+            id=document.id,
+            language=document.language,
+            segments=document.segments,
+            values=values
+        )
+
+    def classify_segments_for_refined_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[RefinedValues, None, None]:
-        for values in self.classify_document_for_refined_values_with_attainment(segments, language):
+        for values in self.classify_segments_for_refined_values_with_attainment(segments, language):
             yield values.without_attainment()
 
-    def classify_document_for_refined_coarse_values_with_attainment(
+    def classify_segments_for_refined_coarse_values_with_attainment(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
     ) -> Generator[RefinedCoarseValuesWithAttainment, None, None]:
-        for values in self.classify_document_for_refined_values_with_attainment(segments, language):
+        for values in self.classify_segments_for_refined_values_with_attainment(segments, language):
             yield values.coarse_values()
 
     @abstractmethod
-    def classify_document_for_refined_values_with_attainment(
+    def classify_segments_for_refined_values_with_attainment(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE

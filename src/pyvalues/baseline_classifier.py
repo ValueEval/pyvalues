@@ -43,7 +43,7 @@ class AllAttainedClassifier(RefinedValuesWithAttainmentClassifier):
     Classifier that assigns all values as attained to each text.
     """
 
-    def classify_document_for_refined_values_with_attainment(
+    def classify_segments_for_refined_values_with_attainment(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
@@ -77,7 +77,7 @@ class AllConstrainedClassifier(RefinedValuesWithAttainmentClassifier):
     Classifier that assigns all values as constrained to each text.
     """
 
-    def classify_document_for_refined_values_with_attainment(
+    def classify_segments_for_refined_values_with_attainment(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
@@ -128,7 +128,7 @@ class RandomOriginalValuesClassifier(OriginalValuesClassifier):
         else:
             self._probabilities = [probabilities] * 10
 
-    def classify_document_for_original_values(
+    def classify_segments_for_original_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
@@ -160,7 +160,7 @@ class RandomRefinedCoarseValuesClassifier(RefinedCoarseValuesClassifier):
         else:
             self._probabilities = [probabilities] * 12
 
-    def classify_document_for_refined_coarse_values(
+    def classify_segments_for_refined_coarse_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
@@ -192,7 +192,7 @@ class RandomRefinedValuesClassifier(RefinedValuesClassifier):
         else:
             self._probabilities = [probabilities] * 19
 
-    def classify_document_for_refined_values(
+    def classify_segments_for_refined_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
@@ -228,7 +228,7 @@ class RandomOriginalValuesWithAttainmentClassifier(OriginalValuesWithAttainmentC
         else:
             self._probabilities = probabilities.to_list()
 
-    def classify_document_for_original_values_with_attainment(
+    def classify_segments_for_original_values_with_attainment(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
@@ -264,7 +264,7 @@ class RandomRefinedCoarseValuesWithAttainmentClassifier(RefinedCoarseValuesWithA
         else:
             self._probabilities = probabilities.to_list()
 
-    def classify_document_for_refined_coarse_values_with_attainment(
+    def classify_segments_for_refined_coarse_values_with_attainment(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
@@ -300,7 +300,7 @@ class RandomRefinedValuesWithAttainmentClassifier(RefinedValuesWithAttainmentCla
         else:
             self._probabilities = probabilities.to_list()
 
-    def classify_document_for_refined_values_with_attainment(
+    def classify_segments_for_refined_values_with_attainment(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE

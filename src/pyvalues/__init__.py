@@ -18,12 +18,18 @@ from .classifiers import (
     RefinedCoarseValuesWithAttainmentClassifier,
     OriginalValuesWithAttainmentClassifier,
 )
+from .document import (
+    Document,
+    ValuesAnnotatedDocument,
+)
 
 __all__ = [
     "DEFAULT_LANGUAGE",
+    "Document",
     "Values",
     "ValuesWithoutAttainment",
     "ValuesWithAttainment",
+    "ValuesAnnotatedDocument",
     "RefinedValues",
     "RefinedCoarseValues",
     "OriginalValues",

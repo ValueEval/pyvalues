@@ -243,7 +243,7 @@ class OriginalValuesDictionaryClassifier(DictionaryClassifier, OriginalValuesCla
                     )
         return OriginalValuesLanguageEnsembleClassifier(classifiers=classifiers)
 
-    def classify_document_for_original_values(
+    def classify_segments_for_original_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
@@ -311,7 +311,7 @@ class RefinedCoarseValuesDictionaryClassifier(DictionaryClassifier, RefinedCoars
             max_values=max_values
         )
 
-    def classify_document_for_refined_coarse_values(
+    def classify_segments_for_refined_coarse_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
@@ -379,7 +379,7 @@ class RefinedValuesDictionaryClassifier(DictionaryClassifier, RefinedValuesClass
             max_values=max_values
         )
 
-    def classify_document_for_refined_values(
+    def classify_segments_for_refined_values(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
@@ -447,7 +447,7 @@ class OriginalValuesWithAttainmentDictionaryClassifier(DictionaryClassifier, Ori
             max_values=max_values
         )
 
-    def classify_document_for_original_values_with_attainment(
+    def classify_segments_for_original_values_with_attainment(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
@@ -515,7 +515,7 @@ class RefinedCoarseValuesWithAttainmentDictionaryClassifier(DictionaryClassifier
             max_values=max_values
         )
 
-    def classify_document_for_refined_coarse_values_with_attainment(
+    def classify_segments_for_refined_coarse_values_with_attainment(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE
@@ -583,7 +583,7 @@ class RefinedValuesWithAttainmentDictionaryClassifier(DictionaryClassifier, Refi
             max_values=max_values
         )
 
-    def classify_document_for_refined_values_with_attainment(
+    def classify_segments_for_refined_values_with_attainment(
             self,
             segments: Iterable[str],
             language: LanguageAlpha2 | str = DEFAULT_LANGUAGE

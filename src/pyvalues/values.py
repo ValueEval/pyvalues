@@ -1,11 +1,16 @@
 from abc import ABC, abstractmethod
 import csv
 from pathlib import Path
-from typing import Annotated, Callable, ClassVar, Generator, Generic, Iterable, Self, Sequence, TextIO, Tuple, Type, TypeVar
+from typing import Annotated, Callable, Generator, Iterable, Self, Sequence, TextIO, TypeVar
 from pydantic import AliasChoices, BaseModel, ConfigDict, Field, model_validator
 from pydantic_extra_types.language_code import LanguageAlpha2
 from .radarplot import plot_radar
-import matplotlib.pyplot as plt
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .values_writer import ValuesWriter, ValuesWithTextWriter
+    from .evaluation import Evaluation, ThresholdedDecision
+    from .document import ValuesAnnotatedDocument
 
 DEFAULT_LANGUAGE: LanguageAlpha2 = LanguageAlpha2("en")
 
@@ -140,263 +145,8 @@ class AttainmentScore(BaseModel):
         return self.attained + self.constrained
 
 
-class ThresholdedDecision(BaseModel):
-    threshold: Score
-    is_true: bool
-
-
 VALUES = TypeVar("VALUES", bound="Values")
 VALUES_WITHOUT_ATTAINMENT = TypeVar("VALUES_WITHOUT_ATTAINMENT", bound="ValuesWithoutAttainment")
-
-
-class Evaluation(Generic[VALUES_WITHOUT_ATTAINMENT]):
-    _cls: Type[VALUES_WITHOUT_ATTAINMENT]
-    _value_evaluations: dict[str, list[ThresholdedDecision]] = {}
-
-    def __init__(
-        self,
-        cls: Type[VALUES_WITHOUT_ATTAINMENT],
-        value_evaluations: dict[str, list[ThresholdedDecision]]
-    ):
-        self._cls = cls
-        self._value_evaluations = value_evaluations
-        for thresholded_decisions in self._value_evaluations.values():
-            thresholded_decisions.sort(key=lambda x: x.threshold)
-
-    @classmethod
-    def combine(cls, evaluations: Iterable[Self]) -> Self:
-        clz = None
-        combined = {}
-        for evaluation in evaluations:
-            for value, thresholded_decisions in evaluation._value_evaluations.items():
-                if value not in combined:
-                    combined[value] = thresholded_decisions.copy()
-                else:
-                    combined[value] += thresholded_decisions
-            clz = evaluation._cls
-        if clz is not None:
-            return cls(clz, combined)
-        raise ValueError("No evaluation given")
-
-    def __getitem__(self, key: str) -> list[ThresholdedDecision]:
-        return self._value_evaluations[key]
-
-    def f(
-            self,
-            threshold: Score = 0.5,
-            beta: float = 1
-    ) -> Tuple["VALUES_WITHOUT_ATTAINMENT", "VALUES_WITHOUT_ATTAINMENT", "VALUES_WITHOUT_ATTAINMENT"]:
-        beta_square = beta * beta
-        fs = {}
-        precisions = {}
-        recalls = {}
-        for value, thresholded_decisions in self._value_evaluations.items():
-            true_positives = 0
-            false_positives = 0
-            true_negatives = 0
-            false_negatives = 0
-            for thresholded_decision in thresholded_decisions:
-                if thresholded_decision.threshold >= threshold:
-                    if thresholded_decision.is_true:
-                        true_positives += 1
-                    else:
-                        false_positives += 1
-                else:
-                    if thresholded_decision.is_true:
-                        false_negatives += 1
-                    else:
-                        true_negatives += 1
-
-            precision = 0
-            recall = 0
-            f = 0
-            if true_positives > 0:
-                precision = true_positives / (true_positives + false_positives)
-                recall = true_positives / (true_positives + false_negatives)
-                f = (1 + beta_square) * precision * recall / ((beta_square * precision) + recall)
-            precisions[value] = precision
-            recalls[value] = recall
-            fs[value] = f
-
-        return self._cls.model_validate(fs), \
-            self._cls.model_validate(precisions), \
-            self._cls.model_validate(recalls)
-
-    def precision_recall_steps(self) -> dict[str, Tuple[list[float], list[float]]]:
-        steps = {}
-        for value, thresholded_decisions in self._value_evaluations.items():
-            num_positive = sum([
-                thresholded_decision.is_true for thresholded_decision
-                in thresholded_decisions
-            ])
-            assert num_positive > 0
-            true_positives = 0
-            false_positives = 0
-            xs = []
-            ys = []
-            last_threshold = 2
-            for thresholded_decision in reversed(thresholded_decisions):
-                if thresholded_decision.threshold < last_threshold:
-                    if last_threshold <= 1:
-                        xs.append(true_positives / num_positive)
-                        if true_positives == 0:
-                            ys.append(0)
-                        else:
-                            ys.append(true_positives / (true_positives + false_positives))
-                    last_threshold = thresholded_decision.threshold
-                    if thresholded_decision.is_true:
-                        true_positives += 1
-                    else:
-                        false_positives += 1
-            xs.append(1)
-            if true_positives > 0:
-                ys.append(true_positives / (true_positives + false_positives))
-            else:
-                ys.append(0)
-            steps[value] = (xs, ys)
-        return steps
-
-    def plot_precision_recall_curves(self):
-        num_values = len(self._value_evaluations.keys())
-        colors = None
-        if num_values == 10:
-            colors = ORIGINAL_VALUES_COLORS
-        elif num_values == 12:
-            colors = REFINED_COARSE_VALUES_COLORS
-        elif num_values == 19:
-            colors = REFINED_VALUES_COLORS
-        else:
-            raise ValueError(f"Invalid number of values: {num_values}")
-
-        fig = plt.figure()
-        i = 0
-        for value, steps in self.precision_recall_steps().items():
-            plt.step(steps[0], steps[1], where="post", label=value, color=colors[i])
-            i += 1
-
-        axes = fig.get_axes()[0]
-        axes.set_xlim(0, 1)
-        axes.set_ylim(0, 1)
-        axes.set_xlabel("Recall")
-        axes.set_ylabel("Precision")
-        plt.legend(loc="lower left")
-        return plt
-
-
-class Document(BaseModel, Generic[VALUES]):
-    id: str | None = None
-    language: LanguageAlpha2 = DEFAULT_LANGUAGE
-    values: list[VALUES] | None = None
-    segments: list[str] | None = None
-
-    SEGMENT_FIELD: ClassVar[str] = "Text"
-    ID_FIELD: ClassVar[str] = "ID"
-    LANGUAGE_FIELD: ClassVar[str] = "Language"
-
-
-class ValuesWriter(Generic[VALUES]):
-    _writer: csv.DictWriter
-
-    def __init__(
-            self,
-            cls: Type[VALUES],
-            output_file: TextIO,
-            delimiter: str = "\t"
-    ):
-        fieldnames = cls.names()
-        self._writer = csv.DictWriter(
-            output_file,
-            fieldnames=fieldnames,
-            delimiter=delimiter
-        )
-        self._writer.writeheader()
-
-    def write(self, values: VALUES):
-        line: dict[str, float] = {
-            value: score for (value, score) in zip(values.names(), values.to_list())
-        }
-        self._writer.writerow(line)
-
-    def write_all(self, values: Iterable[VALUES]):
-        for v in values:
-            self.write(v)
-
-
-class ValuesWithTextWriter(Generic[VALUES]):
-    _writer: csv.DictWriter
-    _write_document_id: bool
-    _default_document_id: str | None
-    _write_language: bool
-    _default_language: LanguageAlpha2 | None
-
-    def __init__(
-            self,
-            cls: Type[VALUES],
-            output_file: TextIO,
-            delimiter: str = "\t",
-            write_document_id: bool = True,
-            default_document_id: str | None = None,
-            write_language: bool = True,
-            default_language: LanguageAlpha2 | str | None = DEFAULT_LANGUAGE
-    ):
-        self._write_document_id = write_document_id
-        self._default_document_id = default_document_id
-        self._write_language = write_language
-        if default_language is None:
-            self._default_language = None
-        else:
-            self._default_language = LanguageAlpha2(default_language)
-
-        fieldnames = []
-        if write_document_id:
-            fieldnames += [Document.ID_FIELD]
-        fieldnames += [Document.SEGMENT_FIELD]
-        if write_language:
-            fieldnames += [Document.LANGUAGE_FIELD]
-        fieldnames += cls.names()
-
-        self._writer = csv.DictWriter(
-            output_file,
-            fieldnames=fieldnames,
-            delimiter=delimiter
-        )
-        self._writer.writeheader()
-
-    def write(
-            self,
-            values: VALUES,
-            segment: str,
-            document_id: str | None = None,
-            language: LanguageAlpha2 | str | None = None
-    ):
-        line: dict[str, float | str] = {
-            value: score for (value, score) in zip(values.names(), values.to_list())
-        }
-        line[Document.SEGMENT_FIELD] = segment
-        if self._write_document_id:
-            if document_id is not None:
-                line[Document.ID_FIELD] = document_id
-            elif self._default_document_id is not None:
-                line[Document.ID_FIELD] = self._default_document_id
-            else:
-                raise ValueError("Missing document ID for writing and no default set")
-        if self._write_language:
-            if language is not None:
-                line[Document.LANGUAGE_FIELD] = language
-            elif self._default_language is not None:
-                line[Document.LANGUAGE_FIELD] = self._default_language
-            else:
-                raise ValueError("Missing language for writing and no default set")
-        self._writer.writerow(line)
-
-    def write_all(
-            self,
-            values_with_segments: Iterable[Tuple[VALUES, str]],
-            language: LanguageAlpha2 | str,
-            document_id: str | None = None
-    ):
-        for values, segment in values_with_segments:
-            self.write(values=values, document_id=document_id, segment=segment, language=language)
 
 
 class Values(ABC, BaseModel):
@@ -452,7 +202,6 @@ class Values(ABC, BaseModel):
     def read_tsv(
         cls,
         input_file: str | Path,
-        read_values: bool = True,
         document_id: str | None = None,
         language: LanguageAlpha2 | str = DEFAULT_LANGUAGE,
         delimiter: str = "\t",
@@ -460,7 +209,7 @@ class Values(ABC, BaseModel):
         language_field: str | None = None,
         segment_field: str | None = None,
         **kwargs
-    ) -> Generator[Document[Self], None, None]:
+    ) -> Generator["ValuesAnnotatedDocument[Self]", None, None]:
         """
         Reads a tab-separated values file (or one with a different delimiter).
 
@@ -473,11 +222,6 @@ class Values(ABC, BaseModel):
         :param input_file:
             The tab-separated values file to read.
         :type input_file: str | Path
-
-        :param read_values:
-            Whether to read value scores from respective columns with the same value name;
-            Default: True
-        :type read_values: bool
 
         :param document_id:
             Default document ID to use when no ID is found in the row
@@ -517,12 +261,13 @@ class Values(ABC, BaseModel):
             Additional keyword arguments passed to :class:`csv.DictReader`.
 
         :return:
-            A generator yielding :class:`Document[Self]` instances.
-        :rtype: Generator[Document[Self], None, None]
+            A generator yielding :class:`ValuesAnnotatedDocument[Self]` instances.
+        :rtype: Generator[ValuesAnnotatedDocument[Self], None, None]
         """
+        from .document import ValuesAnnotatedDocument
         current_document_id = document_id
         current_language: LanguageAlpha2 = LanguageAlpha2(language)
-        values: list[Self] | None = None
+        values: list[Self] = []
         segments: list[str] | None = None
         with open(input_file, newline='') as input_file_handle:
             reader = csv.DictReader(input_file_handle, delimiter=delimiter, **kwargs)
@@ -531,29 +276,26 @@ class Values(ABC, BaseModel):
                 if document_id_field is not None:
                     row_document_id = row.get(document_id_field, document_id)
                 if row_document_id is None or row_document_id != current_document_id:
-                    if values is not None or segments is not None:
-                        yield Document[Self](
+                    if len(values) > 0:
+                        yield ValuesAnnotatedDocument[Self](
                             id=current_document_id,
                             language=current_language,
                             values=values,
                             segments=segments
                         )
                         segments = None
-                        values = None
+                        values: list[Self] = []
                 current_document_id = row_document_id
                 if language_field is not None:
                     current_language = LanguageAlpha2(row.get(language_field, language))
-                if read_values:
-                    if values is None:
-                        values = []
-                    values.append(cls.from_row(row))
+                values.append(cls.from_row(row))
                 if segment_field is not None:
                     segment = row.get(segment_field)
                     if segment is not None:
                         if segments is None:
                             segments = []
                         segments.append(segment)
-            yield Document[Self](
+            yield ValuesAnnotatedDocument[Self](
                 id=current_document_id,
                 language=current_language,
                 values=values,
@@ -565,7 +307,8 @@ class Values(ABC, BaseModel):
         cls,
         output_file: TextIO,
         delimiter: str = "\t"
-    ) -> ValuesWriter[Self]:
+    ) -> "ValuesWriter[Self]":
+        from .values_writer import ValuesWriter
         return ValuesWriter[Self](
             cls=cls,
             output_file=output_file,
@@ -581,7 +324,8 @@ class Values(ABC, BaseModel):
         default_document_id: str | None = None,
         write_language: bool = True,
         default_language: LanguageAlpha2 | str | None = DEFAULT_LANGUAGE
-    ) -> ValuesWithTextWriter[Self]:
+    ) -> "ValuesWithTextWriter[Self]":
+        from .values_writer import ValuesWithTextWriter
         return ValuesWithTextWriter[Self](
             cls=cls,
             output_file=output_file,
@@ -619,8 +363,9 @@ class ValuesWithoutAttainment(Values):
         cls,
         tested: Iterable["Self"],
         truth: Iterable["Self"]
-    ) -> Evaluation["Self"]:
+    ) -> "Evaluation[Self]":
         instance_evaluations = [t1.evaluate(t2) for t1, t2 in zip(tested, truth)]
+        from .evaluation import Evaluation
         return Evaluation(
             cls=cls,
             value_evaluations={
@@ -668,7 +413,8 @@ class ValuesWithoutAttainment(Values):
             if score >= threshold
         ]
 
-    def evaluate(self, truth: "Self") -> dict[str, ThresholdedDecision]:
+    def evaluate(self, truth: "Self") -> dict[str, "ThresholdedDecision"]:
+        from .evaluation import ThresholdedDecision
         decisions = {}
         for value in self.names():
             decisions[value] = ThresholdedDecision(
