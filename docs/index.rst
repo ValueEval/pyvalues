@@ -2,8 +2,10 @@ pyvalues
 ========
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Contents:
+
+   index
 
 Python library for processing, evaluating, and visualizing (Schwartz) human value scores
 
