@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pyvalues.classifier &#8212; pyvalues 0.6.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=8fa8b3e9"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pyvalues.baseline_classifier" href="pyvalues_baseline_classifier.html" />
+    <link rel="prev" title="pyvalues" href="pyvalues.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-pyvalues.classifier">
+<span id="pyvalues-classifier"></span><h1>pyvalues.classifier<a class="headerlink" href="#module-pyvalues.classifier" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvalues.classifier.OriginalValuesClassifier">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyvalues.classifier.</span></span><span class="sig-name descname"><span class="pre">OriginalValuesClassifier</span></span><a class="headerlink" href="#pyvalues.classifier.OriginalValuesClassifier" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Classifier for the ten values from Schwartz original system.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.OriginalValuesClassifier.classify_document_for_original_values">
+<span class="sig-name descname"><span class="pre">classify_document_for_original_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvalues.html#pyvalues.Document" title="pyvalues.document.Document"><span class="pre">Document</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pyvalues.html#pyvalues.ValuesAnnotatedDocument" title="pyvalues.document.ValuesAnnotatedDocument"><span class="pre">ValuesAnnotatedDocument</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvalues.html#pyvalues.OriginalValues" title="pyvalues.OriginalValues"><span class="pre">OriginalValues</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.classifier.OriginalValuesClassifier.classify_document_for_original_values" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies each segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>document</strong> (<a class="reference internal" href="pyvalues.html#pyvalues.Document" title="pyvalues.Document"><em>Document</em></a>) – The document to classify</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A copy of the document with the classified values</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pyvalues.html#pyvalues.ValuesAnnotatedDocument" title="pyvalues.ValuesAnnotatedDocument">ValuesAnnotatedDocument</a>[<a class="reference internal" href="pyvalues.html#pyvalues.OriginalValues" title="pyvalues.OriginalValues">OriginalValues</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.OriginalValuesClassifier.classify_for_original_values">
+<span class="sig-name descname"><span class="pre">classify_for_original_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pyvalues.html#pyvalues.OriginalValues" title="pyvalues.values.OriginalValues"><span class="pre">OriginalValues</span></a></span></span><a class="headerlink" href="#pyvalues.classifier.OriginalValuesClassifier.classify_for_original_values" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies the segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segment</strong> (<em>str</em>) – The segment to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segment</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The classification</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pyvalues.html#pyvalues.OriginalValues" title="pyvalues.OriginalValues">OriginalValues</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.OriginalValuesClassifier.classify_segments_for_original_values">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">classify_segments_for_original_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvalues.html#pyvalues.OriginalValues" title="pyvalues.values.OriginalValues"><span class="pre">OriginalValues</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.classifier.OriginalValuesClassifier.classify_segments_for_original_values" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies each segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segments</strong> (<em>Iterable</em><em>[</em><em>str</em><em>]</em>) – The segments to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Classifications for each segment</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Generator[<a class="reference internal" href="pyvalues.html#pyvalues.OriginalValues" title="pyvalues.OriginalValues">OriginalValues</a>, None, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvalues.classifier.OriginalValuesWithAttainmentClassifier">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyvalues.classifier.</span></span><span class="sig-name descname"><span class="pre">OriginalValuesWithAttainmentClassifier</span></span><a class="headerlink" href="#pyvalues.classifier.OriginalValuesWithAttainmentClassifier" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyvalues.classifier.OriginalValuesClassifier" title="pyvalues.classifier.OriginalValuesClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">OriginalValuesClassifier</span></code></a></p>
+<p>Classifier for the ten values from Schwartz original system with attainment.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.OriginalValuesWithAttainmentClassifier.classify_document_for_original_values_with_attainment">
+<span class="sig-name descname"><span class="pre">classify_document_for_original_values_with_attainment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvalues.html#pyvalues.Document" title="pyvalues.document.Document"><span class="pre">Document</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pyvalues.html#pyvalues.ValuesAnnotatedDocument" title="pyvalues.document.ValuesAnnotatedDocument"><span class="pre">ValuesAnnotatedDocument</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvalues.html#pyvalues.OriginalValuesWithAttainment" title="pyvalues.OriginalValuesWithAttainment"><span class="pre">OriginalValuesWithAttainment</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.classifier.OriginalValuesWithAttainmentClassifier.classify_document_for_original_values_with_attainment" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies each segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>document</strong> (<a class="reference internal" href="pyvalues.html#pyvalues.Document" title="pyvalues.Document"><em>Document</em></a>) – The document to classify</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A copy of the document with the classified values</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pyvalues.html#pyvalues.ValuesAnnotatedDocument" title="pyvalues.ValuesAnnotatedDocument">ValuesAnnotatedDocument</a>[<a class="reference internal" href="pyvalues.html#pyvalues.OriginalValuesWithAttainment" title="pyvalues.OriginalValuesWithAttainment">OriginalValuesWithAttainment</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.OriginalValuesWithAttainmentClassifier.classify_for_original_values">
+<span class="sig-name descname"><span class="pre">classify_for_original_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pyvalues.html#pyvalues.OriginalValues" title="pyvalues.values.OriginalValues"><span class="pre">OriginalValues</span></a></span></span><a class="headerlink" href="#pyvalues.classifier.OriginalValuesWithAttainmentClassifier.classify_for_original_values" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies the segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segment</strong> (<em>str</em>) – The segment to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segment</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The classification</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pyvalues.html#pyvalues.OriginalValues" title="pyvalues.OriginalValues">OriginalValues</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.OriginalValuesWithAttainmentClassifier.classify_for_original_values_with_attainment">
+<span class="sig-name descname"><span class="pre">classify_for_original_values_with_attainment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pyvalues.html#pyvalues.OriginalValuesWithAttainment" title="pyvalues.values.OriginalValuesWithAttainment"><span class="pre">OriginalValuesWithAttainment</span></a></span></span><a class="headerlink" href="#pyvalues.classifier.OriginalValuesWithAttainmentClassifier.classify_for_original_values_with_attainment" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies the segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segment</strong> (<em>str</em>) – The segment to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segment</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The classification</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pyvalues.html#pyvalues.OriginalValuesWithAttainment" title="pyvalues.OriginalValuesWithAttainment">OriginalValuesWithAttainment</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.OriginalValuesWithAttainmentClassifier.classify_segments_for_original_values">
+<span class="sig-name descname"><span class="pre">classify_segments_for_original_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvalues.html#pyvalues.OriginalValues" title="pyvalues.values.OriginalValues"><span class="pre">OriginalValues</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.classifier.OriginalValuesWithAttainmentClassifier.classify_segments_for_original_values" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies each segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segments</strong> (<em>Iterable</em><em>[</em><em>str</em><em>]</em>) – The segments to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Classifications for each segment</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Generator[<a class="reference internal" href="pyvalues.html#pyvalues.OriginalValues" title="pyvalues.OriginalValues">OriginalValues</a>, None, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.OriginalValuesWithAttainmentClassifier.classify_segments_for_original_values_with_attainment">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">classify_segments_for_original_values_with_attainment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvalues.html#pyvalues.OriginalValuesWithAttainment" title="pyvalues.values.OriginalValuesWithAttainment"><span class="pre">OriginalValuesWithAttainment</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.classifier.OriginalValuesWithAttainmentClassifier.classify_segments_for_original_values_with_attainment" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies each segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segments</strong> (<em>Iterable</em><em>[</em><em>str</em><em>]</em>) – The segments to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Classification for each segment</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Generator[<a class="reference internal" href="pyvalues.html#pyvalues.OriginalValuesWithAttainment" title="pyvalues.OriginalValuesWithAttainment">OriginalValuesWithAttainment</a>, None, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedCoarseValuesClassifier">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyvalues.classifier.</span></span><span class="sig-name descname"><span class="pre">RefinedCoarseValuesClassifier</span></span><a class="headerlink" href="#pyvalues.classifier.RefinedCoarseValuesClassifier" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyvalues.classifier.OriginalValuesClassifier" title="pyvalues.classifier.OriginalValuesClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">OriginalValuesClassifier</span></code></a></p>
+<p>Classifier for the the twelve values from Schwartz refined system (19 values)
+when combining values with same name prefix.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedCoarseValuesClassifier.classify_document_for_refined_coarse_values">
+<span class="sig-name descname"><span class="pre">classify_document_for_refined_coarse_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvalues.html#pyvalues.Document" title="pyvalues.document.Document"><span class="pre">Document</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pyvalues.html#pyvalues.ValuesAnnotatedDocument" title="pyvalues.document.ValuesAnnotatedDocument"><span class="pre">ValuesAnnotatedDocument</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValues" title="pyvalues.RefinedCoarseValues"><span class="pre">RefinedCoarseValues</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.classifier.RefinedCoarseValuesClassifier.classify_document_for_refined_coarse_values" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies each segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>document</strong> (<a class="reference internal" href="pyvalues.html#pyvalues.Document" title="pyvalues.Document"><em>Document</em></a>) – The document to classify</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A copy of the document with the classified values</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pyvalues.html#pyvalues.ValuesAnnotatedDocument" title="pyvalues.ValuesAnnotatedDocument">ValuesAnnotatedDocument</a>[<a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValues" title="pyvalues.RefinedCoarseValues">RefinedCoarseValues</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedCoarseValuesClassifier.classify_for_original_values">
+<span class="sig-name descname"><span class="pre">classify_for_original_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pyvalues.html#pyvalues.OriginalValues" title="pyvalues.values.OriginalValues"><span class="pre">OriginalValues</span></a></span></span><a class="headerlink" href="#pyvalues.classifier.RefinedCoarseValuesClassifier.classify_for_original_values" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies the segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segment</strong> (<em>str</em>) – The segment to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segment</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The classification</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pyvalues.html#pyvalues.OriginalValues" title="pyvalues.OriginalValues">OriginalValues</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedCoarseValuesClassifier.classify_for_refined_coarse_values">
+<span class="sig-name descname"><span class="pre">classify_for_refined_coarse_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValues" title="pyvalues.values.RefinedCoarseValues"><span class="pre">RefinedCoarseValues</span></a></span></span><a class="headerlink" href="#pyvalues.classifier.RefinedCoarseValuesClassifier.classify_for_refined_coarse_values" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies the segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segment</strong> (<em>str</em>) – The segment to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segment</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The classification</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValues" title="pyvalues.RefinedCoarseValues">RefinedCoarseValues</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedCoarseValuesClassifier.classify_segments_for_original_values">
+<span class="sig-name descname"><span class="pre">classify_segments_for_original_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvalues.html#pyvalues.OriginalValues" title="pyvalues.values.OriginalValues"><span class="pre">OriginalValues</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.classifier.RefinedCoarseValuesClassifier.classify_segments_for_original_values" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies each segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segments</strong> (<em>Iterable</em><em>[</em><em>str</em><em>]</em>) – The segments to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Classifications for each segment</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Generator[<a class="reference internal" href="pyvalues.html#pyvalues.OriginalValues" title="pyvalues.OriginalValues">OriginalValues</a>, None, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedCoarseValuesClassifier.classify_segments_for_refined_coarse_values">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">classify_segments_for_refined_coarse_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValues" title="pyvalues.values.RefinedCoarseValues"><span class="pre">RefinedCoarseValues</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.classifier.RefinedCoarseValuesClassifier.classify_segments_for_refined_coarse_values" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies each segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segments</strong> (<em>Iterable</em><em>[</em><em>str</em><em>]</em>) – The segments to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Classification for each segment</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Generator[<a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValues" title="pyvalues.RefinedCoarseValues">RefinedCoarseValues</a>, None, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedCoarseValuesWithAttainmentClassifier">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyvalues.classifier.</span></span><span class="sig-name descname"><span class="pre">RefinedCoarseValuesWithAttainmentClassifier</span></span><a class="headerlink" href="#pyvalues.classifier.RefinedCoarseValuesWithAttainmentClassifier" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyvalues.classifier.OriginalValuesWithAttainmentClassifier" title="pyvalues.classifier.OriginalValuesWithAttainmentClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">OriginalValuesWithAttainmentClassifier</span></code></a>, <a class="reference internal" href="#pyvalues.classifier.RefinedCoarseValuesClassifier" title="pyvalues.classifier.RefinedCoarseValuesClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefinedCoarseValuesClassifier</span></code></a></p>
+<p>Classifier for the the twelve values from Schwartz refined system (19 values)
+when combining values with same name prefix and with attainment.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedCoarseValuesWithAttainmentClassifier.classify_document_for_refined_coarse_values_with_attainment">
+<span class="sig-name descname"><span class="pre">classify_document_for_refined_coarse_values_with_attainment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvalues.html#pyvalues.Document" title="pyvalues.document.Document"><span class="pre">Document</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pyvalues.html#pyvalues.ValuesAnnotatedDocument" title="pyvalues.document.ValuesAnnotatedDocument"><span class="pre">ValuesAnnotatedDocument</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValuesWithAttainment" title="pyvalues.RefinedCoarseValuesWithAttainment"><span class="pre">RefinedCoarseValuesWithAttainment</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.classifier.RefinedCoarseValuesWithAttainmentClassifier.classify_document_for_refined_coarse_values_with_attainment" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies each segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>document</strong> (<a class="reference internal" href="pyvalues.html#pyvalues.Document" title="pyvalues.Document"><em>Document</em></a>) – The document to classify</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A copy of the document with the classified values</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pyvalues.html#pyvalues.ValuesAnnotatedDocument" title="pyvalues.ValuesAnnotatedDocument">ValuesAnnotatedDocument</a>[<a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValuesWithAttainment" title="pyvalues.RefinedCoarseValuesWithAttainment">RefinedCoarseValuesWithAttainment</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedCoarseValuesWithAttainmentClassifier.classify_for_original_values_with_attainment">
+<span class="sig-name descname"><span class="pre">classify_for_original_values_with_attainment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pyvalues.html#pyvalues.OriginalValuesWithAttainment" title="pyvalues.values.OriginalValuesWithAttainment"><span class="pre">OriginalValuesWithAttainment</span></a></span></span><a class="headerlink" href="#pyvalues.classifier.RefinedCoarseValuesWithAttainmentClassifier.classify_for_original_values_with_attainment" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies the segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segment</strong> (<em>str</em>) – The segment to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segment</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The classification</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pyvalues.html#pyvalues.OriginalValuesWithAttainment" title="pyvalues.OriginalValuesWithAttainment">OriginalValuesWithAttainment</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedCoarseValuesWithAttainmentClassifier.classify_for_refined_coarse_values">
+<span class="sig-name descname"><span class="pre">classify_for_refined_coarse_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValues" title="pyvalues.values.RefinedCoarseValues"><span class="pre">RefinedCoarseValues</span></a></span></span><a class="headerlink" href="#pyvalues.classifier.RefinedCoarseValuesWithAttainmentClassifier.classify_for_refined_coarse_values" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies the segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segment</strong> (<em>str</em>) – The segment to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segment</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The classification</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValues" title="pyvalues.RefinedCoarseValues">RefinedCoarseValues</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedCoarseValuesWithAttainmentClassifier.classify_for_refined_coarse_values_with_attainment">
+<span class="sig-name descname"><span class="pre">classify_for_refined_coarse_values_with_attainment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValuesWithAttainment" title="pyvalues.values.RefinedCoarseValuesWithAttainment"><span class="pre">RefinedCoarseValuesWithAttainment</span></a></span></span><a class="headerlink" href="#pyvalues.classifier.RefinedCoarseValuesWithAttainmentClassifier.classify_for_refined_coarse_values_with_attainment" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies the segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segment</strong> (<em>str</em>) – The segment to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segment</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The classification</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValuesWithAttainment" title="pyvalues.RefinedCoarseValuesWithAttainment">RefinedCoarseValuesWithAttainment</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedCoarseValuesWithAttainmentClassifier.classify_segments_for_original_values_with_attainment">
+<span class="sig-name descname"><span class="pre">classify_segments_for_original_values_with_attainment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvalues.html#pyvalues.OriginalValuesWithAttainment" title="pyvalues.values.OriginalValuesWithAttainment"><span class="pre">OriginalValuesWithAttainment</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.classifier.RefinedCoarseValuesWithAttainmentClassifier.classify_segments_for_original_values_with_attainment" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies each segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segments</strong> (<em>Iterable</em><em>[</em><em>str</em><em>]</em>) – The segments to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Classification for each segment</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Generator[<a class="reference internal" href="pyvalues.html#pyvalues.OriginalValuesWithAttainment" title="pyvalues.OriginalValuesWithAttainment">OriginalValuesWithAttainment</a>, None, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedCoarseValuesWithAttainmentClassifier.classify_segments_for_refined_coarse_values">
+<span class="sig-name descname"><span class="pre">classify_segments_for_refined_coarse_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValues" title="pyvalues.values.RefinedCoarseValues"><span class="pre">RefinedCoarseValues</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.classifier.RefinedCoarseValuesWithAttainmentClassifier.classify_segments_for_refined_coarse_values" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies each segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segments</strong> (<em>Iterable</em><em>[</em><em>str</em><em>]</em>) – The segments to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Classification for each segment</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Generator[<a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValues" title="pyvalues.RefinedCoarseValues">RefinedCoarseValues</a>, None, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedCoarseValuesWithAttainmentClassifier.classify_segments_for_refined_coarse_values_with_attainment">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">classify_segments_for_refined_coarse_values_with_attainment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValuesWithAttainment" title="pyvalues.values.RefinedCoarseValuesWithAttainment"><span class="pre">RefinedCoarseValuesWithAttainment</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.classifier.RefinedCoarseValuesWithAttainmentClassifier.classify_segments_for_refined_coarse_values_with_attainment" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies each segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segments</strong> (<em>Iterable</em><em>[</em><em>str</em><em>]</em>) – The segments to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Classifications for each segment</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Generator[<a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValuesWithAttainment" title="pyvalues.RefinedCoarseValuesWithAttainment">RefinedCoarseValuesWithAttainment</a>, None, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedValuesClassifier">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyvalues.classifier.</span></span><span class="sig-name descname"><span class="pre">RefinedValuesClassifier</span></span><a class="headerlink" href="#pyvalues.classifier.RefinedValuesClassifier" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyvalues.classifier.RefinedCoarseValuesClassifier" title="pyvalues.classifier.RefinedCoarseValuesClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefinedCoarseValuesClassifier</span></code></a></p>
+<p>Classifier for the 19 values from Schwartz refined system.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedValuesClassifier.classify_document_for_refined_values">
+<span class="sig-name descname"><span class="pre">classify_document_for_refined_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvalues.html#pyvalues.Document" title="pyvalues.document.Document"><span class="pre">Document</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pyvalues.html#pyvalues.ValuesAnnotatedDocument" title="pyvalues.document.ValuesAnnotatedDocument"><span class="pre">ValuesAnnotatedDocument</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvalues.html#pyvalues.RefinedValues" title="pyvalues.RefinedValues"><span class="pre">RefinedValues</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.classifier.RefinedValuesClassifier.classify_document_for_refined_values" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies each segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>document</strong> (<a class="reference internal" href="pyvalues.html#pyvalues.Document" title="pyvalues.Document"><em>Document</em></a>) – The document to classify</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A copy of the document with the classified values</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pyvalues.html#pyvalues.ValuesAnnotatedDocument" title="pyvalues.ValuesAnnotatedDocument">ValuesAnnotatedDocument</a>[<a class="reference internal" href="pyvalues.html#pyvalues.RefinedValues" title="pyvalues.RefinedValues">RefinedValues</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedValuesClassifier.classify_for_refined_coarse_values">
+<span class="sig-name descname"><span class="pre">classify_for_refined_coarse_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValues" title="pyvalues.values.RefinedCoarseValues"><span class="pre">RefinedCoarseValues</span></a></span></span><a class="headerlink" href="#pyvalues.classifier.RefinedValuesClassifier.classify_for_refined_coarse_values" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies the segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segment</strong> (<em>str</em>) – The segment to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segment</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The classification</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValues" title="pyvalues.RefinedCoarseValues">RefinedCoarseValues</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedValuesClassifier.classify_for_refined_values">
+<span class="sig-name descname"><span class="pre">classify_for_refined_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pyvalues.html#pyvalues.RefinedValues" title="pyvalues.values.RefinedValues"><span class="pre">RefinedValues</span></a></span></span><a class="headerlink" href="#pyvalues.classifier.RefinedValuesClassifier.classify_for_refined_values" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies the segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segment</strong> (<em>str</em>) – The segment to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segment</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The classification</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pyvalues.html#pyvalues.RefinedValues" title="pyvalues.RefinedValues">RefinedValues</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedValuesClassifier.classify_segments_for_refined_coarse_values">
+<span class="sig-name descname"><span class="pre">classify_segments_for_refined_coarse_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValues" title="pyvalues.values.RefinedCoarseValues"><span class="pre">RefinedCoarseValues</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.classifier.RefinedValuesClassifier.classify_segments_for_refined_coarse_values" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies each segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segments</strong> (<em>Iterable</em><em>[</em><em>str</em><em>]</em>) – The segments to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Classification for each segment</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Generator[<a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValues" title="pyvalues.RefinedCoarseValues">RefinedCoarseValues</a>, None, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedValuesClassifier.classify_segments_for_refined_values">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">classify_segments_for_refined_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvalues.html#pyvalues.RefinedValues" title="pyvalues.values.RefinedValues"><span class="pre">RefinedValues</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.classifier.RefinedValuesClassifier.classify_segments_for_refined_values" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies each segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segments</strong> (<em>Iterable</em><em>[</em><em>str</em><em>]</em>) – The segments to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Classifications for each segment</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Generator[<a class="reference internal" href="pyvalues.html#pyvalues.RefinedValues" title="pyvalues.RefinedValues">RefinedValues</a>, None, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedValuesWithAttainmentClassifier">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyvalues.classifier.</span></span><span class="sig-name descname"><span class="pre">RefinedValuesWithAttainmentClassifier</span></span><a class="headerlink" href="#pyvalues.classifier.RefinedValuesWithAttainmentClassifier" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyvalues.classifier.RefinedCoarseValuesWithAttainmentClassifier" title="pyvalues.classifier.RefinedCoarseValuesWithAttainmentClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefinedCoarseValuesWithAttainmentClassifier</span></code></a>, <a class="reference internal" href="#pyvalues.classifier.RefinedValuesClassifier" title="pyvalues.classifier.RefinedValuesClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefinedValuesClassifier</span></code></a></p>
+<p>Classifier for the 19 values from Schwartz refined system with attainment.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedValuesWithAttainmentClassifier.classify_document_for_refined_values_with_attainment">
+<span class="sig-name descname"><span class="pre">classify_document_for_refined_values_with_attainment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvalues.html#pyvalues.Document" title="pyvalues.document.Document"><span class="pre">Document</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pyvalues.html#pyvalues.ValuesAnnotatedDocument" title="pyvalues.document.ValuesAnnotatedDocument"><span class="pre">ValuesAnnotatedDocument</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvalues.html#pyvalues.RefinedValuesWithAttainment" title="pyvalues.RefinedValuesWithAttainment"><span class="pre">RefinedValuesWithAttainment</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.classifier.RefinedValuesWithAttainmentClassifier.classify_document_for_refined_values_with_attainment" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies each segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>document</strong> (<a class="reference internal" href="pyvalues.html#pyvalues.Document" title="pyvalues.Document"><em>Document</em></a>) – The document to classify</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A copy of the document with the classified values</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pyvalues.html#pyvalues.ValuesAnnotatedDocument" title="pyvalues.ValuesAnnotatedDocument">ValuesAnnotatedDocument</a>[<a class="reference internal" href="pyvalues.html#pyvalues.RefinedValuesWithAttainment" title="pyvalues.RefinedValuesWithAttainment">RefinedValuesWithAttainment</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedValuesWithAttainmentClassifier.classify_for_refined_coarse_values_with_attainment">
+<span class="sig-name descname"><span class="pre">classify_for_refined_coarse_values_with_attainment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValuesWithAttainment" title="pyvalues.values.RefinedCoarseValuesWithAttainment"><span class="pre">RefinedCoarseValuesWithAttainment</span></a></span></span><a class="headerlink" href="#pyvalues.classifier.RefinedValuesWithAttainmentClassifier.classify_for_refined_coarse_values_with_attainment" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies the segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segment</strong> (<em>str</em>) – The segment to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segment</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The classification</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValuesWithAttainment" title="pyvalues.RefinedCoarseValuesWithAttainment">RefinedCoarseValuesWithAttainment</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedValuesWithAttainmentClassifier.classify_for_refined_values">
+<span class="sig-name descname"><span class="pre">classify_for_refined_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pyvalues.html#pyvalues.RefinedValues" title="pyvalues.values.RefinedValues"><span class="pre">RefinedValues</span></a></span></span><a class="headerlink" href="#pyvalues.classifier.RefinedValuesWithAttainmentClassifier.classify_for_refined_values" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies the segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segment</strong> (<em>str</em>) – The segment to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segment</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The classification</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pyvalues.html#pyvalues.RefinedValues" title="pyvalues.RefinedValues">RefinedValues</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedValuesWithAttainmentClassifier.classify_for_refined_values_with_attainment">
+<span class="sig-name descname"><span class="pre">classify_for_refined_values_with_attainment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pyvalues.html#pyvalues.RefinedValuesWithAttainment" title="pyvalues.values.RefinedValuesWithAttainment"><span class="pre">RefinedValuesWithAttainment</span></a></span></span><a class="headerlink" href="#pyvalues.classifier.RefinedValuesWithAttainmentClassifier.classify_for_refined_values_with_attainment" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies the segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segment</strong> (<em>str</em>) – The segment to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segment</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The classification</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pyvalues.html#pyvalues.RefinedValuesWithAttainment" title="pyvalues.RefinedValuesWithAttainment">RefinedValuesWithAttainment</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedValuesWithAttainmentClassifier.classify_segments_for_refined_coarse_values_with_attainment">
+<span class="sig-name descname"><span class="pre">classify_segments_for_refined_coarse_values_with_attainment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValuesWithAttainment" title="pyvalues.values.RefinedCoarseValuesWithAttainment"><span class="pre">RefinedCoarseValuesWithAttainment</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.classifier.RefinedValuesWithAttainmentClassifier.classify_segments_for_refined_coarse_values_with_attainment" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies each segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segments</strong> (<em>Iterable</em><em>[</em><em>str</em><em>]</em>) – The segments to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Classifications for each segment</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Generator[<a class="reference internal" href="pyvalues.html#pyvalues.RefinedCoarseValuesWithAttainment" title="pyvalues.RefinedCoarseValuesWithAttainment">RefinedCoarseValuesWithAttainment</a>, None, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedValuesWithAttainmentClassifier.classify_segments_for_refined_values">
+<span class="sig-name descname"><span class="pre">classify_segments_for_refined_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvalues.html#pyvalues.RefinedValues" title="pyvalues.values.RefinedValues"><span class="pre">RefinedValues</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.classifier.RefinedValuesWithAttainmentClassifier.classify_segments_for_refined_values" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies each segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segments</strong> (<em>Iterable</em><em>[</em><em>str</em><em>]</em>) – The segments to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Classifications for each segment</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Generator[<a class="reference internal" href="pyvalues.html#pyvalues.RefinedValues" title="pyvalues.RefinedValues">RefinedValues</a>, None, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.classifier.RefinedValuesWithAttainmentClassifier.classify_segments_for_refined_values_with_attainment">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">classify_segments_for_refined_values_with_attainment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LanguageAlpha2</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvalues.html#pyvalues.RefinedValuesWithAttainment" title="pyvalues.values.RefinedValuesWithAttainment"><span class="pre">RefinedValuesWithAttainment</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvalues.classifier.RefinedValuesWithAttainmentClassifier.classify_segments_for_refined_values_with_attainment" title="Link to this definition">¶</a></dt>
+<dd><p>Classifies each segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segments</strong> (<em>Iterable</em><em>[</em><em>str</em><em>]</em>) – The segments to classify</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – The language of the segments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Classifications for each segment</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Generator[<a class="reference internal" href="pyvalues.html#pyvalues.RefinedValuesWithAttainment" title="pyvalues.RefinedValuesWithAttainment">RefinedValuesWithAttainment</a>, None, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">pyvalues</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="pyvalues.html">pyvalues</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pyvalues.classifier</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pyvalues.classifier.OriginalValuesClassifier"><code class="docutils literal notranslate"><span class="pre">OriginalValuesClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyvalues.classifier.OriginalValuesWithAttainmentClassifier"><code class="docutils literal notranslate"><span class="pre">OriginalValuesWithAttainmentClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyvalues.classifier.RefinedCoarseValuesClassifier"><code class="docutils literal notranslate"><span class="pre">RefinedCoarseValuesClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyvalues.classifier.RefinedCoarseValuesWithAttainmentClassifier"><code class="docutils literal notranslate"><span class="pre">RefinedCoarseValuesWithAttainmentClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyvalues.classifier.RefinedValuesClassifier"><code class="docutils literal notranslate"><span class="pre">RefinedValuesClassifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyvalues.classifier.RefinedValuesWithAttainmentClassifier"><code class="docutils literal notranslate"><span class="pre">RefinedValuesWithAttainmentClassifier</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyvalues_baseline_classifier.html">pyvalues.baseline_classifier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyvalues_dictionary_classifier.html">pyvalues.dictionary_classifier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyvalues_ensemble_classifier.html">pyvalues.ensemble_classifier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyvalues_values_writer.html">pyvalues.values_writer</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="pyvalues.html" title="previous chapter">pyvalues</a></li>
+      <li>Next: <a href="pyvalues_baseline_classifier.html" title="next chapter">pyvalues.baseline_classifier</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/pyvalues_classifier.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
