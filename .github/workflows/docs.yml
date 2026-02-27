@@ -1,0 +1,47 @@
+name: Build & Deploy Docs
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout code
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # needed for sphinx-multiversion to see all tags
+
+      # 2. Set up Python
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+
+      # 3. Install Poetry
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "::add-path::${HOME}/.local/bin"
+
+      # 4. Install dependencies
+      - name: Install dependencies
+        run: poetry install
+
+      # 5. Build versioned docs
+      - name: Build docs
+        run: |
+          poetry run sphinx-multiversion docs docs/_build/html
+
+      # 6. Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v6
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/_build/html
