@@ -11,4 +11,4 @@ Python library for processing, evaluating, and visualizing (Schwartz) human valu
     :toctree: generated/
     :caption: Modules
 
-    pyvalues
+    pyvalues.values
