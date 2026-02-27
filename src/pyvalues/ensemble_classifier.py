@@ -3,7 +3,7 @@ from typing import Generator, Generic, Iterable, TypeVar
 from pydantic_extra_types.language_code import LanguageAlpha2
 
 from pyvalues.document import DEFAULT_LANGUAGE
-from .classifiers import (
+from .classifier import (
     OriginalValuesClassifier,
     OriginalValuesWithAttainmentClassifier,
     RefinedCoarseValuesClassifier,

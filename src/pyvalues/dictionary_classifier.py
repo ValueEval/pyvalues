@@ -7,7 +7,7 @@ import unicodedata
 from pydantic_extra_types.language_code import LanguageAlpha2
 
 from pyvalues.ensemble_classifier import OriginalValuesLanguageEnsembleClassifier
-from .classifiers import (
+from .classifier import (
     OriginalValuesClassifier,
     OriginalValuesWithAttainmentClassifier,
     RefinedCoarseValuesClassifier,

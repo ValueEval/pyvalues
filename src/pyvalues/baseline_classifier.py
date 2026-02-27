@@ -1,7 +1,7 @@
 import random
 from typing import Generator, Iterable, TypeVar
 from pydantic_extra_types.language_code import LanguageAlpha2
-from .classifiers import (
+from .classifier import (
     OriginalValuesClassifier,
     OriginalValuesWithAttainmentClassifier,
     RefinedCoarseValuesClassifier,
