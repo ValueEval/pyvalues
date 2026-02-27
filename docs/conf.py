@@ -17,7 +17,7 @@ extensions = [
     "sphinx_multiversion",
 ]
 
-html_theme = "furo"
+# html_theme = "furo"
 
 # Optional: configure version selector
 smv_tag_whitelist = r"^v\d+\.\d+\.\d+$"
