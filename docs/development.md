@@ -1,7 +1,14 @@
 # pyvalues Development Notes
 
 ```shell
-poetry install --with development
+poetry install --with dev
+```
+
+## Build documentation
+
+```shell
+git fetch --tags
+poetry run sphinx-multiversion docs docs/_build/html
 ```
 
 ## Running unittests (automatically on push)
