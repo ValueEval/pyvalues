@@ -2,8 +2,8 @@ import csv
 from typing import Generic, Iterable, TextIO, Type
 from pydantic_extra_types.language_code import LanguageAlpha2
 
-from pyvalues.document import DEFAULT_LANGUAGE, Document
-from pyvalues.values import VALUES, ValuesAnnotatedDocument
+from pyvalues.document import DEFAULT_LANGUAGE, Document, ValuesAnnotatedDocument
+from pyvalues.values import VALUES
 
 
 class ValuesWriter(Generic[VALUES]):
