@@ -10,14 +10,13 @@ meta = importlib.metadata.metadata("pyvalues")
 project = meta["Name"]
 author = meta["Author"]
 release = meta["Version"]
+version = ".".join(release.split(".")[:2])
 
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.githubpages",
     "sphinx_multiversion",
 ]
-
-html_theme = "furo"
 
 # Optional: configure version selector
 smv_tag_whitelist = r"^v\d+\.\d+\.\d+$"
