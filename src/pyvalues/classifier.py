@@ -83,6 +83,23 @@ class OriginalValuesClassifier(ABC):
             values=values
         )
 
+    def classify_documents_for_original_values(
+            self,
+            documents: Iterable[Document]
+    ) -> Generator[ValuesAnnotatedDocument[OriginalValues], None, None]:
+        """
+        Classifies each document.
+
+        :param documents:
+            The documents to classify
+        :type documents: Iterable[Document]
+        :return:
+            A copy of each document with the classified values
+        :rtype: Generator[ValuesAnnotatedDocument[OriginalValues], None, None]
+        """
+        for document in documents:
+            yield self.classify_document_for_original_values(document)
+
     @abstractmethod
     def classify_segments_for_original_values(
             self,
@@ -171,6 +188,23 @@ class RefinedCoarseValuesClassifier(OriginalValuesClassifier):
             segments=document.segments,
             values=values
         )
+
+    def classify_documents_for_refined_coarse_values(
+            self,
+            documents: Iterable[Document]
+    ) -> Generator[ValuesAnnotatedDocument[RefinedCoarseValues], None, None]:
+        """
+        Classifies each document.
+
+        :param documents:
+            The documents to classify
+        :type documents: Iterable[Document]
+        :return:
+            A copy of each document with the classified values
+        :rtype: Generator[ValuesAnnotatedDocument[RefinedCoarseValues], None, None]
+        """
+        for document in documents:
+            yield self.classify_document_for_refined_coarse_values(document)
 
     def classify_segments_for_original_values(
             self,
@@ -268,6 +302,23 @@ class RefinedValuesClassifier(RefinedCoarseValuesClassifier):
             values=values
         )
 
+    def classify_documents_for_refined_values(
+            self,
+            documents: Iterable[Document]
+    ) -> Generator[ValuesAnnotatedDocument[RefinedValues], None, None]:
+        """
+        Classifies each document.
+
+        :param documents:
+            The documents to classify
+        :type documents: Iterable[Document]
+        :return:
+            A copy of each document with the classified values
+        :rtype: Generator[ValuesAnnotatedDocument[RefinedValues], None, None]
+        """
+        for document in documents:
+            yield self.classify_document_for_refined_values(document)
+
     def classify_segments_for_refined_coarse_values(
             self,
             segments: Iterable[str],
@@ -363,6 +414,23 @@ class OriginalValuesWithAttainmentClassifier(OriginalValuesClassifier):
             segments=document.segments,
             values=values
         )
+
+    def classify_documents_for_original_values_with_attainment(
+            self,
+            documents: Iterable[Document]
+    ) -> Generator[ValuesAnnotatedDocument[OriginalValuesWithAttainment], None, None]:
+        """
+        Classifies each document.
+
+        :param documents:
+            The documents to classify
+        :type documents: Iterable[Document]
+        :return:
+            A copy of each document with the classified values
+        :rtype: Generator[ValuesAnnotatedDocument[OriginalValuesWithAttainment], None, None]
+        """
+        for document in documents:
+            yield self.classify_document_for_original_values_with_attainment(document)
 
     def classify_segments_for_original_values(
             self,
@@ -470,6 +538,23 @@ class RefinedCoarseValuesWithAttainmentClassifier(
             segments=document.segments,
             values=values
         )
+
+    def classify_documents_for_refined_coarse_values_with_attainment(
+            self,
+            documents: Iterable[Document]
+    ) -> Generator[ValuesAnnotatedDocument[RefinedCoarseValuesWithAttainment], None, None]:
+        """
+        Classifies each document.
+
+        :param documents:
+            The documents to classify
+        :type documents: Iterable[Document]
+        :return:
+            A copy of each document with the classified values
+        :rtype: Generator[ValuesAnnotatedDocument[RefinedCoarseValuesWithAttainment], None, None]
+        """
+        for document in documents:
+            yield self.classify_document_for_refined_coarse_values_with_attainment(document)
 
     def classify_segments_for_refined_coarse_values(
             self,
@@ -586,6 +671,23 @@ class RefinedValuesWithAttainmentClassifier(
             segments=document.segments,
             values=values
         )
+
+    def classify_documents_for_refined_values_with_attainment(
+            self,
+            documents: Iterable[Document]
+    ) -> Generator[ValuesAnnotatedDocument[RefinedValuesWithAttainment], None, None]:
+        """
+        Classifies each document.
+
+        :param documents:
+            The documents to classify
+        :type documents: Iterable[Document]
+        :return:
+            A copy of each document with the classified values
+        :rtype: Generator[ValuesAnnotatedDocument[RefinedValuesWithAttainment], None, None]
+        """
+        for document in documents:
+            yield self.classify_document_for_refined_values_with_attainment(document)
 
     def classify_segments_for_refined_values(
             self,
