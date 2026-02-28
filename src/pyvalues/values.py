@@ -137,6 +137,8 @@ class AttainmentScore(BaseModel):
     """
     A total Score for a value,
     split into a score for value (partially) attained and value (partially) constrained.
+
+    A score represents an effect size, confidence, or something else between (both inclusive) 0 (no effect/confidence/etc.) and 1 (maximum effect/confidence/etc.).
     """
     attained: Score = 0.0
     """
