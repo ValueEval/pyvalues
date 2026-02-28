@@ -1,5 +1,7 @@
 from .values import (
     DEFAULT_LANGUAGE,
+    Score,
+    AttainmentScore,
     Values,
     ValuesWithoutAttainment,
     ValuesWithAttainment,
@@ -17,6 +19,8 @@ from .document import (
 
 __all__ = [
     "DEFAULT_LANGUAGE",
+    "Score",
+    "AttainmentScore",
     "Document",
     "Values",
     "ValuesWithoutAttainment",
