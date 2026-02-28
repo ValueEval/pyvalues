@@ -355,10 +355,30 @@ class Values(ABC, BaseModel):
     @classmethod
     @abstractmethod
     def names(cls) -> list[str]:
+        """
+        Gets the names of the value scores.
+
+        If the scores have attainment, one is returned for value (partially) attained
+        (with suffix " attained") and another one for value (partially) constrained
+        (" constrained"). 
+
+        The order is the same as for :meth:`to_list`.
+
+        :return:
+            The list of names
+        :rtype: list[str]
+        """
         pass
 
     @abstractmethod
     def to_list(self) -> list[float]:
+        """
+        Gets the single scores, in the same order as :meth:`names`.
+
+        :return:
+            The list of scores
+        :rtype: list[float]
+        """
         pass
 
     @abstractmethod
