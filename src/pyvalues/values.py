@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import csv
 from pathlib import Path
-from typing import Annotated, Callable, Generator, Iterable, Self, Sequence, TextIO, TypeVar
+from typing import Annotated, Callable, Generator, Iterable, Self, Sequence, TextIO, TypeAlias, TypeVar
 from pydantic import AliasChoices, BaseModel, ConfigDict, Field, model_validator
 from pydantic_extra_types.language_code import LanguageAlpha2
 from .radarplot import plot_radar
@@ -126,7 +126,7 @@ REFINED_VALUES_WITH_ATTAINMENT = sum(
 )
 
 
-Score = Annotated[float, Field(ge=0, le=1)]
+Score: TypeAlias = Annotated[float, Field(ge=0, le=1)]
 """
 A score for a value (representing an effect size, confidence, or something else)
 between (both inclusive) 0 (no effect/confidence/etc.) and 1 (maximum effect/confidence/etc.).
