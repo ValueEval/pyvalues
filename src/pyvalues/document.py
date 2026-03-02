@@ -1,7 +1,7 @@
 import csv
 from pathlib import Path
-from typing import Callable, ClassVar, Generator, Generic, Iterable
-from pydantic import BaseModel
+from typing import Callable, ClassVar, Generator, Generic, Iterable, Self
+from pydantic import BaseModel, model_validator
 from pydantic_extra_types.language_code import LanguageAlpha2
 
 from pyvalues.values import DEFAULT_LANGUAGE, VALUES
@@ -163,3 +163,62 @@ class Document(BaseModel):
 
 class ValuesAnnotatedDocument(Document, Generic[VALUES]):
     values: list[VALUES]
+
+    @model_validator(mode="after")
+    def _check_length(self) -> Self:
+        if self.segments is not None:
+            if len(self.segments) != len(self.values):
+                raise ValueError(
+                    f"Length mismatch segments and values: {len(self.segments)} != {len(self.values)}"
+                )
+        if len(self.values) == 0:
+            raise ValueError(
+                f"Empty document"
+            )
+        return self
+
+    def binarize(self, threshold:float = 0.5) -> "ValuesAnnotatedDocument[VALUES]":
+        """
+        Gets the scores as either 1 (if at least at threshold) or 0 (otherwise).
+
+        :param threshold:
+            The threshold for becoming 1
+        :type threshold: float
+
+        :return:
+            A new document with scores either 0 or 1
+        :rtype: Self
+        """
+        binarized = [scores.binarize(threshold) for scores in self.values]
+        return self.__class__.model_construct(
+            id=self.id,
+            language=self.language,
+            segments=self.segments,
+            values=binarized
+        )
+
+    def average(self) -> "ValuesAnnotatedDocument[VALUES]":
+        """
+        Creates a new values score object with each score being the average of this document's respective scores
+
+        :return:
+            The averaged scores
+        :rtype: Self
+        """
+        segments = None
+        if len(self.values) > 0:
+            if self.segments is not None:
+                segments = [" ".join(self.segments)]
+            return self.__class__.model_construct(
+                id=self.id,
+                language=self.language,
+                segments=segments,
+                values=self.values[0].average(self.values)
+            )
+        else:
+            return self.__class__.model_construct(
+                id=self.id,
+                language=self.language,
+                segments=segments,
+                values=self.values
+            )

@@ -206,6 +206,17 @@ class Values(ABC, BaseModel):
         cls,
         value_scores_list: Iterable[Self]
     ) -> Self:
+        """
+        Creates a new values score object with each score being the average of the respective scores in the input
+
+        :param value_scores_list:
+            The scores to average
+        :type value_scores_list: Iterable[Self]
+
+        :return:
+            The averaged scores
+        :rtype: Self
+        """
         value_scores_matrix = [value_scores.to_list() for value_scores in value_scores_list]
         num_scores = len(value_scores_matrix)
         if num_scores == 0:
@@ -385,6 +396,21 @@ class Values(ABC, BaseModel):
     def __getitem__(self, key: str) -> Score | AttainmentScore:
         pass
 
+    def binarize(self, threshold: Score = 0.5) -> Self:
+        """
+        Gets the scores as either 1 (if at least at threshold) or 0 (otherwise).
+
+        :param threshold:
+            The threshold for becoming 1
+        :type threshold: float
+
+        :return:
+            A new object with scores either 0 or 1
+        :rtype: Self
+        """
+        scores = [float(score >= threshold) for score in self.to_list()]
+        return self.__class__.from_list(scores)
+
 
 class ValuesWithoutAttainment(Values):
     """
@@ -525,6 +551,24 @@ class ValuesWithAttainment(Values):
             else:
                 model[value] = AttainmentScore(constrained=attained + constrained)
         return self.model_validate(model)
+
+    def binarize(self, threshold: Score = 0.5) -> Self:
+        scores = self.to_list()
+        for i in range(int(len(scores) / 2)):
+            attained = scores[i * 2]
+            constrained = scores[i * 2 + 1]
+            total = attained + constrained
+            if total >= threshold:
+                if attained >= constrained:
+                    scores[i * 2] = 1
+                    scores[i * 2 + 1] = 0
+                else:
+                    scores[i * 2] = 0
+                    scores[i * 2 + 1] = 1
+            else:
+                scores[i * 2] = 0
+                scores[i * 2 + 1] = 0
+        return self.__class__.from_list(scores)
 
     def plot(self, **kwargs):
         return ValuesWithoutAttainment.plot_all(
