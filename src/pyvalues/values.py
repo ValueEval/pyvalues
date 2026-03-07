@@ -228,6 +228,23 @@ class Values(ABC, BaseModel):
         return cls.from_list(means)
 
     @classmethod
+    def average_documents(cls, documents: "Iterable[ValuesAnnotatedDocument[Self]]") -> Self:
+        """
+        Creates a new values score object with each score being the average
+        of the respective average score of each document in the input
+
+        :param documents:
+            The documents to average
+        :type documents: Iterable[ValuesAnnotatedDocument[Self]]
+
+        :return:
+            The averaged scores
+        :rtype: Self
+        """
+        document_averages = [cls.average(document.values) for document in documents]
+        return cls.average(document_averages)
+
+    @classmethod
     def read_tsv(
         cls,
         input_file: str | Path,
