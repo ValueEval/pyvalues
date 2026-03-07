@@ -96,7 +96,8 @@ class Evaluation(Generic[VALUES_WITHOUT_ATTAINMENT]):
                 thresholded_decision.is_true for thresholded_decision
                 in thresholded_decisions
             ])
-            assert num_positive > 0
+            if num_positive == 0:
+                continue
             true_positives = 0
             false_positives = 0
             xs = []
@@ -136,9 +137,11 @@ class Evaluation(Generic[VALUES_WITHOUT_ATTAINMENT]):
             raise ValueError(f"Invalid number of values: {num_values}")
 
         fig = plt.figure()
+        steps = self.precision_recall_steps()
         i = 0
-        for value, steps in self.precision_recall_steps().items():
-            plt.step(steps[0], steps[1], where="post", label=value, color=colors[i])
+        for value in self._cls.names():
+            if value in steps:
+                plt.step(steps[value][0], steps[value][1], where="post", label=value, color=colors[i])
             i += 1
 
         axes = fig.get_axes()[0]
