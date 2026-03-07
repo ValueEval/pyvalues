@@ -476,6 +476,27 @@ class ValuesWithoutAttainment(Values):
             }
         )
 
+    @classmethod
+    def evaluate_documents(
+        cls,
+        tested: Iterable["ValuesAnnotatedDocument[Self]"],
+        truth: Iterable["ValuesAnnotatedDocument[Self]"]
+    ) -> "Evaluation[Self]":
+        instance_evaluations = []
+        for tested_document, truth_document in zip(tested, truth):
+            instance_evaluations += [
+                t1.evaluate(t2) for t1, t2 in zip(tested_document.values, truth_document.values)
+            ]
+        from .evaluation import Evaluation
+        return Evaluation(
+            cls=cls,
+            value_evaluations={
+                value: [
+                    instance_evaluation[value] for instance_evaluation in instance_evaluations
+                ] for value in cls.names()
+            }
+        )
+
     @staticmethod
     def plot_all(value_scores_list: Sequence["ValuesWithoutAttainment"], **kwargs):
         """
