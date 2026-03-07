@@ -5,6 +5,7 @@ from pydantic import ValidationError
 from pyvalues import (
     OriginalValues,
 )
+from pyvalues.values import RefinedValues, RefinedValuesWithAttainment
 
 
 class TestValueClasses(unittest.TestCase):
@@ -50,3 +51,20 @@ class TestValueClasses(unittest.TestCase):
     def test_error_on_negative(self):
         with self.assertRaises(ValidationError):
             OriginalValues.from_list([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, -0.6, 0.7, 0.8, 0.9])
+
+    def test_convert(self):
+        values = RefinedValues.from_labels(["Tradition", "Self-Direction: Action"]).convert(OriginalValues)
+        self.assertEqual(1.0, values.self_direction)
+        self.assertEqual(0.0, values.stimulation)
+        self.assertEqual(0.0, values.hedonism)
+        self.assertEqual(0.0, values.achievement)
+        self.assertEqual(0.0, values.power)
+        self.assertEqual(0.0, values.security)
+        self.assertEqual(1.0, values.tradition)
+        self.assertEqual(0.0, values.conformity)
+        self.assertEqual(0.0, values.benevolence)
+        self.assertEqual(0.0, values.universalism)
+
+    def test_error_on_invalid_convert(self):
+        with self.assertRaises(ValueError):
+            RefinedValues.from_labels(["Tradition", "Self-Direction: Action"]).convert(RefinedValuesWithAttainment)

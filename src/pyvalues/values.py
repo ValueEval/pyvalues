@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import csv
 from pathlib import Path
-from typing import Annotated, Callable, Generator, Iterable, Self, Sequence, TextIO, TypeAlias, TypeVar
+from typing import Annotated, Callable, Generator, Iterable, Self, Sequence, TextIO, Type, TypeAlias, TypeVar
 from pydantic import AliasChoices, BaseModel, ConfigDict, Field, model_validator
 from pydantic_extra_types.language_code import LanguageAlpha2
 from .radarplot import plot_radar
@@ -138,7 +138,8 @@ class AttainmentScore(BaseModel):
     A total Score for a value,
     split into a score for value (partially) attained and value (partially) constrained.
 
-    A score represents an effect size, confidence, or something else between (both inclusive) 0 (no effect/confidence/etc.) and 1 (maximum effect/confidence/etc.).
+    A score represents an effect size, confidence, or something else between
+    (both inclusive) 0 (no effect/confidence/etc.) and 1 (maximum effect/confidence/etc.).
     """
     attained: Score = 0.0
     """
@@ -162,6 +163,7 @@ class AttainmentScore(BaseModel):
 
 
 VALUES = TypeVar("VALUES", bound="Values")
+VALUES2 = TypeVar("VALUES2", bound="Values")
 VALUES_WITHOUT_ATTAINMENT = TypeVar("VALUES_WITHOUT_ATTAINMENT", bound="ValuesWithoutAttainment")
 
 
@@ -371,7 +373,7 @@ class Values(ABC, BaseModel):
 
         If the scores have attainment, one is returned for value (partially) attained
         (with suffix " attained") and another one for value (partially) constrained
-        (" constrained"). 
+        (" constrained").
 
         The order is the same as for :meth:`to_list`.
 
@@ -398,6 +400,23 @@ class Values(ABC, BaseModel):
 
     def __str__(self) -> str:
         return self.model_dump_json(exclude_defaults=True)
+
+    @abstractmethod
+    def convert(self, target: Type[VALUES2]) -> VALUES2:
+        """
+        Converts the scores to the target class if possible.
+
+        If the scores can not be converted, a ValueError is raised.
+
+        :param target:
+            The target class
+        :type target: Type[Values]
+
+        :return:
+            The converted scores
+        :rtype: Values
+        """
+        pass
 
     def binarize(self, threshold: Score = 0.5) -> Self:
         """
@@ -680,6 +699,12 @@ class OriginalValues(ValuesWithoutAttainment):
             self.universalism
         ]
 
+    def convert(self, target: Type[VALUES2]) -> VALUES2:
+        if target is OriginalValues:
+            return target.from_list(self.to_list())  # type: ignore
+        else:
+            raise ValueError(f"Can not convert {self.__class__} to {target}")
+
 
 class RefinedCoarseValues(ValuesWithoutAttainment):
     """
@@ -813,6 +838,14 @@ class RefinedCoarseValues(ValuesWithoutAttainment):
             benevolence=self.benevolence,
             universalism=self.universalism,
         )
+
+    def convert(self, target: Type[VALUES2]) -> VALUES2:
+        if target is OriginalValues:
+            return self.original_values()  # type: ignore
+        elif target is RefinedCoarseValues:
+            return target.from_list(self.to_list())  # type: ignore
+        else:
+            raise ValueError(f"Can not convert {self.__class__} to {target}")
 
 
 class RefinedValues(ValuesWithoutAttainment):
@@ -1018,6 +1051,16 @@ class RefinedValues(ValuesWithoutAttainment):
         """
         return self.coarse_values(mode=mode).original_values()
 
+    def convert(self, target: Type[VALUES2]) -> VALUES2:
+        if target is OriginalValues:
+            return self.original_values()  # type: ignore
+        elif target is RefinedCoarseValues:
+            return self.coarse_values()  # type: ignore
+        elif target is RefinedValues:
+            return target.from_list(self.to_list())  # type: ignore
+        else:
+            raise ValueError(f"Can not convert {self.__class__} to {target}")
+
 
 class OriginalValuesWithAttainment(ValuesWithAttainment):
     """
@@ -1199,6 +1242,14 @@ class OriginalValuesWithAttainment(ValuesWithAttainment):
             benevolence=self.benevolence.constrained,
             universalism=self.universalism.constrained,
         )
+
+    def convert(self, target: Type[VALUES2]) -> VALUES2:
+        if target is OriginalValues:
+            return self.without_attainment()  # type: ignore
+        elif target is OriginalValuesWithAttainment:
+            return target.from_list(self.to_list())  # type: ignore
+        else:
+            raise ValueError(f"Can not convert {self.__class__} to {target}")
 
 
 class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
@@ -1424,6 +1475,18 @@ class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
             benevolence=self.benevolence.constrained,
             universalism=self.universalism.constrained,
         )
+
+    def convert(self, target: Type[VALUES2]) -> VALUES2:
+        if target is OriginalValues:
+            return self.without_attainment().original_values()  # type: ignore
+        elif target is OriginalValuesWithAttainment:
+            return self.original_values()  # type: ignore
+        elif target is RefinedCoarseValues:
+            return self.without_attainment()  # type: ignore
+        elif target is RefinedCoarseValuesWithAttainment:
+            return target.from_list(self.to_list())  # type: ignore
+        else:
+            raise ValueError(f"Can not convert {self.__class__} to {target}")
 
 
 class RefinedValuesWithAttainment(ValuesWithAttainment):
@@ -1753,6 +1816,22 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
             universalism_nature=self.universalism_nature.constrained,
             universalism_tolerance=self.universalism_tolerance.constrained,
         )
+
+    def convert(self, target: Type[VALUES2]) -> VALUES2:
+        if target is OriginalValues:
+            return self.without_attainment().original_values()  # type: ignore
+        elif target is OriginalValuesWithAttainment:
+            return self.original_values()  # type: ignore
+        elif target is RefinedCoarseValues:
+            return self.without_attainment().coarse_values()  # type: ignore
+        elif target is RefinedCoarseValuesWithAttainment:
+            return self.coarse_values()  # type: ignore
+        elif target is RefinedValues:
+            return self.without_attainment()  # type: ignore
+        elif target is RefinedValuesWithAttainment:
+            return target.from_list(self.to_list())  # type: ignore
+        else:
+            raise ValueError(f"Can not convert {self.__class__} to {target}")
 
 
 def normalize_value(value: str) -> str:

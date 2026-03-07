@@ -1,10 +1,10 @@
 import csv
 from pathlib import Path
-from typing import Callable, ClassVar, Generator, Generic, Iterable, Self
+from typing import Callable, ClassVar, Generator, Generic, Iterable, Self, Type
 from pydantic import BaseModel, model_validator
 from pydantic_extra_types.language_code import LanguageAlpha2
 
-from pyvalues.values import DEFAULT_LANGUAGE, VALUES
+from pyvalues.values import DEFAULT_LANGUAGE, VALUES, VALUES2
 
 
 class Document(BaseModel):
@@ -172,12 +172,10 @@ class ValuesAnnotatedDocument(Document, Generic[VALUES]):
                     f"Length mismatch segments and values: {len(self.segments)} != {len(self.values)}"
                 )
         if len(self.values) == 0:
-            raise ValueError(
-                f"Empty document"
-            )
+            raise ValueError("Empty document")
         return self
 
-    def binarize(self, threshold:float = 0.5) -> "ValuesAnnotatedDocument[VALUES]":
+    def binarize(self, threshold: float = 0.5) -> "ValuesAnnotatedDocument[VALUES]":
         """
         Gets the scores as either 1 (if at least at threshold) or 0 (otherwise).
 
@@ -199,7 +197,7 @@ class ValuesAnnotatedDocument(Document, Generic[VALUES]):
 
     def average(self) -> "ValuesAnnotatedDocument[VALUES]":
         """
-        Creates a new values score object with each score being the average of this document's respective scores
+        Creates a new document with each score being the average of this document's respective scores
 
         :return:
             The averaged scores
@@ -222,3 +220,24 @@ class ValuesAnnotatedDocument(Document, Generic[VALUES]):
                 segments=segments,
                 values=self.values
             )
+
+    def convert(self, target: Type[VALUES2]) -> "ValuesAnnotatedDocument[VALUES2]":
+        """
+        Create a new document with all scores converted to the target class if possible.
+
+        If the scores can not be converted, a ValueError is raised.
+
+        :param target:
+            The target class
+        :type target: Type[Values]
+
+        :return:
+            The converted document
+        :rtype: ValuesAnnotatedDocument[Values]
+        """
+        return ValuesAnnotatedDocument[VALUES2](
+            id=self.id,
+            language=self.language,
+            segments=self.segments,
+            values=[values.convert(target) for values in self.values]
+        )
