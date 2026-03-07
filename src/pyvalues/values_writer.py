@@ -33,6 +33,13 @@ class ValuesWriter(Generic[VALUES]):
         for v in values:
             self.write(v)
 
+    def write_document(self, document: ValuesAnnotatedDocument[VALUES]):
+        self.write_all(document.values)
+
+    def write_documents(self, documents: Iterable[ValuesAnnotatedDocument[VALUES]]):
+        for document in documents:
+            self.write_document(document)
+
 
 class ValuesWithTextWriter(Generic[VALUES]):
     _writer: csv.DictWriter
@@ -117,3 +124,7 @@ class ValuesWithTextWriter(Generic[VALUES]):
                     segment=segment,
                     language=document.language
                 )
+
+    def write_documents(self, documents: Iterable[ValuesAnnotatedDocument[VALUES]]):
+        for document in documents:
+            self.write_document(document)
