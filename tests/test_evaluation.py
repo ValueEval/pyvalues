@@ -3,6 +3,7 @@ import unittest
 from pyvalues import (
     OriginalValues,
 )
+from pyvalues.document import ValuesAnnotatedDocument
 
 
 class TestEvaluation(unittest.TestCase):
@@ -19,6 +20,58 @@ class TestEvaluation(unittest.TestCase):
             OriginalValues.from_list([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0])
         ]
         evaluation = OriginalValues.evaluate_all(tested, truth)
+        f, precision, recall = evaluation.f()
+        self.assertAlmostEqual(precision["self_direction"], 0)
+        self.assertAlmostEqual(precision["stimulation"], 0)
+        self.assertAlmostEqual(precision["hedonism"], 0)
+        self.assertAlmostEqual(precision["achievement"], 0)
+        self.assertAlmostEqual(precision["power"], 0)
+        self.assertAlmostEqual(precision["security"], 2 / 3)
+        self.assertAlmostEqual(precision["tradition"], 1)
+        self.assertAlmostEqual(precision["conformity"], 1)
+        self.assertAlmostEqual(precision["benevolence"], 1)
+        self.assertAlmostEqual(precision["universalism"], 1)
+        self.assertAlmostEqual(recall["self_direction"], 0)
+        self.assertAlmostEqual(recall["stimulation"], 0)
+        self.assertAlmostEqual(recall["hedonism"], 0)
+        self.assertAlmostEqual(recall["achievement"], 0)
+        self.assertAlmostEqual(recall["power"], 0)
+        self.assertAlmostEqual(recall["security"], 1)
+        self.assertAlmostEqual(recall["tradition"], 1)
+        self.assertAlmostEqual(recall["conformity"], 1)
+        self.assertAlmostEqual(recall["benevolence"], 1)
+        self.assertAlmostEqual(recall["universalism"], 1)
+        self.assertAlmostEqual(f["self_direction"], 0)
+        self.assertAlmostEqual(f["stimulation"], 0)
+        self.assertAlmostEqual(f["hedonism"], 0)
+        self.assertAlmostEqual(f["achievement"], 0)
+        self.assertAlmostEqual(f["power"], 0)
+        self.assertAlmostEqual(f["security"], 0.8)
+        self.assertAlmostEqual(f["tradition"], 1)
+        self.assertAlmostEqual(f["conformity"], 1)
+        self.assertAlmostEqual(f["benevolence"], 1)
+        self.assertAlmostEqual(f["universalism"], 1)
+
+    def test_documents_f(self):
+        tested = [
+            ValuesAnnotatedDocument[OriginalValues](values=[
+                OriginalValues.from_list([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]),
+                OriginalValues.from_list([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9])
+            ]),
+            ValuesAnnotatedDocument[OriginalValues](values=[
+                OriginalValues.from_list([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9])
+            ])
+        ]
+        truth = [
+            ValuesAnnotatedDocument[OriginalValues](values=[
+                OriginalValues.from_list([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]),
+                OriginalValues.from_list([0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
+            ]),
+            ValuesAnnotatedDocument[OriginalValues](values=[
+                OriginalValues.from_list([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0])
+            ])
+        ]
+        evaluation = OriginalValues.evaluate_documents(tested, truth)
         f, precision, recall = evaluation.f()
         self.assertAlmostEqual(precision["self_direction"], 0)
         self.assertAlmostEqual(precision["stimulation"], 0)
