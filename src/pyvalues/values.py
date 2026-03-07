@@ -396,6 +396,9 @@ class Values(ABC, BaseModel):
     def __getitem__(self, key: str) -> Score | AttainmentScore:
         pass
 
+    def __str__(self) -> str:
+        return self.model_dump_json(exclude_defaults=True)
+
     def binarize(self, threshold: Score = 0.5) -> Self:
         """
         Gets the scores as either 1 (if at least at threshold) or 0 (otherwise).
