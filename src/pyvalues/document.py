@@ -4,7 +4,7 @@ from typing import Callable, ClassVar, Generator, Generic, Iterable, Self, Type
 from pydantic import BaseModel, model_validator
 from pydantic_extra_types.language_code import LanguageAlpha2
 
-from pyvalues.values import DEFAULT_LANGUAGE, VALUES, VALUES2
+from pyvalues.values import DEFAULT_LANGUAGE, VALUES, VALUES2, Score
 
 
 class Document(BaseModel):
@@ -175,13 +175,15 @@ class ValuesAnnotatedDocument(Document, Generic[VALUES]):
             raise ValueError("Empty document")
         return self
 
-    def binarize(self, threshold: float = 0.5) -> "ValuesAnnotatedDocument[VALUES]":
+    def binarize(self, threshold: Score | VALUES = 0.5) -> "ValuesAnnotatedDocument[VALUES]":
         """
         Gets the scores as either 1 (if at least at threshold) or 0 (otherwise).
 
         :param threshold:
-            The threshold for becoming 1
-        :type threshold: float
+            The threshold for becoming 1, either a single number for all values or
+            a values score object with each score being the corresponding threshold
+            for that value
+        :type threshold: Score | VALUES
 
         :return:
             A new document with scores either 0 or 1

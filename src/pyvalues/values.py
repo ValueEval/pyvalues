@@ -435,19 +435,25 @@ class Values(ABC, BaseModel):
         """
         pass
 
-    def binarize(self, threshold: Score = 0.5) -> Self:
+    def binarize(self, threshold: Score | Self = 0.5) -> Self:
         """
         Gets the scores as either 1 (if at least at threshold) or 0 (otherwise).
 
         :param threshold:
-            The threshold for becoming 1
-        :type threshold: float
+            The threshold for becoming 1, either a single number for all values or
+            a values score object with each score being the corresponding threshold
+            for that value
+        :type threshold: Score | Self
 
         :return:
             A new object with scores either 0 or 1
         :rtype: Self
         """
-        scores = [float(score >= threshold) for score in self.to_list()]
+        if isinstance(threshold, float) or isinstance(threshold, int):
+            scores = [float(score >= threshold) for score in self.to_list()]
+        else:
+            thresholds = threshold.to_list()
+            scores = [float(score >= thresholds[index]) for index, score in enumerate(self.to_list())]
         return self.__class__.from_list(scores)
 
 
@@ -612,13 +618,18 @@ class ValuesWithAttainment(Values):
                 model[value] = AttainmentScore(constrained=attained + constrained)
         return self.model_validate(model)
 
-    def binarize(self, threshold: Score = 0.5) -> Self:
+    def binarize(self, threshold: Score | Self = 0.5) -> Self:  # type: ignore
         scores = self.to_list()
-        for i in range(int(len(scores) / 2)):
+        num_values = int(len(scores) / 2)
+        if isinstance(threshold, float) or isinstance(threshold, int):
+            thresholds = [threshold] * num_values
+        else:
+            thresholds = threshold.to_list()
+        for i in range(num_values):
             attained = scores[i * 2]
             constrained = scores[i * 2 + 1]
             total = attained + constrained
-            if total >= threshold:
+            if total >= thresholds[i]:
                 if attained >= constrained:
                     scores[i * 2] = 1
                     scores[i * 2 + 1] = 0
