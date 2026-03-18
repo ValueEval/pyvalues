@@ -13,7 +13,8 @@ class ValuesWriter(Generic[VALUES]):
             self,
             cls: Type[VALUES],
             output_file: TextIO,
-            delimiter: str = "\t"
+            delimiter: str = "\t",
+            write_header: bool = True
     ):
         fieldnames = cls.names()
         self._writer = csv.DictWriter(
@@ -21,7 +22,8 @@ class ValuesWriter(Generic[VALUES]):
             fieldnames=fieldnames,
             delimiter=delimiter
         )
-        self._writer.writeheader()
+        if write_header:
+            self._writer.writeheader()
 
     def write(self, values: VALUES):
         line: dict[str, float] = {
@@ -56,7 +58,8 @@ class ValuesWithTextWriter(Generic[VALUES]):
             write_document_id: bool = True,
             default_document_id: str | None = None,
             write_language: bool = True,
-            default_language: LanguageAlpha2 | str | None = DEFAULT_LANGUAGE
+            default_language: LanguageAlpha2 | str | None = DEFAULT_LANGUAGE,
+            write_header: bool = True
     ):
         self._write_document_id = write_document_id
         self._default_document_id = default_document_id
@@ -79,7 +82,8 @@ class ValuesWithTextWriter(Generic[VALUES]):
             fieldnames=fieldnames,
             delimiter=delimiter
         )
-        self._writer.writeheader()
+        if write_header:
+            self._writer.writeheader()
 
     def write(
             self,

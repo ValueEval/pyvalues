@@ -354,13 +354,15 @@ class Values(ABC, BaseModel):
     def writer_tsv(
         cls,
         output_file: TextIO,
-        delimiter: str = "\t"
+        delimiter: str = "\t",
+        write_header: bool = True,
     ) -> "ValuesWriter[Self]":
         from .values_writer import ValuesWriter
         return ValuesWriter[Self](
             cls=cls,
             output_file=output_file,
-            delimiter=delimiter
+            delimiter=delimiter,
+            write_header=write_header
         )
 
     @classmethod
@@ -371,7 +373,8 @@ class Values(ABC, BaseModel):
         write_document_id: bool = True,
         default_document_id: str | None = None,
         write_language: bool = True,
-        default_language: LanguageAlpha2 | str | None = DEFAULT_LANGUAGE
+        default_language: LanguageAlpha2 | str | None = DEFAULT_LANGUAGE,
+        write_header: bool = True
     ) -> "ValuesWithTextWriter[Self]":
         from .values_writer import ValuesWithTextWriter
         return ValuesWithTextWriter[Self](
@@ -381,7 +384,8 @@ class Values(ABC, BaseModel):
             write_document_id=write_document_id,
             default_document_id=default_document_id,
             write_language=write_language,
-            default_language=default_language
+            default_language=default_language,
+            write_header=write_header
         )
 
     @classmethod
