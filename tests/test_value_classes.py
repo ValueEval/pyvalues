@@ -65,6 +65,21 @@ class TestValueClasses(unittest.TestCase):
         self.assertEqual(0.0, values.benevolence)
         self.assertEqual(0.0, values.universalism)
 
+    def test_cap_at_one(self):
+        scores = [0.0] * 38
+        scores[0] = 0.40001
+        scores[1] = 0.60001
+        values = RefinedValuesWithAttainment.from_list(scores, cap_at_one=True)
+        self.assertAlmostEqual(0.4, values.self_direction_action.attained, places=3)
+        self.assertAlmostEqual(0.6, values.self_direction_action.constrained, places=3)
+
+    def test_error_without_cap_at_one(self):
+        scores = [0.0] * 38
+        scores[0] = 0.40001
+        scores[1] = 0.60001
+        with self.assertRaises(ValidationError):
+            RefinedValuesWithAttainment.from_list(scores)
+
     def test_error_on_invalid_convert(self):
         with self.assertRaises(ValueError):
             RefinedValues.from_labels(["Tradition", "Self-Direction: Action"]).convert(RefinedValuesWithAttainment)
