@@ -1183,8 +1183,8 @@ class OriginalValuesWithAttainment(ValuesWithAttainment):
                 score_constrained = scores[i * 2 + 1]
                 score_total = score_attained + score_constrained
                 if score_total > 1.0:
-                    score_attained = score_attained / score_total
-                    score_constrained = score_constrained / score_total
+                    score_attained = score_attained / (score_total + 0.000001)  # tolerance
+                    score_constrained = score_constrained / (score_total + 0.000001)  # tolerance
                 scores_copy.append(score_attained)
                 scores_copy.append(score_constrained)
         return OriginalValuesWithAttainment(
@@ -1384,8 +1384,8 @@ class RefinedCoarseValuesWithAttainment(ValuesWithAttainment):
                 score_constrained = scores[i * 2 + 1]
                 score_total = score_attained + score_constrained
                 if score_total > 1.0:
-                    score_attained = score_attained / score_total
-                    score_constrained = score_constrained / score_total
+                    score_attained = score_attained / (score_total + 0.000001)  # tolerance
+                    score_constrained = score_constrained / (score_total + 0.000001)  # tolerance
                 scores_copy.append(score_attained)
                 scores_copy.append(score_constrained)
         return RefinedCoarseValuesWithAttainment(
@@ -1655,8 +1655,8 @@ class RefinedValuesWithAttainment(ValuesWithAttainment):
                 score_constrained = scores[i * 2 + 1]
                 score_total = score_attained + score_constrained
                 if score_total > 1.0:
-                    score_attained = score_attained / score_total
-                    score_constrained = score_constrained / score_total
+                    score_attained = score_attained / (score_total + 0.000001)  # tolerance
+                    score_constrained = score_constrained / (score_total + 0.000001)  # tolerance
                 scores_copy.append(score_attained)
                 scores_copy.append(score_constrained)
         return RefinedValuesWithAttainment(
