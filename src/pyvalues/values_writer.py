@@ -7,29 +7,38 @@ from pyvalues.values import VALUES
 
 
 class ValuesWriter(Generic[VALUES]):
+    _output_file: TextIO
     _writer: csv.DictWriter
+    _buffered_writes: bool
 
     def __init__(
             self,
             cls: Type[VALUES],
             output_file: TextIO,
             delimiter: str = "\t",
-            write_header: bool = True
+            write_header: bool = True,
+            buffered_writes: bool = False
     ):
         fieldnames = cls.names()
+        self._output_file = output_file
         self._writer = csv.DictWriter(
             output_file,
             fieldnames=fieldnames,
             delimiter=delimiter
         )
+        self._buffered_writes = buffered_writes
         if write_header:
             self._writer.writeheader()
+            if not self._buffered_writes:
+                self._output_file.flush()
 
     def write(self, values: VALUES):
         line: dict[str, float] = {
             value: score for (value, score) in zip(values.names(), values.to_list())
         }
         self._writer.writerow(line)
+        if not self._buffered_writes:
+            self._output_file.flush()
 
     def write_all(self, values: Iterable[VALUES]):
         for v in values:
@@ -44,11 +53,13 @@ class ValuesWriter(Generic[VALUES]):
 
 
 class ValuesWithTextWriter(Generic[VALUES]):
+    _output_file: TextIO
     _writer: csv.DictWriter
     _write_document_id: bool
     _default_document_id: str | None
     _write_language: bool
     _default_language: LanguageAlpha2 | None
+    _buffered_writes: bool
 
     def __init__(
             self,
@@ -59,8 +70,10 @@ class ValuesWithTextWriter(Generic[VALUES]):
             default_document_id: str | None = None,
             write_language: bool = True,
             default_language: LanguageAlpha2 | str | None = DEFAULT_LANGUAGE,
-            write_header: bool = True
+            write_header: bool = True,
+            buffered_writes: bool = False
     ):
+        self._output_file = output_file
         self._write_document_id = write_document_id
         self._default_document_id = default_document_id
         self._write_language = write_language
@@ -68,6 +81,7 @@ class ValuesWithTextWriter(Generic[VALUES]):
             self._default_language = None
         else:
             self._default_language = LanguageAlpha2(default_language)
+        self._buffered_writes = buffered_writes
 
         fieldnames = []
         if write_document_id:
@@ -84,6 +98,8 @@ class ValuesWithTextWriter(Generic[VALUES]):
         )
         if write_header:
             self._writer.writeheader()
+            if not self._buffered_writes:
+                self._output_file.flush()
 
     def write(
             self,
@@ -111,6 +127,8 @@ class ValuesWithTextWriter(Generic[VALUES]):
             else:
                 raise ValueError("Missing language for writing and no default set")
         self._writer.writerow(line)
+        if not self._buffered_writes:
+            self._output_file.flush()
 
     def write_document(
             self,
