@@ -26,13 +26,14 @@ def plot_radar(
         "#999999"
     ],
     fillcolors: list[str | None] = [None],
-    fillalphas: list[float] = [0.25]
+    fillalphas: list[float] = [0.25],
+    gridlines: list[float] = [0.25, 0.50, 0.75, 1.00]
 ):
     theta = radar_factory(len(dim_names))
     fig, ax = plt.subplots(subplot_kw=dict(projection="radar"))
-    ax.set_ylim(0, 1)
-    ax.set_rgrids([0.25, 0.50, 0.75], fontsize="small")  # type: ignore
-    ax.set_varlabels(dim_names)  # type: ignore
+    ax.set_ylim(0, gridlines[-1])
+    ax.set_rgrids(gridlines[0:-1], fontsize="small")  # type: ignore
+    ax.set_varlabels(dim_names, gridlines[-1])  # type: ignore
     has_label = False
     for i in range(len(valuess)):
         label = labels[i % len(labels)]
@@ -107,7 +108,7 @@ def radar_factory(num_vars):
                 y = np.append(y, y[0])
                 line.set_data(x, y)
 
-        def set_varlabels(self, labels):
+        def set_varlabels(self, labels, outer):
             self.set_thetagrids(np.degrees(theta), fmt="")
             for i in range(len(labels)):
                 horizontal_alignment = None
@@ -126,7 +127,7 @@ def radar_factory(num_vars):
                 else:
                     vertical_alignment = "top"
 
-                self.text(theta[i], 1.025, labels[i], fontsize="small",
+                self.text(theta[i], outer * 1.025, labels[i], fontsize="small",
                           horizontalalignment=horizontal_alignment,
                           verticalalignment=vertical_alignment)
 

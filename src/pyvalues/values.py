@@ -525,7 +525,7 @@ class ValuesWithoutAttainment(Values):
 
         :param value_scores_list: The scores to plot
         :type value_scores_list: Sequence["ValuesWithoutAttainment"]
-        :param kwargs: Arguments to pass on for plotting
+        :param kwargs: Arguments to pass on for plotting, especially `labels` (`list[str]`), `linecolors` (`list[str]`), `fillcolors` (`list[str]`), `fillalphas` (`list[str]`), and `gridlines` (`list[float]`)
         """
         assert len(value_scores_list) > 0
         assert all(
@@ -557,9 +557,37 @@ class ValuesWithoutAttainment(Values):
             )
         return decisions
 
-    def plot(self, linecolors=["black"], **kwargs):
+    def plot(self, label=None, linecolor="black", fillcolor=None, fillalpha=0.25, **kwargs):
+        """
+        Plot theses scores in a radar plot.
+
+        Returns the matplotlib module, so one can directly use `savefig(file)` or `show()`
+        on the returned value.
+
+        ::
+
+            import pyvalues
+            values = pyvalues.OriginalValues.from_list([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0])
+            values.plot(label="my values").show()
+
+        :param label: The label to use in the legend, if any
+        :type label: str | None
+        :param linecolor: The color of the line to draw
+        :type linecolor: str
+        :param fillcolor: The area fill to draw, if any
+        :type fillcolor: str | None
+        :param fillalpha: The alpha channel of the fill color
+        :type fillalpha: float
+        :param kwargs: Arguments to pass on for plotting, especially `gridlines` (`list[float]`)
+        """
         return ValuesWithoutAttainment.plot_all(
-            [self], linecolors=linecolors, **kwargs)
+            [self],
+            labels=[label],
+            linecolors=[linecolor],
+            fillcolors=[fillcolor],
+            fillalphas=[fillalpha],
+            **kwargs
+        )
 
 
 class ValuesWithAttainment(Values):
