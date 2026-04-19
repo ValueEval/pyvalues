@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pyvalues &#8212; pyvalues 0.8.3 documentation</title>
+    <title>pyvalues &#8212; pyvalues 0.9.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
-    <script src="_static/documentation_options.js?v=7f96dc5e"></script>
+    <script src="_static/documentation_options.js?v=39bb1c6d"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -1187,6 +1187,30 @@ for that value</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="pyvalues.ValuesWithoutAttainment.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linecolor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'black'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fillcolor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fillalpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvalues.ValuesWithoutAttainment.plot" title="Link to this definition">¶</a></dt>
+<dd><p>Plot theses scores in a radar plot.</p>
+<p>Returns the matplotlib module, so one can directly use <cite>savefig(file)</cite> or <cite>show()</cite>
+on the returned value.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvalues</span>
+<span class="n">values</span> <span class="o">=</span> <span class="n">pyvalues</span><span class="o">.</span><span class="n">OriginalValues</span><span class="o">.</span><span class="n">from_list</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span><span class="mf">0.7</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.9</span><span class="p">,</span><span class="mf">1.0</span><span class="p">])</span>
+<span class="n">values</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;my values&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em><em> | </em><em>None</em>) – The label to use in the legend, if any</p></li>
+<li><p><strong>linecolor</strong> (<em>str</em>) – The color of the line to draw</p></li>
+<li><p><strong>fillcolor</strong> (<em>str</em><em> | </em><em>None</em>) – The area fill to draw, if any</p></li>
+<li><p><strong>fillalpha</strong> (<em>float</em>) – The alpha channel of the fill color</p></li>
+<li><p><strong>kwargs</strong> – Arguments to pass on for plotting, especially <cite>gridlines</cite> (<cite>list[float]</cite>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="pyvalues.ValuesWithoutAttainment.plot_all">
 <em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">plot_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value_scores_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvalues.ValuesWithoutAttainment" title="pyvalues.values.ValuesWithoutAttainment"><span class="pre">ValuesWithoutAttainment</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvalues.ValuesWithoutAttainment.plot_all" title="Link to this definition">¶</a></dt>
 <dd><p>Plot scores in a radar plot.</p>
@@ -1201,7 +1225,9 @@ on the returned value.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>value_scores_list</strong> (<em>Sequence</em><em>[</em><em>&quot;ValuesWithoutAttainment&quot;</em><em>]</em>) – The scores to plot</p></li>
-<li><p><strong>kwargs</strong> – Arguments to pass on for plotting</p></li>
+<li><p><strong>kwargs</strong> – Arguments to pass on for plotting, especially <cite>labels</cite> (<cite>list[str]</cite>),
+<cite>linecolors</cite> (<cite>list[str]</cite>), <cite>fillcolors</cite> (<cite>list[str]</cite>), <cite>fillalphas</cite> (<cite>list[str]</cite>),
+and <cite>gridlines</cite> (<cite>list[float]</cite>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -1222,7 +1248,7 @@ on the returned value.</p>
 
 
 
-<p class="blurb">Version 0.8.3</p>
+<p class="blurb">Version 0.9.0</p>
 
 
 
