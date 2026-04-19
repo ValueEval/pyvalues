@@ -525,7 +525,10 @@ class ValuesWithoutAttainment(Values):
 
         :param value_scores_list: The scores to plot
         :type value_scores_list: Sequence["ValuesWithoutAttainment"]
-        :param kwargs: Arguments to pass on for plotting, especially `labels` (`list[str]`), `linecolors` (`list[str]`), `fillcolors` (`list[str]`), `fillalphas` (`list[str]`), and `gridlines` (`list[float]`)
+        :param kwargs:
+            Arguments to pass on for plotting, especially `labels` (`list[str]`),
+            `linecolors` (`list[str]`), `fillcolors` (`list[str]`), `fillalphas` (`list[str]`),
+            and `gridlines` (`list[float]`)
         """
         assert len(value_scores_list) > 0
         assert all(
