@@ -9,6 +9,8 @@ from pyvalues.values import VALUES
 class ValuesWriter(Generic[VALUES]):
     _output_file: TextIO
     _writer: csv.DictWriter
+    _write_document_id: bool
+    _default_document_id: str | None
     _buffered_writes: bool
 
     def __init__(
@@ -16,10 +18,15 @@ class ValuesWriter(Generic[VALUES]):
             cls: Type[VALUES],
             output_file: TextIO,
             delimiter: str = "\t",
+            write_document_id: bool = True,
+            default_document_id: str | None = None,
             write_header: bool = True,
             buffered_writes: bool = False
     ):
-        fieldnames = cls.names()
+        fieldnames = []
+        if write_document_id:
+            fieldnames += [Document.ID_FIELD]
+        fieldnames += cls.names()
         self._output_file = output_file
         self._writer = csv.DictWriter(
             output_file,
@@ -32,10 +39,17 @@ class ValuesWriter(Generic[VALUES]):
             if not self._buffered_writes:
                 self._output_file.flush()
 
-    def write(self, values: VALUES):
+    def write(self, values: VALUES, document_id: str | None = None):
         line: dict[str, float] = {
             value: score for (value, score) in zip(values.names(), values.to_list())
         }
+        if self._write_document_id:
+            if document_id is not None:
+                line[Document.ID_FIELD] = document_id
+            elif self._default_document_id is not None:
+                line[Document.ID_FIELD] = self._default_document_id
+            else:
+                raise ValueError("Missing document ID for writing and no default set")
         self._writer.writerow(line)
         if not self._buffered_writes:
             self._output_file.flush()
