@@ -10,23 +10,26 @@ from matplotlib.spines import Spine
 from matplotlib.transforms import Affine2D
 
 
+linecolors = [
+    "#e41a1c",
+    "#377eb8",
+    "#4daf4a",
+    "#984ea3",
+    "#ff7f00",
+    "#ffff33",
+    "#a65628",
+    "#f781bf",
+    "#999999"
+]
+
+
 def plot_radar(
     dim_names: list[str],
     valuess: list[list[float]],
     labels: list[str | None] = [None],
-    linecolors: list[str] = [
-        "#e41a1c",
-        "#377eb8",
-        "#4daf4a",
-        "#984ea3",
-        "#ff7f00",
-        "#ffff33",
-        "#a65628",
-        "#f781bf",
-        "#999999"
-    ],
-    fillcolors: list[str | None] = [None],
-    fillalphas: list[float] = [0.25],
+    linecolors: list[str] = linecolors,
+    fillcolors: list[str | None] = linecolors,
+    fillalphas: list[float] = [0.1],
     gridlines: list[float] = [0.25, 0.50, 0.75, 1.00]
 ):
     theta = radar_factory(len(dim_names))
