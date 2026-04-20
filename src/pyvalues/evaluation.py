@@ -48,6 +48,15 @@ class Evaluation(Generic[VALUES_WITHOUT_ATTAINMENT]):
     def __getitem__(self, key: str) -> list[ThresholdedDecision]:
         return self._value_evaluations[key]
 
+    def get_values_in_ground_truth(self) -> list[str]:
+        values = []
+        for value, thresholded_decisions in self._value_evaluations.items():
+            for thresholded_decision in thresholded_decisions:
+                if thresholded_decision.is_true:
+                    values.append(value)
+                    break
+        return values
+
     def f(
             self,
             threshold: Score = 0.5,
