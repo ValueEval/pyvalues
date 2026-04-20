@@ -475,9 +475,10 @@ class ValuesWithoutAttainment(Values):
     def evaluate_all(
         cls,
         tested: Iterable["Self"],
-        truth: Iterable["Self"]
+        truth: Iterable["Self"],
+        threshold: float = 0.5
     ) -> "Evaluation[Self]":
-        instance_evaluations = [t1.evaluate(t2) for t1, t2 in zip(tested, truth)]
+        instance_evaluations = [t1.evaluate(t2, threshold) for t1, t2 in zip(tested, truth)]
         from .evaluation import Evaluation
         return Evaluation(
             cls=cls,
@@ -492,12 +493,13 @@ class ValuesWithoutAttainment(Values):
     def evaluate_documents(
         cls,
         tested: Iterable["ValuesAnnotatedDocument[Self]"],
-        truth: Iterable["ValuesAnnotatedDocument[Self]"]
+        truth: Iterable["ValuesAnnotatedDocument[Self]"],
+        threshold: float = 0.1
     ) -> "Evaluation[Self]":
         instance_evaluations = []
         for tested_document, truth_document in zip(tested, truth):
             instance_evaluations += [
-                t1.evaluate(t2) for t1, t2 in zip(tested_document.values, truth_document.values)
+                t1.evaluate(t2, threshold) for t1, t2 in zip(tested_document.values, truth_document.values)
             ]
         from .evaluation import Evaluation
         return Evaluation(
@@ -550,13 +552,13 @@ class ValuesWithoutAttainment(Values):
             if score >= threshold
         ]
 
-    def evaluate(self, truth: "Self") -> dict[str, "ThresholdedDecision"]:
+    def evaluate(self, truth: "Self", threshold: float = 0.5) -> dict[str, "ThresholdedDecision"]:
         from .evaluation import ThresholdedDecision
         decisions = {}
         for value in self.names():
             decisions[value] = ThresholdedDecision(
                 threshold=self[value],
-                is_true=truth[value] >= 0.5
+                is_true=truth[value] >= threshold
             )
         return decisions
 
