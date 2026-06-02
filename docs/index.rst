@@ -13,4 +13,5 @@ Python library for processing, evaluating, and visualizing (Schwartz) human valu
    pyvalues_dictionary_classifier
    pyvalues_ensemble_classifier
    pyvalues_evaluation
+   pyvalues_remote_classifier
    pyvalues_values_writer
