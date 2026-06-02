@@ -441,9 +441,38 @@ class Values(ABC, BaseModel):
         """
         pass
 
+    @abstractmethod
+    def top(self, k: int = 1, binarize: bool = False) -> Self:
+        """
+        Gets the k highest scores by setting all others to 0.
+
+        If the scores are with attainment, the total scores are used to determine
+        the highest ones. The split score (attained and constrained) of the highest
+        are kept as they are.
+
+        :param k:
+            The number of values for which to not set the scores to 0.
+        :type k: int
+
+        :param binarize:
+            Whether to set the highest scores to 1 instead of just keeping them
+            (default). If the scores are with attainment, the higher one
+            (attained or constrained) is set to 1 and the smaller one to 0.
+        :type binarize: bool
+
+        :return:
+            A new object with only the k highest scores
+        :rtype: Self
+        """
+        pass
+
     def binarize(self, threshold: Score | Self = 0.5) -> Self:
         """
         Gets the scores as either 1 (if at least at threshold) or 0 (otherwise).
+
+        If the scores are with attainment, the total (attained + constrained) is
+        checked against the threshold and, if equal or higher, the higher one
+        (attained or constrained) is set to 1 and the smaller one to 0.
 
         :param threshold:
             The threshold for becoming 1, either a single number for all values or
@@ -594,6 +623,39 @@ class ValuesWithoutAttainment(Values):
             **kwargs
         )
 
+    def top(self, k: int = 1, binarize: bool = False) -> Self:
+        """
+        Gets the k highest scores by setting all others to 0.
+
+        :param k:
+            The number of values for which to not set the scores to 0.
+        :type k: int
+
+        :param binarize:
+            Whether to set the highest scores to 1 instead of just keeping them
+            (default).
+        :type binarize: bool
+
+        :return:
+            A new object with only the k highest scores
+        :rtype: Self
+        """
+        scores: list[float] = self.to_list()
+        # https://stackoverflow.com/a/7851166
+        sorted_indices = sorted(
+            range(len(scores)),
+            key=lambda i: scores[i],
+            reverse=True
+        )
+        topped = [0.0] * len(scores)
+        if binarize:
+            for i in range(k):
+                topped[sorted_indices[i]] = 1
+        else:
+            for i in range(k):
+                topped[sorted_indices[i]] = scores[sorted_indices[i]]
+        return self.__class__.from_list(topped)
+
 
 class ValuesWithAttainment(Values):
     """
@@ -687,6 +749,48 @@ class ValuesWithAttainment(Values):
             linecolors=["black", "green", "red"],
             **kwargs
         )
+
+    def top(self, k: int = 1, binarize: bool = False) -> Self:
+        """
+        Gets the k highest scores by setting all others to 0.
+
+        The total scores are used to determine the highest ones. The split score
+        (attained and constrained) of the highest are kept as they are.
+
+        :param k:
+            The number of values for which to not set the scores to 0.
+        :type k: int
+
+        :param binarize:
+            Whether to set the highest scores to 1 instead of just keeping them
+            (default). Specifically, the higher one of attained or constrained is
+            set to 1 and the smaller one to 0.
+        :type binarize: bool
+
+        :return:
+            A new object with only the k highest scores
+        :rtype: Self
+        """
+        scores: list[float] = self.to_list()
+        totals = [scores[2 * i] + scores[2 * i + 1] for i in range(len(scores) // 2)]
+        # https://stackoverflow.com/a/7851166
+        sorted_indices = sorted(
+            range(len(totals)),
+            key=lambda i: totals[i],
+            reverse=True
+        )
+        topped = [0.0] * len(scores)
+        if binarize:
+            for i in range(k):
+                if scores[2 * sorted_indices[i]] >= scores[2 * sorted_indices[i] + 1]:
+                    topped[2 * sorted_indices[i]] = 1.0
+                else:
+                    topped[2 * sorted_indices[i] + 1] = 1.0
+        else:
+            for i in range(k):
+                topped[2 * sorted_indices[i]] = scores[2 * sorted_indices[i]]
+                topped[2 * sorted_indices[i] + 1] = scores[2 * sorted_indices[i] + 1]
+        return self.__class__.from_list(topped)
 
 
 class OriginalValues(ValuesWithoutAttainment):
