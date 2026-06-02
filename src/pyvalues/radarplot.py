@@ -1,3 +1,5 @@
+from typing import Sequence
+
 from matplotlib.lines import Line2D
 import matplotlib.pyplot as plt
 import numpy as np
@@ -24,13 +26,13 @@ linecolors = [
 
 
 def plot_radar(
-    dim_names: list[str],
-    valuess: list[list[float]],
-    labels: list[str | None] = [None],
-    linecolors: list[str] = linecolors,
-    fillcolors: list[str | None] = linecolors,
-    fillalphas: list[float] = [0.1],
-    gridlines: list[float] = [0.25, 0.50, 0.75, 1.00]
+    dim_names: Sequence[str],
+    valuess: Sequence[list[float]],
+    labels: Sequence[str | None] = [None],
+    linecolors: Sequence[str] = linecolors,
+    fillcolors: Sequence[str | None] = linecolors,
+    fillalphas: Sequence[float] = [0.1],
+    gridlines: Sequence[float] = [0.25, 0.50, 0.75, 1.00]
 ):
     theta = radar_factory(len(dim_names))
     fig, ax = plt.subplots(subplot_kw=dict(projection="radar"))

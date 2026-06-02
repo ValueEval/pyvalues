@@ -42,7 +42,7 @@ class ValuesWriter(Generic[VALUES]):
                 self._output_file.flush()
 
     def write(self, values: VALUES, record_id: str | None = None):
-        line: dict[str, float] = {
+        line: dict[str, float | str] = {
             value: score for (value, score) in zip(values.names(), values.to_list())
         }
         if self._write_id:
