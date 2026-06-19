@@ -325,7 +325,7 @@ class Values(ABC, BaseModel):
                     row_document_id = row.get(document_id_field, document_id)
                 if row_document_id is None or row_document_id != current_document_id:
                     if len(values) > 0:
-                        yield ValuesAnnotatedDocument[Self](
+                        yield ValuesAnnotatedDocument[cls](
                             id=current_document_id,
                             language=current_language,
                             values=values,
@@ -343,7 +343,7 @@ class Values(ABC, BaseModel):
                         if segments is None:
                             segments = []
                         segments.append(segment)
-            yield ValuesAnnotatedDocument[Self](
+            yield ValuesAnnotatedDocument[cls](
                 id=current_document_id,
                 language=current_language,
                 values=values,
