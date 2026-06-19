@@ -129,10 +129,8 @@ but a <code class="docutils literal notranslate"><span class="pre">segmenter</sp
 <li><p><strong>input_file</strong> (<em>str</em><em> | </em><em>Path</em>) – The text file to read.</p></li>
 <li><p><strong>segmenter</strong> (<em>Callable</em><em>[</em><em>[</em><em>str</em><em>]</em><em>, </em><em>Iterable</em><em>[</em><em>str</em><em>]</em><em>]</em>) – Segmenter used to split the text into segments.
 Default: use complete text as single segment.</p></li>
-<li><p><strong>document_id</strong> (<em>str</em><em> | </em><em>None</em>) – Default document ID to use when no ID is found in the row
-or when <code class="docutils literal notranslate"><span class="pre">document_id_field</span></code> is not specified.</p></li>
-<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – Default language (ISO 639-1 / alpha-2) to use when no language is found in the row
-or when <code class="docutils literal notranslate"><span class="pre">language_field</span></code> is not specified.</p></li>
+<li><p><strong>document_id</strong> (<em>str</em><em> | </em><em>None</em>) – Identifier for the document.</p></li>
+<li><p><strong>language</strong> (<em>LanguageAlpha2</em><em> | </em><em>str</em>) – Language of the document in ISO 639-1 / alpha-2.</p></li>
 </ul>
 </dd>
 </dl>
