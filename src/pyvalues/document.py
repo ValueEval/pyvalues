@@ -39,13 +39,11 @@ class Document(BaseModel):
         :type segmenter: Callable[[str], Iterable[str]]
 
         :param document_id:
-            Default document ID to use when no ID is found in the row
-            or when ``document_id_field`` is not specified.
+            Identifier for the document.
         :type document_id: str | None
 
         :param language:
-            Default language (ISO 639-1 / alpha-2) to use when no language is found in the row
-            or when ``language_field`` is not specified.
+            Language of the document in ISO 639-1 / alpha-2.
         :type language: LanguageAlpha2 | str
         """
         with open(input_file) as file:
